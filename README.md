@@ -1,6 +1,6 @@
-# Tamnora.js
+# tamnora.js
 
-Tamnora.js es una librería JavaScript ligera que proporciona enlace de datos reactivo y manipulación del DOM, lo que facilita la creación de aplicaciones web interactivas. Con Tamnora.js, puedes crear interfaces de usuario reactivas vinculando valores de datos a elementos HTML y automatizando las actualizaciones cuando cambian los datos.
+tamnora.js es una librería JavaScript ligera que proporciona enlace de datos reactivo y manipulación del DOM, lo que facilita la creación de aplicaciones web interactivas. Con Tamnora.js, puedes crear interfaces de usuario reactivas vinculando valores de datos a elementos HTML y automatizando las actualizaciones cuando cambian los datos.
 
 ## Características
 
