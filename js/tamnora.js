@@ -546,7 +546,7 @@ export default class Tamnora {
   saveStateToLocalStorage() {
     try {
       const serializedState = JSON.stringify(this.state);
-      localStorage.setItem('tamnoraState', serializedState);
+      localStorage.setItem('tmnState', serializedState);
     } catch (error) {
       console.error('Error al guardar el state en el localStorage:', error);
     }
@@ -555,7 +555,7 @@ export default class Tamnora {
   // Método para cargar el state desde el localStorage
   loadStateFromLocalStorage() {
     try {
-      const serializedState = localStorage.getItem('tamnoraState');
+      const serializedState = localStorage.getItem('tmnState');
       if (serializedState !== null) {
         return JSON.parse(serializedState);
       }

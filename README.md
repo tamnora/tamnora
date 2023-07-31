@@ -23,29 +23,42 @@ Para comenzar a utilizar Tamnora.js, incluye el script `tamnora.js` en tu archiv
 
 ```html
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-  <title>Ejemplo con Tamnora.js</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tamnorajs</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <input type="text" data-value="nombre" />
-  <span data-value="edad"></span>
-  <button data-click="saludar">Saludar</button>
+<body class="bg-gray-900">
+  <div id="app" class="container mx-auto mt-3">
+    <div class="flex gap-3 justify-between items-center">
+      <input type="text" data-value="nombre" data-tail="input"/>
+      <span data-value="edad" data-tail="label"></span>
+      <button data-click="saludar" data-tail="btn colorRed">Saludar</button>
+    </div>
+  </div>
 
-  <script src="ruta/hacia/tamnora.js"></script>
-  <script>
+  
+  <script type="module">
+    import Tamnora from './js/tamnora.js';
+    import {styleClass} from './js/style.js'
+
+    
     const data = {
       nombre: 'Juan',
       edad: 30,
     };
+    
+    const tmn = new Tamnora(data);
+    tmn.styleClasses = styleClass;
+   
 
-    const tamnora = new Tamnora(data);
-
-    tamnora.setFunction('saludar', () => {
-      alert(`¡Hola, ${tamnora.getData('nombre')}!`);
+    tmn.setFunction('saludar', () => {
+      alert(`¡Hola, ${tmn.getData('nombre')}!`);
     });
 
-    tamnora.onMount(() => {
+    tmn.onMount(() => {
       console.log('¡tamnora.js está listo!');
     });
   </script>
