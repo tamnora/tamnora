@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tamnora JS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+</head>
+<body class="bg-gray-900" data-tail="container">
+  
+  <div id="app">
+   <div data-component="Navbar" set-empresa="Nuevo sistema"></div>
+   
+   <div class="container mx-auto mt-5">
+      <div>
+        <form data-action="enviarDatos">
+          <div class="grid gap-6 mb-6 md:grid-cols-2">
+              <div>
+                  <label for="first_name" data-tail="label">IdUser</label>
+                  <input type="number"  data-value="newUser!IdUser" data-tail="input inactive" data-default=''  required>
+              </div>
+              <div>
+                  <label for="last_name" data-tail="label">Usuario</label>
+                  <input type="text" data-value="newUser!Usuario" data-tail="input" data-UpperCase="true" data-default=""  required>
+              </div>
+              <div>
+                  <label for="company" data-tail="label">Pass</label>
+                  <input type="text" data-value="newUser!Pass" data-tail="input"  data-default="" required>
+              </div>  
+              <div>
+                  <label for="phone" data-tail="label">TipoMenu</label>
+                  <select data-value="newUser!TipoMenu" data-tail="input" data-default="Ninguno"></select>
+              </div>
+              <div>
+                <p data-value="accion" class="text-yellow-600" ></p>
+              </div>
+              
+          <button type="submit"  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
+        </form>
+      </div>
+
+      <div class="flex flex-col gap-3" data-for="users as user" data-template="cardUsers">
+        <div class="flex justify-between p-2 bg-gray-800 rounded text-gray-400">
+          <dir class="flex flex-col">
+            <p>Usuario: <span class="text-white ml-2">{user.IdUser}, {user.Usuario }</span></p>
+          <p>Password:<span class="text-white ml-2">{user.Pass}</span> Menu: <span class="text-white ml-2">{user.TipoMenu}</span></p>
+          </dir>
+         
+            <button data-tail="btn colorNeutral" data-click="editar,{user.index}" >Editar</button>
+          
+        </div>
+      </div>
+   </div>
+
+  </div>
+  
+
+  <script type="module">
+    import Tamnora from './js/tamnora.js';
+    import {dbSelect, createQuerySQL} from './js/tsql.js'
+    import {styleClass} from './js/style.js'
+
+    const tmn = new Tamnora();
+    tmn.styleClasses = styleClass;
+    tmn.data.users= [];
+
+    
+
+    tmn.setFunction('editar', (id)=>{
+      const data = tmn.data.users[id]
+      tmn.setData('Id', data.IdUser);
+      tmn.setData('newUser', data);
+      tmn.setData('accion', 'update');
+    })
+
+    
+
+    tmn.setFunction('enviarDatos', async ()=>{ 
+      
+      if(tmn.data.accion == 'insert'){
+        let sql = createQuerySQL('insert',{
+          t: 'tblusuarios',
+          d: tmn.data.newUser
+        })
+        console.log(sql)
+        let runSQL = await dbSelect('insert', sql).then(resp => console.log(resp))
+      }else{
+        let Id = tmn.data.Id;
+        let sql = createQuerySQL('update',{
+          t: 'tblusuarios',
+          w: `IdUser = ${Id}`,
+          d: tmn.data.newUser
+        })
+        console.log(sql)
+        let runSQL = await dbSelect('update', sql).then(resp => console.log(resp))
+      }
+      
+      tmn.cleanData('newUser', true);
+      consultarDatos()
+    })
+
+    const tipoMenus = await dbSelect('select', 'SELECT * FROM tblusuariosmenu').then(rows => {
+      let selectMenu = document.querySelector('[data-value="newUser!TipoMenu"]')
+      let options = '';
+        rows.forEach((row)=> {
+          options += `<option value="${row.TipoMenu}">${row.TipoMenu}</option>`
+        })
+        selectMenu.innerHTML = options;
+    })
+
+    async function consultarDatos(){
+      const bdatos = await dbSelect('select', 'SELECT IdUser, Usuario, Pass, TipoMenu FROM tblusuarios').then(valores => {
+        tmn.data.users = valores;
+        tmn.refreshDataFor('cardUsers')
+        return valores;
+      })
+
+      proxId();      
+    }
+
+    async function proxId(){
+      let ultimo = 0;
+      const bdatos = await dbSelect('select', 'SELECT max(IdUser) as ultimoId FROM tblusuarios').then(rows => {
+        if(rows[0].ultimoId){
+          ultimo = parseInt(rows[0].ultimoId); 
+          return rows[0].ultimoId;
+        }
+
+      })
+
+      const nuevo = (parseInt(bdatos)) + 1
+      if(nuevo > ultimo){
+        tmn.data.Id = nuevo;
+        tmn.setDataRoute('newUser!IdUser', nuevo)
+        tmn.setDefRoute('newUser!IdUser', nuevo)
+        tmn.setData('accion', 'insert');
+      }
+
+      console.log(tmn.getData('newUser!IdUser'))
+      console.log(tmn.getDef('newUser!IdUser'))
+    }
+
+    consultarDatos();
+   
+
+    
+   
+           
+   
+  
+  </script>
+  </body>
+</html>
