@@ -1,15 +1,29 @@
+import '../../public/style.css';
+
+
 // Definición de la librería Tamnora
 export default class Tamnora {
-  constructor(data) {
-    this.data = this.createReactiveProxy(data);
+  constructor(definit = {}) {
+    this.data = this.createReactiveProxy(definit.data);
+    this._componentHTML = definit.componentHTML || {};
     this.def = {};
     this._styleClasses = {};
     this.functions = {};
-    this.folderComp = './components';
     this.templates = {};
+    this.dirComponents = definit.dirComponents ||'../components';
+    this.elementsById = {};
     this.state = this.loadStateFromLocalStorage();
     this.onMountCallback = null;
     this.initialize();
+
+    // Agregar código de manejo de navegación en la carga de la página
+    this.handleNavigationOnLoad();
+
+    // Escuchar el evento de cambio de historial
+    window.addEventListener('popstate', () => {
+      this.handleNavigation();
+    });
+
   }
   
   get styleClasses() {
@@ -23,13 +37,34 @@ export default class Tamnora {
     this.applyStyleClassesNavActive();
   }
 
+  getComponentHTML(name){
+    if(name){
+      return this._componentHTML[name];
+    }else{
+      return this._componentHTML;
+
+    }
+  }
+
+  setComponentHTML(name, html){
+    if(name && html){
+      this._componentHTML[name] = html;
+      this.bindComponents();
+    }else{
+      console.error('Error en componente')
+    }
+  }
+
+
+
   // Inicializa la librería y realiza las vinculaciones necesarias
   initialize() {
     this.bindElementsWithDataValues();
     this.bindClickEvents();
-    this.applyStyleClassesNavActive()
     this.bindComponents();
+    this.applyStyleClassesNavActive()
     this.bindSubmitEvents();
+    this.bindElementsById();
   }
   
   //Crea un Proxy reactivo para los datos
@@ -263,13 +298,35 @@ export default class Tamnora {
   }
 
   async bindComponents() {
-    const componentDivs = document.querySelectorAll('[data-component]');
+    // Obtener todos los elementos del DOM
+    const allElements = document.getElementsByTagName('*');
+
+    // Filtrar los elementos cuyos nombres de etiqueta comiencen con "t-"
+    const componentDivs = [];
+    for (let i = 0; i < allElements.length; i++) {
+      const element = allElements[i];
+      if (element.tagName.toLowerCase().startsWith('t-')) {
+        componentDivs.push(element);
+      }
+    }
+
+    console.log(componentDivs)
+
     const cantComponents = componentDivs.length;
     if (cantComponents) {
       componentDivs.forEach(async (componentDiv, index) => {
-        const componentName = componentDiv.getAttribute('data-component');
+        const tagName = componentDiv.tagName.toLowerCase();
+        const component = tagName.substring(2); // Eliminar "t-" del nombre
+        const componentName = component.charAt(0).toUpperCase() + component.slice(1);
         const objSlots = {};
         const setSlots = componentDiv.querySelectorAll('[set-slot]');
+
+        await fetch(`${this.dirComponents}/${componentName}.html`)
+          .then((response) => response.text())
+          .then((html) => { 
+            this._componentHTML[componentName] = html;
+          })
+          .catch((error) => console.error(`Error al cargar el componente ${componentName}:`, error));
 
         if(setSlots){
           setSlots.forEach(slot => {
@@ -278,12 +335,9 @@ export default class Tamnora {
           })
         }
 
-        await fetch(`${this.folderComp}/${componentName}.html`)
-          .then((response) => response.text())
-          .then((html) => {
-            componentDiv.innerHTML = html;
+          if(this._componentHTML[componentName] !== 'undefined'){
+            componentDiv.innerHTML = this._componentHTML[componentName];
             const getSlots = componentDiv.querySelectorAll('[get-slot]')
-
             if(getSlots){
               getSlots.forEach(slot => {
                 const nameSlot = slot.getAttribute('get-slot')
@@ -294,8 +348,13 @@ export default class Tamnora {
                 }
               })
             }
-          })
-          .catch((error) => console.error(`Error al cargar el componente ${componentName}:`, error));
+
+          } else {
+            console.error(`Error al cargar el componente ${componentName}:`)
+          }
+          
+       
+        
 
         this.applyDataPropsFromAttributes(componentDiv);
 
@@ -317,20 +376,20 @@ export default class Tamnora {
         
         if((cantComponents - 1) == index){
           // Ejecutamos la función onMount cuando el DOM esté cargado
-            this.onDOMContentLoaded();
-            this.bindDataFor();
-            this.applyStyleClasses();
-            this.applyStyleClassesNavActive();
+          this.bindDataFor();
+          this.applyStyleClasses();
+          this.applyStyleClassesNavActive();
+          this.onDOMContentLoaded();
           
         }
       });
     } else {
           // Ejecutamos la función onMount cuando el DOM esté cargado
           document.addEventListener('DOMContentLoaded', () => {
-            this.onDOMContentLoaded();
             this.bindDataFor();
             this.applyStyleClasses();
             this.applyStyleClassesNavActive();
+            this.onDOMContentLoaded();
           }); 
           
     }
@@ -777,6 +836,82 @@ export default class Tamnora {
       
     });
   }
+
+  // Método para resaltar el enlace activo
+  handleNavigation() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('[data-navactive]');
+    navLinks.forEach((link) => {
+      const navactive = link.getAttribute('data-navactive');
+      if (navactive && currentPath === link.getAttribute('href')) {
+        this.setState('navactive', parseInt(navactive, 10));
+        this.applyStyleClassesNavActive();
+      }
+    });
+  }
+
+  // Método para manejar la navegación en la carga de la página
+  handleNavigationOnLoad() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('[data-navactive]');
+    navLinks.forEach((link) => {
+      const navactive = link.getAttribute('data-navactive');
+      if (navactive && currentPath === link.getAttribute('href')) {
+        this.setState('navactive', parseInt(navactive, 10));
+      }
+    });
+  }
+
+  // Vincular elementos del DOM por su ID
+  bindElementsById() {
+    const elementsWithId = document.querySelectorAll('[id]');
+    elementsWithId.forEach((element) => {
+      const id = element.getAttribute('id');
+      this.elementsById[id] = element;
+    });
+  }
+
+  // Acceder a elementos vinculados por su ID y agregar eventos
+  id(id) {
+    const element = this.elementsById[id];
+    if (element) {
+      return {
+        click: (callback) => {
+          element.addEventListener('click', callback);
+        },
+        doubleClick: (callback) => {
+          element.addEventListener('dblclick', callback);
+        },
+        focus: (callback) => {
+          element.addEventListener('focus', callback);
+        },
+        blur: (callback) => {
+          element.addEventListener('blur', callback);
+        },
+        change: (callback) => {
+          element.addEventListener('change', callback);
+        },
+        select: (callback) => {
+          element.addEventListener('select', callback);
+        },
+        input: (callback) => {
+          element.addEventListener('input', callback);
+        },
+        enter: (callback) => {
+          element.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+              callback();
+            }
+          });
+        },
+        // Agregar más eventos aquí según sea necesario
+      };
+    } else {
+      console.error(`Elemento con ID '${id}' no encontrado.`);
+      return null;
+    }
+  }
+  
  
 }
 

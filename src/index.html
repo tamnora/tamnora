@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" href="favicon.png" type="image/png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Home</title>
+  </head>
+    <body class="bg-neutral-900">
+      <div id="app" class="container mx-auto mt-3">
+        <t-navbar  set-titulo='Tamnora ' set-anio="- home"></t-navbar>
+     
+        <div class="container mx-auto mt-5 ">
+          <div class="flex items-end gap-2 mb-2">
+            <div class="flex flex-col ">
+              <label for="nombre"  data-tail="label">Nombre</label>
+              <input type="text" id="nombre" data-tail="input" data-value="nombre" placeholder="Ingrese su nombre" >
+            </div>
+            <div class="flex flex-col ">
+              <label for="apellido" data-tail="label">Apellido</label>
+              <input type="text" id="apellido" data-tail="input" data-value="apellido" placeholder="Ingrese su apellido">
+            </div>
+            <div class="flex flex-col ">
+              <label for="apellido" data-tail="label">Select</label>
+              <select data-value="myselect" data-tail="input">
+                <option value="1">Opción 1</option>
+                <option value="2">Opción 2</option>
+                <option value="3">Opción 3</option>
+              </select>
+            </div>
+            <div class="flex flex-col ">
+              <button data-tail="btn darkRed" data-click="saludar">Click me!</button>
+            </div>
+          </div>
+    
+          <h4 class="text-gray-500">Reactividad:</h4>
+          <div class="flex gap-2 text-pink-500 mb-4">
+            <p class="text-xl" data-value="nombre" ></p>
+            <p class="text-xl" data-value="apellido"></p>
+            <p class="text-xl" data-value="myselect"></p>
+          </div>
+    
+          
+         
+                
+    
+          <t-footer>
+            <div set-slot="algo">
+              <h2 class="text-sm text-pink-300">Hola desde el slot del Footer</h2>
+              <p class="text-sm text-pink-300">Este es el contenido que se incluirá dentro del Footer</p>
+            </div>
+          </div>
+        </t-footer>
+        
+      </div>
+
+      <script type="module" src="./main.js"></script>
+     
+  </body>
+</html>
