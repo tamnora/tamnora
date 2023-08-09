@@ -12,6 +12,7 @@ tmn.setData('empresa', 'Mi Empresa');
 
 //Uso del state en localStorage
 tmn.setState('user', 'Daniel');
+tmn.setState('navactive', 1);
 
 
 console.log('Usuario activo', tmn.getState('user')); // Output: 'Daniel'

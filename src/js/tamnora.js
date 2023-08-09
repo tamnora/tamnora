@@ -4,14 +4,14 @@ import '../../public/style.css';
 
 // Definición de la librería Tamnora
 export default class Tamnora {
-  constructor(definit = {}) {
-    this.data = this.createReactiveProxy(definit.data);
-    this._componentHTML = definit.componentHTML || {};
+  constructor(config = {}) {
+    this.data = this.createReactiveProxy(config.data);
+    this._componentHTML = config.componentHTML || {};
     this.def = {};
     this._styleClasses = {};
     this.functions = {};
     this.templates = {};
-    this.dirComponents = definit.dirComponents ||'../components';
+    this.componentDirectory = config.componentDirectory ||'../components';
     this.elementsById = {};
     this.state = this.loadStateFromLocalStorage();
     this.onMountCallback = null;
@@ -322,7 +322,7 @@ export default class Tamnora {
         const objSlots = {};
         const setSlots = componentDiv.querySelectorAll('[set-slot]');
 
-        await fetch(`${this.dirComponents}/${componentName}.html`)
+        await fetch(`${this.componentDirectory}/${componentName}.html`)
           .then((response) => response.text())
           .then((html) => { 
             this._componentHTML[componentName] = html;
