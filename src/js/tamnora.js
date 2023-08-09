@@ -1,6 +1,3 @@
-import '../../public/style.css';
-
-
 
 // Definición de la librería Tamnora
 export default class Tamnora {
