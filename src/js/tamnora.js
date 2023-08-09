@@ -1,5 +1,5 @@
-
-// Definición de la librería Tamnora
+//tamnorajs
+// Definición de la librería
 export default class Tamnora {
   constructor(config = {}) {
     this.data = this.createReactiveProxy(config.data);
@@ -902,6 +902,31 @@ export default class Tamnora {
             }
           });
         },
+        hover: (enterCallback, leaveCallback) => {
+          element.addEventListener('mouseenter', enterCallback);
+          element.addEventListener('mouseleave', leaveCallback);
+        },
+        keydown: (callback) => {
+          element.addEventListener('keydown', callback);
+        },
+        submit: (callback) => {
+          element.addEventListener('submit', callback);
+        },
+        scroll: (callback) => {
+          element.addEventListener('scroll', callback);
+        },
+        resize: (callback) => {
+          element.addEventListener('resize', callback);
+        },
+        contextMenu: (callback) => {
+          element.addEventListener('contextmenu', callback);
+        },
+        remove: (event, callback) => {
+          element.removeEventListener(event, callback);
+        },
+        html: (content) => {
+          element.innerHTML = content;
+        }
         // Agregar más eventos aquí según sea necesario
       };
     } else {

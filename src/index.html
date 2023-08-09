@@ -4,54 +4,19 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="./images/favicon.png" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>Tamnora JS</title>
     <link rel="stylesheet" href="./css/style.css">
   </head>
-    <body class="bg-neutral-900">
-      <div id="app" class="container mx-auto mt-3">
-        <t-navbar  set-titulo='Tamnora ' set-anio="- home"></t-navbar>
-     
-        <div class="container mx-auto mt-5 ">
-          <div class="flex items-end gap-2 mb-2">
-            <div class="flex flex-col ">
-              <label for="nombre"  data-tail="label">Nombre</label>
-              <input type="text" id="nombre" data-tail="input" data-value="nombre" placeholder="Ingrese su nombre" >
-            </div>
-            <div class="flex flex-col ">
-              <label for="apellido" data-tail="label">Apellido</label>
-              <input type="text" id="apellido" data-tail="input" data-value="apellido" placeholder="Ingrese su apellido">
-            </div>
-            <div class="flex flex-col ">
-              <label for="apellido" data-tail="label">Select</label>
-              <select data-value="myselect" data-tail="input">
-                <option value="1">Opción 1</option>
-                <option value="2">Opción 2</option>
-                <option value="3">Opción 3</option>
-              </select>
-            </div>
-            <div class="flex flex-col ">
-              <button data-tail="btn darkRed" data-click="saludar">Click me!</button>
-            </div>
-          </div>
-    
-          <h4 class="text-gray-500">Reactividad:</h4>
-          <div class="flex gap-2 text-pink-500 mb-4">
-            <p class="text-xl" data-value="nombre" ></p>
-            <p class="text-xl" data-value="apellido"></p>
-            <p class="text-xl" data-value="myselect"></p>
-          </div>
-    
+    <body class="dark:bg-gray-900 antialiased">
+      <div id="app" class="container h-screen mx-auto flex items-center justify-center">
+        <div class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700  h-96 w-96 flex items-center justify-center">
+          <button id="btnToggle" class="relative inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-cyan-500 to-blue-500 group-hover:from-cyan-500 group-hover:to-blue-500 hover:text-white dark:text-white focus:ring-4 focus:outline-none focus:ring-cyan-200 dark:focus:ring-cyan-800">
+            <span class="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                toggle theme
+            </span>
+          </button>
           
-         
-                
-    
-          <t-footer>
-            <div set-slot="algo">
-              <h2 class="text-sm text-pink-300">Hola desde el slot del Footer</h2>
-              <p class="text-sm text-pink-300">Este es el contenido que se incluirá dentro del Footer</p>
-            </div>
-          </div>
-        </t-footer>
+        </div>
         
       </div>
 
