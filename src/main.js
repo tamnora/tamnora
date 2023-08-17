@@ -1,7 +1,13 @@
 import Tamnora from './js/tamnora.js';
+import { runcode } from './js/tsql.js';
 const tmn = new Tamnora();
 tmn.setData('contador', 0);
 
+
+async function consularDatos (){
+    const tr = await runcode("-st users");
+    console.log(tr)
+  };
 
 var themeToggleDarkIcon = document.getElementById('theme-toggle-dark-icon');
 var themeToggleLightIcon = document.getElementById('theme-toggle-light-icon');
@@ -48,10 +54,13 @@ tmn.id('theme-toggle').click(function() {
 })
 
 
-tmn.id('myButton').click(()=>{
+tmn.id('myButton').click(async ()=>{
 
     tmn.data.contador++
-    tmn.id('contador').html(`Valor en ${tmn.data.contador}`)
+    const data = await runcode("-st users");
+    
+    tmn.id('contador').html(`Valor en ${tmn.data.contador}, ${data[0].firstname} ${data[0].lastname}`)
+    
 })
 
 tmn.onMount(() => {

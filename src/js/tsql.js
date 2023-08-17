@@ -1,81 +1,67 @@
 // @ts-nocheck
-const CONNEC_TSQL = 'http://192.168.0.148/distridaf/tsql.php';
-//const CONNEC_TSQL = "http://localhost/data/tsql.php";
+// SERVER
+const CONNEC_TSQL = 'http://distridaf.com.ar/tmn/tsql.php';
+// PC TAMNORA
+// const CONNEC_TSQL = 'http://192.168.0.11/distridaf/tmn/tsql.php';
+// ABAJO
+// const CONNEC_TSQL = 'http://26.52.109.32/distridaf/tsql.php';
+// const CONNEC_TSQL = 'http://192.168.0.148/distridaf/tsql.php';
+// LOCAL
+// const CONNEC_TSQL = "http://localhost/data/tsql.php";
 
-export function createQuerySQL(type, params) {
+function createQuerySQL(type, params) {
 	if (typeof type !== 'string') {
 		throw new Error('type debe ser un string');
 	}
 
-	if (type == 'update' || type == 'delete') {
-		if (!params['w']) {
-			throw new Error("params['w'] debe estar definido dentro del objeto");
-		}
-	}
-
-	if (type == 'update' && !params['d']) {
-		throw new Error("params['d'] debe estar definido dentro del objeto");
+	if (!['select', 'insert', 'update', 'delete'].includes(type)) {
+		throw new Error('type debe ser uno de: select, insert, update, delete');
 	}
 
 	if (!(params instanceof Object)) {
 		throw new Error('params debe ser un objeto');
 	}
 
-	if (!params['t']) {
+	if (!params.t) {
 		throw new Error("params['t'] debe estar definido dentro del objeto");
 	}
 
-	const order = params['o'] || null;
-	const columns = params['c'] || '*';
-	const table = params['t'];
-	const join = params['j'] || null;
-	const data = params['d'] || null;
-	const where = params['w'] || null;
-	const limit = params['l'] || 100;
+	const validColumns = /^\w+(,\s*\w+)*$/;
 
 	let query = '';
 	switch (type) {
 		case 'select':
-			query += `SELECT ${columns} FROM ${table}`;
-			if (join) query += ` ${join}`;
-			if (where) query += ` WHERE ${where}`;
-			if (order) query += ` ORDER BY ${order}`;
-			query += ` LIMIT ${limit}`;
+			const columns = params.c ? (validColumns.test(params.c) ? params.c : '*') : '*';
+			const table = params.t;
+			const join = params.j ? ` ${params.j}` : '';
+			const where = params.w ? ` WHERE ${params.w}` : '';
+			const groupBy = params.g ? ` GROUP BY ${params.g}` : '';
+			const having = params.h ? ` HAVING ${params.h}` : '';
+			const order = params.o ? ` ORDER BY ${params.o}` : '';
+			const limit = params.l ? ` LIMIT ${params.l}` : ' LIMIT 100';
+			query = `SELECT ${columns} FROM ${table}${join}${where}${groupBy}${having}${order}${limit}`;
 			break;
+
 		case 'insert':
-			let columnsInsert = '';
-			let valuesInsert = '';
-			if (data) {
-				let keys = Object.keys(data);
-				for (let i = 0; i < keys.length; i++) {
-					let key = keys[i];
-					let value = data[key] ?? null;
-					columnsInsert += ` ${key},`;
-					if (typeof value === 'string') value = `'${value}'`;
-					valuesInsert += ` ${value},`;
-				}
-				columnsInsert = columnsInsert.slice(0, -1);
-				valuesInsert = valuesInsert.slice(0, -1);
-			}
-			query += `INSERT INTO ${table} (${columnsInsert}) VALUES (${valuesInsert})`;
+			const tableInsert = params.t;
+			const data = params.d || {};
+			const keysInsert = Object.keys(data).join(', ');
+			const valuesInsert = Object.values(data).map(value => (typeof value === 'string' ? `'${value}'` : value)).join(', ');
+			query = `INSERT INTO ${tableInsert} (${keysInsert}) VALUES (${valuesInsert})`;
 			break;
+
 		case 'update':
-			query += `UPDATE ${table} SET`;
-			if (data) {
-				let keys = Object.keys(data);
-				for (let i = 0; i < keys.length; i++) {
-					let key = keys[i];
-					let value = data[key] ?? null;
-					if (typeof value === 'string') value = `'${value}'`;
-					query += ` ${key} = ${value}`;
-					if (i < keys.length - 1) query += ',';
-				}
-			}
-			if (where) query += ` WHERE ${where}`;
+			const tableUpdate = params.t;
+			const dataUpdate = params.d || {};
+			const setData = Object.entries(dataUpdate).map(([key, value]) => `${key} = ${typeof value === 'string' ? `'${value}'` : value}`).join(', ');
+			const whereUpdate = params.w ? ` WHERE ${params.w}` : '';
+			query = `UPDATE ${tableUpdate} SET ${setData}${whereUpdate}`;
 			break;
+
 		case 'delete':
-			query += `DELETE FROM ${table}`;
-			if (where) query += ` WHERE ${where}`;
+			const tableDelete = params.t;
+			const whereDelete = params.w ? ` WHERE ${params.w}` : '';
+			query = `DELETE FROM ${tableDelete}${whereDelete}`;
 			break;
 	}
 
@@ -262,6 +248,7 @@ export async function dbSelect(type, sql) {
 		tsql: codeTSQL(sql)
 	};
 
+	
 	try {
 		const resp = await fetch(CONNEC_TSQL, {
 			method: 'POST',
@@ -276,4 +263,72 @@ export async function dbSelect(type, sql) {
 		const err = [{ resp: 'error', msgError: 'Error al consultar datos!' }];
 		return err;
 	}
+}
+
+export async function runcode(input){
+	let opcion = '';
+	let data = '';
+  const codwords = ['-sl', '-st', '-in', '-up', '-dl'];
+   
+  const lista = [
+        { str: 'select', cod: '-sl' },
+        { str: 'select * from', cod: '-st' },
+        { str: '*', cod: '-kk' },
+        { str: 'from', cod: '-fr' },
+        { str: 'join', cod: '-jn' },
+        { str: 'inner join', cod: '-ij' },
+        { str: 'left join', cod: '-il' },
+        { str: 'right join', cod: '-ir' },
+        { str: 'left', cod: '-lf' },
+        { str: 'right', cod: '-rg' },
+        { str: 'update', cod: '-up' },
+        { str: 'delete', cod: '-dl' },
+        { str: 'insert into', cod: '-in' },
+        { str: 'values', cod: '-va' },
+        { str: 'set', cod: '-se' },
+        { str: 'where', cod: '-wr' },
+        { str: 'as', cod: '->' },
+        { str: 'or', cod: '|' },
+        { str: 'and', cod: '&' },
+        { str: 'order by', cod: '-ob' },
+        { str: 'order', cod: '-od' },
+        { str: 'by', cod: '-yy' },
+        { str: 'desc', cod: '-ds' },
+        { str: 'asc', cod: '-as' },
+        { str: '<', cod: '-me' },
+        { str: '>', cod: '-ma' },
+        { str: '<>', cod: '-mm' },
+        { str: 'group by', cod: '-gb' },
+        { str: 'group', cod: '-gr' },
+        { str: 'having', cod: '-hv' },
+        { str: 'limit', cod: '-lt' },
+        { str: 'like', cod: '-lk' }
+    ];
+    input = input.toLowerCase();
+    
+    for (let keyword of codwords) {
+      if (input.startsWith(keyword)) {
+        lista.forEach(val => {
+          if(val.cod == keyword){
+            opcion = val.str;
+          }
+        })  
+      }
+    }
+    
+    for (let item of lista) {
+      let code = item.cod;
+      let str = item.str;
+    	input = input.split(code).join(str);
+    }
+
+    input = input.replace(/\s+-/g, '-').replace(/-\s+/g, '-');  
+		if(opcion){
+			data = await dbSelect(opcion, input);
+			return data;
+		} else {
+			console.error('No se reconoce la estructura!')
+			return [{resp: 'error', msgError: 'No se reconoce la estructura!'}]
+		}
+   
 }
