@@ -265,6 +265,31 @@ export async function dbSelect(type, sql) {
 	}
 }
 
+export async function login(user, password) {
+	let datos = {
+		user, password
+	};
+  
+	try {
+		const headers = new Headers();
+    headers.append('Content-Type', 'application/json');
+
+    const resp = await fetch('http://192.168.0.148/distridaf/login.php', {
+      method: 'POST',
+      headers: headers,
+      body: JSON.stringify({
+        data: datos
+      })
+    });
+		
+    const result = await resp.json();
+		return result;
+	} catch (error) {
+		const err = [{ resp: 'error', msgError: 'Error al consultar datos!' }];
+		return err;
+	}
+}
+
 export async function runcode(input){
 	let opcion = '';
 	let data = '';

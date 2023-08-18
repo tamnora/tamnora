@@ -55,11 +55,15 @@ tmn.id('theme-toggle').click(function() {
 
 
 tmn.id('myButton').click(async ()=>{
-
-    tmn.data.contador++
-    const data = await runcode("-st users");
     
-    tmn.id('contador').html(`Valor en ${tmn.data.contador}, ${data[0].firstname} ${data[0].lastname}`)
+    tmn.data.contador++
+    const data = await runcode(`-st movimientos -wr id=${tmn.data.contador}`);
+
+    console.log(data)
+    
+    tmn.id('contador').html(`Valor en ${tmn.data.contador}`)
+    tmn.id('titulo').html(`Datos del movimeinto nro ${tmn.data.contador}`)
+    tmn.id('detalle').html(`Realizado el ${data[0].fechahora} como concepto ${data[0].concepto} y por el importe de $ ${data[0].importe}`)
     
 })
 
