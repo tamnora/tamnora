@@ -1,13 +1,5 @@
-// @ts-nocheck
-// SERVER
-const CONNEC_TSQL = 'http://distridaf.com.ar/tmn/tsql.php';
-// PC TAMNORA
-// const CONNEC_TSQL = 'http://192.168.0.11/distridaf/tmn/tsql.php';
-// ABAJO
-// const CONNEC_TSQL = 'http://26.52.109.32/distridaf/tsql.php';
-// const CONNEC_TSQL = 'http://192.168.0.148/distridaf/tsql.php';
-// LOCAL
-// const CONNEC_TSQL = "http://localhost/data/tsql.php";
+const SERVER = import.meta.env.VITE_SERVER;
+
 
 function createQuerySQL(type, params) {
 	if (typeof type !== 'string') {
@@ -250,7 +242,7 @@ export async function dbSelect(type, sql) {
 
 	
 	try {
-		const resp = await fetch(CONNEC_TSQL, {
+		const resp = await fetch(`${SERVER}/tsql.php`, {
 			method: 'POST',
 			body: JSON.stringify({
 				data: datos
@@ -271,12 +263,8 @@ export async function login(user, password) {
 	};
   
 	try {
-		const headers = new Headers();
-    headers.append('Content-Type', 'application/json');
-
-    const resp = await fetch('http://192.168.0.148/distridaf/login.php', {
+    const resp = await fetch(`${SERVER}/login.php`, {
       method: 'POST',
-      headers: headers,
       body: JSON.stringify({
         data: datos
       })
