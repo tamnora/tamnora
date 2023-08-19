@@ -1,22 +1,23 @@
 //tamnorajs
-// Definición de la librería
 export default class Tamnora {
   constructor(config = {}) {
     this.data = this.createReactiveProxy(config.data);
     this._componentHTML = config.componentHTML || {};
     this.def = {};
-    this._styleClasses = {};
+    this._styleClasses = config.styleClasses || {};
     this.functions = {};
     this.templates = {};
+    this.theme = '';
     this.componentDirectory = config.componentDirectory ||'../components';
-    this.elementsById = {};
     this.state = this.loadStateFromLocalStorage();
     this.onMountCallback = null;
     this.initialize();
+    this.darkMode(config.darkMode ?? true);
 
     // Agregar código de manejo de navegación en la carga de la página
     this.handleNavigationOnLoad();
 
+    
     // Escuchar el evento de cambio de historial
     window.addEventListener('popstate', () => {
       this.handleNavigation();
@@ -53,8 +54,6 @@ export default class Tamnora {
     }
   }
 
-
-
   // Inicializa la librería y realiza las vinculaciones necesarias
   initialize() {
     this.bindElementsWithDataValues();
@@ -62,7 +61,6 @@ export default class Tamnora {
     this.bindComponents();
     this.applyStyleClassesNavActive()
     this.bindSubmitEvents();
-    this.bindElementsById();
   }
   
   //Crea un Proxy reactivo para los datos
@@ -98,8 +96,6 @@ export default class Tamnora {
     this.applyStyleClassesNavActive();
     }
   }
-
-  
 
   getData(camino) {
     const propiedades = camino.split('!');
@@ -308,7 +304,7 @@ export default class Tamnora {
       }
     }
 
-    console.log(componentDivs)
+   
 
     const cantComponents = componentDivs.length;
     if (cantComponents) {
@@ -378,7 +374,6 @@ export default class Tamnora {
           this.applyStyleClasses();
           this.applyStyleClassesNavActive();
           this.onDOMContentLoaded();
-          
         }
       });
     } else {
@@ -860,18 +855,9 @@ export default class Tamnora {
     });
   }
 
-  // Vincular elementos del DOM por su ID
-  bindElementsById() {
-    const elementsWithId = document.querySelectorAll('[id]');
-    elementsWithId.forEach((element) => {
-      const id = element.getAttribute('id');
-      this.elementsById[id] = element;
-    });
-  }
-
-  // Acceder a elementos vinculados por su ID y agregar eventos
-  id(id) {
-    const element = this.elementsById[id];
+  // Acceder a elementos vinculados por selector y agregar eventos
+  select(selector) {
+    const element = document.querySelector(selector);
     if (element) {
       return {
         click: (callback) => {
@@ -921,12 +907,22 @@ export default class Tamnora {
         contextMenu: (callback) => {
           element.addEventListener('contextmenu', callback);
         },
-        remove: (event, callback) => {
+        removeEvent: (event, callback) => {
           element.removeEventListener(event, callback);
         },
         html: (content) => {
           element.innerHTML = content;
-        }
+        },
+        addClass: (content) => {
+          element.classList.add(content);
+        },
+        removeClass: (content) => {
+          element.classList.remove(content);
+        },
+        toggleClass: (content) => {
+          element.classList.toggle(content);
+        },
+        value: element
         // Agregar más eventos aquí según sea necesario
       };
     } else {
@@ -934,8 +930,93 @@ export default class Tamnora {
       return null;
     }
   }
+  // Acceder a todos los elementos vinculados por selector y agregar eventos
+  selectAll(selector) {
+    const elements = document.querySelectorAll(selector);
+    return Array.from(elements).map((element) => {
+      return {
+        click: (callback) => {
+          element.addEventListener('click', callback);
+        },
+        doubleClick: (callback) => {
+          element.addEventListener('dblclick', callback);
+        },
+        focus: (callback) => {
+          element.addEventListener('focus', callback);
+        },
+        blur: (callback) => {
+          element.addEventListener('blur', callback);
+        },
+        change: (callback) => {
+          element.addEventListener('change', callback);
+        },
+        select: (callback) => {
+          element.addEventListener('select', callback);
+        },
+        input: (callback) => {
+          element.addEventListener('input', callback);
+        },
+        enter: (callback) => {
+          element.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+              callback();
+            }
+          });
+        },
+        hover: (enterCallback, leaveCallback) => {
+          element.addEventListener('mouseenter', enterCallback);
+          element.addEventListener('mouseleave', leaveCallback);
+        },
+        keydown: (callback) => {
+          element.addEventListener('keydown', callback);
+        },
+        submit: (callback) => {
+          element.addEventListener('submit', callback);
+        },
+        scroll: (callback) => {
+          element.addEventListener('scroll', callback);
+        },
+        resize: (callback) => {
+          element.addEventListener('resize', callback);
+        },
+        contextMenu: (callback) => {
+          element.addEventListener('contextmenu', callback);
+        },
+        removeEvent: (event, callback) => {
+          element.removeEventListener(event, callback);
+        },
+        html: (content) => {
+          element.innerHTML = content;
+        },
+        addClass: (content) => {
+          element.classList.add(content);
+        },
+        removeClass: (content) => {
+          element.classList.remove(content);
+        },
+        toggleClass: (content) => {
+          element.classList.toggle(content);
+        },
+        value: element
+        
+        // ... (otros métodos, igual que en el método selector)
+      };
+    });
+  }
+
+  // Agregar lógica del tema oscuro
+  darkMode(option){
+    if(option){
+      if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        this.theme='dark';
+      } else {
+        document.documentElement.classList.remove('dark');
+        this.theme='light';
+      }
+    }
+  }
   
- 
 }
 
 
