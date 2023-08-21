@@ -95,7 +95,7 @@ export class DataArray {
 		if (!isNaN(parseFloat(value)) && isFinite(value)) {
 			return "number";
 		} else if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/.test(value)) {
-			return "datetime";
+			return "datetime-local";
 		} else if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
 			return "date";
 		} else if (/^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/.test(value)) {

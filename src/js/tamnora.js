@@ -156,7 +156,6 @@ export default class Tamnora {
     
     for (let i = 0; i < propiedades.length - 1; i++) {
       const propiedad = propiedades[i];
-      
       if (valorActual.hasOwnProperty(propiedad)) {
         valorActual = valorActual[propiedad];
       } else {
@@ -247,7 +246,7 @@ export default class Tamnora {
         if (!this.data[dataObj]) {
           this.data[dataObj] = {};
         }
- 
+       
         if (element.type === 'checkbox') {
           element.checked = this.data[dataObj][dataProp] || false;
         } else if (element.tagName === 'SELECT') {
@@ -507,6 +506,149 @@ export default class Tamnora {
     }
   }
 
+  bindData(attribute) {
+    const elementsWithDataValue = document.querySelectorAll(`[data-value="${attribute}"]`);
+    elementsWithDataValue.forEach((element) => {
+      const dataKey = element.getAttribute('data-value');
+      const dataDefaul = element.getAttribute('data-default');
+      const isUpperCase = element.getAttribute('data-UpperCase');
+      let valorDefaul = '';
+
+      if (dataKey.includes('!')) {
+        const [dataObj, dataProp] = dataKey.split('!');
+        if (!this.data[dataObj]) {
+          this.data[dataObj] = {};
+        }
+        
+        if (!this.data[dataObj][dataProp]) {
+          this.data[dataObj][dataProp]="";
+        }
+
+        if(dataDefaul){
+          if(dataDefaul.startsWith('#')){
+            const subcadena = dataDefaul.slice(1);
+            valorDefaul = this.data[subcadena];
+          } else {
+            valorDefaul = dataDefaul
+          }
+
+          if (!this.def[dataObj]) {
+            this.def[dataObj] = {};
+          }
+          
+          if (!this.def[dataObj][dataProp]) {
+            this.def[dataObj][dataProp]="";
+          }
+          this.def[dataObj][dataProp] = valorDefaul;
+          this.data[dataObj][dataProp]= valorDefaul;
+        }
+
+       
+        if (element.tagName === 'SELECT') {
+          
+          const dataObj = dataKey.split('!')[0];
+          this.data[dataObj][dataProp] = element.value;
+    
+          element.addEventListener('change', (event) => {
+            this.data[dataObj][dataProp] = event.target.value;
+          });
+        } else if (element.type === 'checkbox') {
+         
+          if(!this.data[dataObj][dataProp]){
+            this.data[dataObj][dataProp] = false;
+          }
+          element.checked = this.data[dataObj][dataProp] || false;
+          
+          element.addEventListener('change', (event) => {
+            this.data[dataObj][dataProp] = event.target.checked;
+          });
+        }else if (element.tagName === 'INPUT') {
+          element.value = this.data[dataObj][dataProp] || '';
+          
+          if (isUpperCase) {
+            element.addEventListener('input', (event) => {
+              const newValue = event.target.value.toUpperCase();
+              this.data[dataObj][dataProp] = newValue;
+              event.target.value = newValue;
+            });
+          } else {
+            element.addEventListener('input', (event) => {
+              this.data[dataObj][dataProp] = event.target.value;
+            });
+          }
+        } else {
+          element.textContent = this.data[dataObj][dataProp] || '';
+        }
+  
+      } else {
+
+        if(dataDefaul){
+
+          if(dataDefaul.startsWith('#')){
+            const subcadena = dataDefaul.slice(1);
+            valorDefaul = this.data[subcadena];
+          } else {
+            valorDefaul = dataDefaul
+          }
+
+          if (!this.def[dataKey]) {
+            this.def[dataKey] = '';
+          }
+
+          
+          this.def[dataKey] = valorDefaul;
+          this.data[dataKey] = valorDefaul;
+        }
+
+        if (element.tagName === 'SELECT') {
+          this.data[dataKey] = element.value;
+    
+          element.addEventListener('change', (event) => {
+            this.data[dataKey] = event.target.value;
+          });
+        } else if (element.type === 'checkbox') {
+          if(!this.data[dataKey]){
+            this.data[dataKey] = false;
+          }
+          element.checked = this.data[dataKey] || false;
+          
+          element.addEventListener('change', (event) => {
+            this.data[dataKey] = event.target.checked;
+          });
+        } else if (element.tagName === 'INPUT') {
+          element.value = this.data[dataKey] || '';
+          if (isUpperCase) {
+            element.addEventListener('input', (event) => {
+              const newValue = event.target.value.toUpperCase();
+              this.data[dataKey] = newValue;
+              event.target.value = newValue;
+            });
+          } else {
+            element.addEventListener('input', (event) => {
+              this.data[dataKey] = event.target.value;
+            });
+          }
+        } else {
+          element.textContent = this.data[dataKey] || '';
+        }
+      }
+
+    });
+  }
+
+  getNestedPropertyValue(obj, propPath) {
+    const props = propPath.split('.');
+    let value = obj;
+    for (const prop of props) {
+      if (value.hasOwnProperty(prop)) {
+        value = value[prop];
+      } else {
+        return '';
+      }
+    }
+    return value;
+  }
+
   // Vincula los elementos con atributos data-value a los datos reactivos, pero solo dentro del componente
   bindElementsWithDataValues(componentDiv) {
     let elementsWithDataValue;
@@ -626,7 +768,7 @@ export default class Tamnora {
           element.addEventListener('change', (event) => {
             this.data[dataKey] = event.target.checked;
           });
-        }else if (element.tagName === 'INPUT') {
+        } else if (element.tagName === 'INPUT') {
           element.value = this.data[dataKey] || '';
           if (isUpperCase) {
             element.addEventListener('input', (event) => {
