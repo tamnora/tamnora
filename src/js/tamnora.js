@@ -666,6 +666,7 @@ export default class Tamnora {
       const dataDefaul = element.getAttribute('data-default');
       const isUpperCase = element.getAttribute('data-UpperCase');
       let valorDefaul = '';
+     
 
       if (dataKey.includes('!')) {
         const [dataObj, dataProp] = dataKey.split('!');
@@ -717,7 +718,7 @@ export default class Tamnora {
           });
         }else if (element.tagName === 'INPUT') {
           element.value = this.data[dataObj][dataProp] || '';
-          
+         
           if (isUpperCase) {
             element.addEventListener('input', (event) => {
               const newValue = event.target.value.toUpperCase();
@@ -1107,6 +1108,8 @@ export default class Tamnora {
         },
         html: (content) => {
           element.innerHTML = content;
+          this.applyStyleClasses(element);
+          this.bindElementsWithDataValues(element);
         },
         addClass: (content) => {
           element.classList.add(content);
@@ -1182,6 +1185,8 @@ export default class Tamnora {
         },
         html: (content) => {
           element.innerHTML = content;
+          this.applyStyleClasses(element);
+          this.bindElementsWithDataValues(element);
         },
         addClass: (content) => {
           element.classList.add(content);

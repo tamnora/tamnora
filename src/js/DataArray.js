@@ -62,7 +62,7 @@ export class DataArray {
 	// Nuevo método para recorrer y aplicar una función a cada elemento del array
 	forEachItem(callback) {
 		this.dataArray.forEach((item, index) => {
-			callback(index, item);
+			callback(item, index);
 		});
 	}
 
@@ -105,7 +105,16 @@ export class DataArray {
 		}
 		return "text";
 	}
+	
+	// Nuevo método para obtener los nombres de las claves de un objeto
+	getKeys(index){
+		if (this.dataArray[index]) {
+				return Object.keys(this.dataArray[index]);
+		}
+		return [];
+	}
 }
+
 
 
 
