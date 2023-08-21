@@ -30,17 +30,29 @@ async function traerCliente(id){
 };
 
 async function traerMovimientos(id){
-  const rst = await runcode(`-st movimientos -wr id_cliente=${id}`);
-  let tabla = ``
+  const rst = await runcode(`-st movimientos -wr id_cliente=${id} -ob fechahora -ds`);
+  let saldo = 0;
+  let count = 0;
+  
+  movimientos.removeAll();
+
   rst.forEach(row => {
+    count++
     movimientos.addObject(row);
+    saldo = saldo + parseFloat(row.importe)
   })
 
-  console.log(movimientos.getKeys(0))
-  movimientos.forEachItem((row, values)=>{
-    console.log(row, values)
-  })
+  const options = {
+    header:{
 
+    },
+    footer:{
+      importe: saldo, id: count
+    }
+  }
+
+  const tabla = movimientos.newSimpleTable(0, 5);
+  tmn.select('#tabla').html(tabla)
 };
 
 

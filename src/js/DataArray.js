@@ -105,6 +105,44 @@ export class DataArray {
 		}
 		return "text";
 	}
+
+	formatValueByDataType(value) {
+		const dataType = this.detectDataType(value);
+			
+		if(dataType == 'text' && value == null) value= '-';
+			switch (dataType) {
+					case "number":
+							// Formatear número (decimal) con estilo numérico español
+							return parseFloat(value).toLocaleString('es-ES', { maximumFractionDigits: 2 });
+					case "datetime-local":
+							// Formatear fecha y hora
+							const datetime = new Date(value);
+							return datetime.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' }) +
+									' ' + datetime.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+					case "date":
+							// Formatear fecha
+							const date = new Date(value);
+							return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+					// Agregar más casos según los tipos de datos necesarios
+					default:
+							return value;
+			}
+	}
+
+	removeObjectIndex(index) {
+			if (index >= 0 && index < this.dataArray.length) {
+					this.dataArray.splice(index, 1);
+			}
+	}
+
+	removeObjectWhere(condition) {
+			this.dataArray = this.dataArray.filter(item => !condition(item));
+	}
+
+	removeAll() {
+			this.dataArray = [];
+	}
+
 	
 	// Nuevo método para obtener los nombres de las claves de un objeto
 	getKeys(index){
@@ -113,6 +151,115 @@ export class DataArray {
 		}
 		return [];
 	}
+
+	newSimpleTable(desde = 0, hasta = 0, options = {}){
+    let table = ``;
+		let tableHeader = ``;
+		let count = 0;
+		let footer = [];
+		let header = [];
+		let hayMas = false;
+    table += '<table data-tail="table"><thead data-tail="thead">';
+		tableHeader += '<tr>';
+		
+		Object.keys(this.dataArray[0]).forEach(item =>{
+			let tipo = this.detectDataType(this.dataArray[0][item].value);
+			let xheader = options.header[item] ? options.header[item] : '';
+			let xfooter = options.footer[item] ? options.footer[item] : '';
+			console.log(xheader, xfooter)
+			header.push(xheader);
+			footer.push(xfooter);
+			if(tipo == 'number'){
+				tableHeader+=`<th scope="col" class="text-right" data-tail="th">${item}</th>`;
+			} else if(tipo == 'date' || tipo == 'datetime-local') {
+				tableHeader+=`<th scope="col" class="text-left" data-tail="th">${item}</th>`;
+			} else {
+				tableHeader+=`<th scope="col" data-tail="th">${item}</th>`;
+			}
+		})
+
+		tableHeader += `</tr>`
+
+		table += `<tr>`;
+
+		table+=`<tr data-tail="trh">`
+		footer.forEach(value => {
+			let valor = this.formatValueByDataType(value);
+			let tipo = this.detectDataType(value);
+			if(tipo == 'number'){
+				table += `<th class="text-right" data-tail="tdh">${valor}</th>`;
+			} else if(tipo == 'date' || tipo == 'datetime-local') {
+				table += `<th class="text-left" data-tail="tdh">${valor}</th>`;
+			} else {
+				table += `<th data-tail="tdh">${valor}</th>`;
+			}
+		})
+		table+=`</tr>`;
+		table+= tableHeader;
+
+		table +=`</thead><tbody>`;
+		
+		this.dataArray.forEach((items, index) => {
+			if(hasta > desde){
+				if(index >= desde && index <= hasta){
+					table += `<tr data-tail="tr">`;
+					Object.keys(items).forEach(item =>{
+						let tipo = this.detectDataType(items[item].value);
+						let valor = this.formatValueByDataType(items[item].value);
+						if(tipo == 'number'){
+							table += `<td class="text-right" data-tail="td">${valor}</td>`;
+						} else if(tipo == 'date' || tipo == 'datetime-local') {
+							table += `<td class="text-left" data-tail="td">${valor}</td>`;
+						} else {
+							table += `<td data-tail="td">${valor}</td>`;
+						}
+
+					})
+					table += `</tr>`;
+				} else if(index > hasta){
+					hayMas = true;
+
+				}
+			} else {
+				table += `<tr data-tail="tr">`;
+				Object.keys(items).forEach(item =>{
+					let tipo = this.detectDataType(items[item].value);
+					let valor = this.formatValueByDataType(items[item].value);
+					if(tipo == 'number'){
+						table += `<td class="text-right" data-tail="td">${valor}</td>`;
+					} else if(tipo == 'date' || tipo == 'datetime-local') {
+						table += `<td class="text-left" data-tail="td">${valor}</td>`;
+					} else {
+						table += `<td data-tail="td">${valor}</td>`;
+					}
+
+				})
+				table += `</tr>`;
+			}
+			
+		});
+
+    table+=`</tbody>`;
+		table+=`<tfoot><tr class="text-md font-semibold text-gray-900 dark:text-white">`
+		footer.forEach(value => {
+			let valor = this.formatValueByDataType(value);
+			let tipo = this.detectDataType(value);
+			if(tipo == 'number'){
+				table += `<td class="text-right" data-tail="td">${valor}</td>`;
+			} else if(tipo == 'date' || tipo == 'datetime-local') {
+				table += `<td class="text-left" data-tail="td">${valor}</td>`;
+			} else {
+				table += `<td data-tail="td">${valor}</td>`;
+			}
+		})
+		table+=`</tr>`;
+		if(hayMas){
+			table += `<tr><td colspan="${footer.length}" data-tail="td">Hay mas registros</td><tr>`;
+		}
+		table+=`</tfoot></table>`;
+
+    return table;
+  }
 }
 
 

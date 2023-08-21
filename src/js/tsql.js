@@ -1,4 +1,4 @@
-const SERVER = import.meta.env.VITE_SERVER;
+const SERVER = import.meta.env.VITE_SERVER_DEV;
 
 
 function createQuerySQL(type, params) {
