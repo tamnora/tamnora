@@ -281,7 +281,7 @@ export default class Tamnora {
 
     elementsWithClick.forEach((element) => {
       const clickData = element.getAttribute('data-click');
-      const [functionName, params] = clickData.split(',');
+      const [functionName, ...params] = clickData.split(',');
       if(params){
         element.addEventListener('click', () => this.executeFunctionByName(functionName, params));
       } else {
@@ -1110,6 +1110,7 @@ export default class Tamnora {
           element.innerHTML = content;
           this.applyStyleClasses(element);
           this.bindElementsWithDataValues(element);
+          this.bindClickEvents(element);
         },
         addClass: (content) => {
           element.classList.add(content);
@@ -1187,6 +1188,7 @@ export default class Tamnora {
           element.innerHTML = content;
           this.applyStyleClasses(element);
           this.bindElementsWithDataValues(element);
+          this.bindClickEvents(element);
         },
         addClass: (content) => {
           element.classList.add(content);
@@ -1218,6 +1220,4 @@ export default class Tamnora {
   }
   
 }
-
-
 

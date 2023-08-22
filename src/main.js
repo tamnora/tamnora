@@ -7,12 +7,44 @@ import { runcode } from './js/tsql.js';
 const tmn = new Tamnora({styleClasses:styleClass});
 const cliente = new DataObject();
 const movimientos = new DataArray();
+const movSeleccionado = new DataObject();
 
 tmn.setData('contador', 0);
 tmn.setData('cliente', {});
-tmn.setData('movimientos',[]);
+tmn.setData('movimiento',{});
 tmn.setFunction('enviarDatos',()=>{
   console.log(tmn.getData('cliente'));
+})
+
+tmn.setFunction('guardarMovimiento',()=>{
+  console.log(tmn.getData('movimiento'));
+  tmn.select('#modalMovimiento').addClass('hidden');
+  tmn.select('#modalMovimiento').removeClass('flex');
+})
+
+tmn.setFunction('closeModal',(params)=>{
+  let index = params[0];
+  console.log(params[0])
+  tmn.select(params[0]).addClass('hidden');
+  tmn.select(params[0]).removeClass('flex');
+} )
+
+tmn.setFunction('seleccionado',async (params)=>{
+  let index = params[0];
+  movSeleccionado.addObject(movimientos.getDataObjectForKey(index, 'value'));
+  movSeleccionado.setData('id', 'attribute', 'readonly')
+ 
+  movSeleccionado.forEachField((campo, dato)=>{
+    tmn.setDataRoute(`movimiento!${campo}`, dato.value);
+  })
+  
+ 
+  const form2 = await movSeleccionado.newSimpleForm({textSubmit:'Guardar', title:'Movimiento:', bind:'movimiento'});
+  tmn.select('#formMovimiento').html(form2)
+  tmn.select('#modalMovimiento').addClass('flex')
+  tmn.select('#modalMovimiento').removeClass('hidden')
+  
+ 
 })
 
 async function traerCliente(id){
@@ -24,7 +56,7 @@ async function traerCliente(id){
     tmn.setDataRoute(`cliente!${campo}`, dato.value);
   })
   
-  const form = cliente.newSimpleForm({textSubmit:'Enviar Datos', title:'Cliente:'});
+  const form = cliente.newSimpleForm({textSubmit:'Guardar Datos', title:'Cliente:', bind:'cliente'});
   tmn.select('#formCliente').html(form)
 
 };
@@ -51,18 +83,21 @@ async function traerMovimientos(id){
       tipo_oper: {class: 'text-right text-blue-500', value: 'Saldo Pendiente:'},
       importe:{class: 'text-right text-blue-500', value: saldo},
     },
-    footer:{
-      fechahora: {class: 'text-yellow-500', value: count},
-    },
-    function:{
-      importe: (items, valor)=>{
-        let result;
-        if(items.tipo_oper.value > 0 ){
-          result = `<span class="text-red-700 dark:text-red-500"> -${valor}</span>`
-        } else {
-          result = `<span class="text-green-700 dark:text-green-500">${valor}</span>`
+    row:{
+      importe: {
+        change: (items, valor)=>{
+          let result;
+          if(items.tipo_oper.value > 0 ){
+            result = `<span class="text-red-700 dark:text-red-500"> -${valor}</span>`
+          } else {
+            result = `<span class="text-green-700 dark:text-green-500">${valor}</span>`
+          }
+          return result;
         }
-        return result;
+      },
+      id:{
+        click:'seleccionado',
+        class:'text-green-500'
       }
     }
   }

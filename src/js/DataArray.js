@@ -34,25 +34,41 @@ export class DataArray {
 	}
 
 	setDataGroup(index, fieldNames, key, value) {
-		if (this.dataArray[index]) {
+		const id = parseInt(index)
+		if (this.dataArray[id]) {
 			fieldNames.forEach(fieldName => {
-				if (this.dataArray[index][fieldName]) {
-					this.dataArray[index][fieldName][key] = value;
+				if (this.dataArray[id][fieldName]) {
+					this.dataArray[id][fieldName][key] = value;
 				}
 			});
 		}
 	}
 
 	getDataGroup(index, fieldNames, key) {
+		const id = parseInt(index)
 		const dataGroup = {};
-		if (this.dataArray[index]) {
+		if (this.dataArray[id]) {
 			fieldNames.forEach(fieldName => {
-				if (this.dataArray[index][fieldName]) {
-					dataGroup[fieldName] = this.dataArray[index][fieldName][key];
+				if (this.dataArray[id][fieldName]) {
+					dataGroup[fieldName] = this.dataArray[id][fieldName][key];
 				}
 			});
 		}
 		return dataGroup;
+	}
+
+	getDataObjectForIndex(index) {
+		const id = parseInt(index)
+		return this.dataArray[id];
+	}
+
+	getDataObjectForKey(index, key) {
+		const id = parseInt(index)
+		const newObject = {};
+			Object.keys(this.dataArray[id]).forEach(data => {
+				newObject[data] = this.dataArray[id][data][key];
+			})
+		return newObject;
 	}
 
 	getDataAll() {
@@ -158,14 +174,14 @@ export class DataArray {
 		let count = 0;
 		let footer = [];
 		let header = [];
-		let evalue = {};
+		let row = {};
 		let hayMas = false;
     table += '<table data-tail="table"><thead data-tail="thead">';
 		tableHeader += '<tr>';
 		
 		Object.keys(this.dataArray[0]).forEach(item =>{
 			let tipo = this.detectDataType(this.dataArray[0][item].value);
-			let xheader, xfooter, xdata;
+			let xheader, xfooter, xrow;
 
 			if ("header" in options) {
 				xheader = options.header[item] ? options.header[item] : '';
@@ -181,11 +197,12 @@ export class DataArray {
 			}
 			footer.push(xfooter);
 
-			if ("function" in options) {
-				if(options.function[item]){
-					evalue[item] = options.function[item] ? options.function[item] : '';
-				}
-			} 
+			if ("row" in options) {
+				xrow = options.row[item] ? options.row[item] : '';
+			} else {
+				xrow = '';
+			}
+			row[item]= xrow;
 
 			if(tipo == 'number'){
 				tableHeader+=`<th scope="col" class="text-right" data-tail="th">${item}</th>`;
@@ -207,7 +224,6 @@ export class DataArray {
 			let valor = this.formatValueByDataType(ref.value);
 			let tipo = this.detectDataType(ref.value);
 			let xcss = ref.class ? ref.class : '';
-			console.log(xcss)
 			if(tipo == 'number'){
 				table += `<th class="text-right ${xcss}" data-tail="tdh">${valor}</th>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
@@ -225,45 +241,78 @@ export class DataArray {
 			if(hasta > desde){
 				if(index >= desde && index <= hasta){
 					table += `<tr data-tail="tr">`;
-					Object.keys(items).forEach(item =>{
+					
+					Object.keys(items).forEach((item) =>{
 						let value = items[item].value;
 						let tipo = this.detectDataType(value);
 						let valor = this.formatValueByDataType(value);
-						if(evalue[item]){
-							valor = evalue[item](items, valor);
-						
+						let dataClick = '';
+						let newClass = '';
+						if(row[item].change){
+							valor = row[item].change(items, valor);
 						}
 
+						if(row[item].click){
+							dataClick = `data-click="${row[item].click}, ${index}, ${value}" data-tail="tdclick"`;
+						} else {
+							dataClick = `data-tail="td"`;
+						}
+
+						if(row[item].class){
+							newClass = row[item].class;
+						} else {
+							newClass = '';
+						}
 
 						if(tipo == 'number'){
-							table += `<td class="text-right" data-tail="td">${valor}</td>`;
+							table += `<td class="text-right ${newClass}" ${dataClick}>${valor}</td>`;
 						} else if(tipo == 'date' || tipo == 'datetime-local') {
-							table += `<td class="text-left" data-tail="td">${valor}</td>`;
+							table += `<td class="text-left ${newClass}" ${dataClick}>${valor}</td>`;
 						} else {
-							table += `<td data-tail="td">${valor}</td>`;
+							table += `<td class=" ${newClass}" ${dataClick}>${valor}</td>`;
 						}
 
 					})
 					table += `</tr>`;
 				} else if(index > hasta){
 					hayMas = true;
-
 				}
 			} else {
 				table += `<tr data-tail="tr">`;
-				Object.keys(items).forEach(item =>{
-					let tipo = this.detectDataType(items[item].value);
-					let valor = this.formatValueByDataType(items[item].value);
-					if(tipo == 'number'){
-						table += `<td class="text-right" data-tail="td">${valor}</td>`;
-					} else if(tipo == 'date' || tipo == 'datetime-local') {
-						table += `<td class="text-left" data-tail="td">${valor}</td>`;
-					} else {
-						table += `<td data-tail="td">${valor}</td>`;
-					}
+					
+					Object.keys(items).forEach((item, i) =>{
+						let value = items[item].value;
+						let tipo = this.detectDataType(value);
+						let valor = this.formatValueByDataType(value);
+						let dataClick = '';
+						let newClass = '';
+						if(row[item].change){
+							valor = row[item].change(items, valor);
+						}
 
-				})
-				table += `</tr>`;
+						
+						if(row[item].click){
+							dataClick = `data-click="${row[item].click}, ${index}, ${value}" data-tail="tdclick"`;
+						} else {
+							dataClick = `data-tail="td"`;
+						}
+
+						if(row[item].class){
+							newClass = row[item].class;
+						} else {
+							newClass = '';
+						}
+
+						if(tipo == 'number'){
+							table += `<td class="text-right ${newClass}" ${dataClick}>${valor}</td>`;
+						} else if(tipo == 'date' || tipo == 'datetime-local') {
+							table += `<td class="text-left ${newClass}" ${dataClick}>${valor}</td>`;
+						} else {
+							table += `<td class=" ${newClass}" ${dataClick}>${valor}</td>`;
+						}
+
+					})
+					table += `</tr>`;
 			}
 			
 		});

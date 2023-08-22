@@ -71,9 +71,13 @@ export class DataObject {
 
     form += '<div class="grid grid-cols-12 gap-4">';
     this.forEachField((campo, dato)=>{
+      let dataValue='';
+      if(data.bind){
+        dataValue = `data-value="${data.bind}!${campo}"`
+      }
       form += `<div class="col-span-12 md:col-span-3 sm:col-span-6">
       <label for="${campo}" data-tail="label">${campo}</label>
-      <input type="${dato.type}" id="${campo}" data-value="cliente!${campo}" value="${dato.value}" ${dato.attribute}  data-tail="input" >
+      <input type="${dato.type}" id="${campo}" ${dataValue} value="${dato.value}" ${dato.attribute}  data-tail="input" >
     </div>`;
 
     })
