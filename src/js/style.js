@@ -9,7 +9,7 @@ const styleClass = {
   th: "px-6 py-3 select-none text-xs text-gray-700 uppercase dark:text-gray-400",
   tr: "border-b border-gray-200 dark:border-gray-700",
   td: "px-6 py-4 select-none",
-  trh: "text-md font-semibold text-blue-700 dark:text-blue-400",
+  trh: "text-md font-semibold",
   tdh: "px-6 py-2 select-none ",
   tdnumber: "px-6 py-4 text-right",
   darkBlue: "bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700",

@@ -39,19 +39,35 @@ async function traerMovimientos(id){
   rst.forEach(row => {
     count++
     movimientos.addObject(row);
-    saldo = saldo + parseFloat(row.importe)
+    if(row.tipo_oper > 0){
+      saldo = saldo - parseFloat(row.importe)
+    } else {
+      saldo = saldo + parseFloat(row.importe)
+    }
   })
 
   const options = {
     header:{
-
+      tipo_oper: {class: 'text-right text-blue-500', value: 'Saldo Pendiente:'},
+      importe:{class: 'text-right text-blue-500', value: saldo},
     },
     footer:{
-      importe: saldo, id: count
+      fechahora: {class: 'text-yellow-500', value: count},
+    },
+    function:{
+      importe: (items, valor)=>{
+        let result;
+        if(items.tipo_oper.value > 0 ){
+          result = `<span class="text-red-700 dark:text-red-500"> -${valor}</span>`
+        } else {
+          result = `<span class="text-green-700 dark:text-green-500">${valor}</span>`
+        }
+        return result;
+      }
     }
   }
 
-  const tabla = movimientos.newSimpleTable(0, 5);
+  const tabla = movimientos.newSimpleTable(0, 10, options);
   tmn.select('#tabla').html(tabla)
 };
 

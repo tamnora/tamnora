@@ -109,7 +109,7 @@ export class DataArray {
 	formatValueByDataType(value) {
 		const dataType = this.detectDataType(value);
 			
-		if(dataType == 'text' && value == null) value= '-';
+		if(dataType == 'text' && value == null) value= '';
 			switch (dataType) {
 					case "number":
 							// Formatear número (decimal) con estilo numérico español
@@ -158,17 +158,35 @@ export class DataArray {
 		let count = 0;
 		let footer = [];
 		let header = [];
+		let evalue = {};
 		let hayMas = false;
     table += '<table data-tail="table"><thead data-tail="thead">';
 		tableHeader += '<tr>';
 		
 		Object.keys(this.dataArray[0]).forEach(item =>{
 			let tipo = this.detectDataType(this.dataArray[0][item].value);
-			let xheader = options.header[item] ? options.header[item] : '';
-			let xfooter = options.footer[item] ? options.footer[item] : '';
-			console.log(xheader, xfooter)
+			let xheader, xfooter, xdata;
+
+			if ("header" in options) {
+				xheader = options.header[item] ? options.header[item] : '';
+			} else {
+				xheader =  '';
+			}
 			header.push(xheader);
+			
+			if ("footer" in options) {
+				xfooter = options.footer[item] ? options.footer[item] : '';
+			} else {
+				xfooter = '';
+			}
 			footer.push(xfooter);
+
+			if ("function" in options) {
+				if(options.function[item]){
+					evalue[item] = options.function[item] ? options.function[item] : '';
+				}
+			} 
+
 			if(tipo == 'number'){
 				tableHeader+=`<th scope="col" class="text-right" data-tail="th">${item}</th>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
@@ -178,20 +196,24 @@ export class DataArray {
 			}
 		})
 
+		
+
 		tableHeader += `</tr>`
 
 		table += `<tr>`;
 
 		table+=`<tr data-tail="trh">`
-		footer.forEach(value => {
-			let valor = this.formatValueByDataType(value);
-			let tipo = this.detectDataType(value);
+		header.forEach(ref => {
+			let valor = this.formatValueByDataType(ref.value);
+			let tipo = this.detectDataType(ref.value);
+			let xcss = ref.class ? ref.class : '';
+			console.log(xcss)
 			if(tipo == 'number'){
-				table += `<th class="text-right" data-tail="tdh">${valor}</th>`;
+				table += `<th class="text-right ${xcss}" data-tail="tdh">${valor}</th>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				table += `<th class="text-left" data-tail="tdh">${valor}</th>`;
+				table += `<th class="${xcss}" data-tail="tdh">${valor}</th>`;
 			} else {
-				table += `<th data-tail="tdh">${valor}</th>`;
+				table += `<th class="${xcss}" data-tail="tdh">${valor}</th>`;
 			}
 		})
 		table+=`</tr>`;
@@ -204,8 +226,15 @@ export class DataArray {
 				if(index >= desde && index <= hasta){
 					table += `<tr data-tail="tr">`;
 					Object.keys(items).forEach(item =>{
-						let tipo = this.detectDataType(items[item].value);
-						let valor = this.formatValueByDataType(items[item].value);
+						let value = items[item].value;
+						let tipo = this.detectDataType(value);
+						let valor = this.formatValueByDataType(value);
+						if(evalue[item]){
+							valor = evalue[item](items, valor);
+						
+						}
+
+
 						if(tipo == 'number'){
 							table += `<td class="text-right" data-tail="td">${valor}</td>`;
 						} else if(tipo == 'date' || tipo == 'datetime-local') {
@@ -240,16 +269,17 @@ export class DataArray {
 		});
 
     table+=`</tbody>`;
-		table+=`<tfoot><tr class="text-md font-semibold text-gray-900 dark:text-white">`
-		footer.forEach(value => {
-			let valor = this.formatValueByDataType(value);
-			let tipo = this.detectDataType(value);
+		table+=`<tfoot><tr class="text-md font-semibold">`
+		footer.forEach(ref => {
+			let valor = this.formatValueByDataType(ref.value);
+			let tipo = this.detectDataType(ref.value);
+			let xcss = ref.class ? ref.class : '';
 			if(tipo == 'number'){
-				table += `<td class="text-right" data-tail="td">${valor}</td>`;
+				table += `<td class="text-right ${xcss}" data-tail="td">${valor}</td>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				table += `<td class="text-left" data-tail="td">${valor}</td>`;
+				table += `<td class="${xcss}" data-tail="td">${valor}</td>`;
 			} else {
-				table += `<td data-tail="td">${valor}</td>`;
+				table += `<td class="${xcss}" data-tail="td">${valor}</td>`;
 			}
 		})
 		table+=`</tr>`;
