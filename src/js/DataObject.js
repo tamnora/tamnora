@@ -6,6 +6,7 @@ export class DataObject {
       fields.forEach(field => {
       this.camposRegistro[field] = {
         "type": "text",
+        "name": field,
         "required": false,
         "placeholder": "",
         "value": "",
@@ -71,12 +72,13 @@ export class DataObject {
 
     form += '<div class="grid grid-cols-12 gap-4">';
     this.forEachField((campo, dato)=>{
+      console.log(dato)
       let dataValue='';
       if(data.bind){
         dataValue = `data-value="${data.bind}!${campo}"`
       }
       form += `<div class="col-span-12 md:col-span-3 sm:col-span-6">
-      <label for="${campo}" data-tail="label">${campo}</label>
+      <label for="${campo}" data-tail="label">${dato.name}</label>
       <input type="${dato.type}" id="${campo}" ${dataValue} value="${dato.value}" ${dato.attribute}  data-tail="input" >
     </div>`;
 
@@ -102,6 +104,7 @@ export class DataObject {
 				const type = this.detectDataType(value);
 				newObject[fieldName] = {
 					"type": type,
+          "name": fieldName,
 					"required": false,
 					"placeholder": "",
 					"value": value,

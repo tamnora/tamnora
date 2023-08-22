@@ -874,6 +874,10 @@ video {
   background-color: rgb(185 28 28 / var(--tw-bg-opacity));
 }
 
+.bg-slate-800\/50 {
+  background-color: rgb(30 41 59 / 0.5);
+}
+
 .bg-transparent {
   background-color: transparent;
 }
@@ -881,10 +885,6 @@ video {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-slate-800\/50 {
-  background-color: rgb(30 41 59 / 0.5);
 }
 
 .bg-gradient-to-br {

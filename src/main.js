@@ -51,6 +51,16 @@ async function traerCliente(id){
   const tblCliente = await runcode(`-st clientes -wr id_cliente=${id}`);
   cliente.addObject(tblCliente[0]);
   cliente.setData('id_cliente', 'attribute', 'readonly')
+  cliente.setData('id_cliente', 'name', 'ID')
+  cliente.setData('nombre_cliente', 'name', 'Nombre');
+  cliente.setData('telefono_cliente', 'name', 'Teléfono');
+  cliente.setData('email_cliente', 'name', 'Email');
+  cliente.setData('direccion_cliente', 'name', 'Dirección');
+  cliente.setData('status_cliente', 'name', 'Estado');
+  cliente.setData('date_added', 'name', 'Fecha ingreso');
+  
+
+
  
   cliente.forEachField((campo, dato)=>{
     tmn.setDataRoute(`cliente!${campo}`, dato.value);
