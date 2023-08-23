@@ -1108,6 +1108,7 @@ export default class Tamnora {
         },
         html: (content) => {
           element.innerHTML = content;
+          console.log(element)
           this.applyStyleClasses(element);
           this.bindElementsWithDataValues(element);
           this.bindClickEvents(element);
