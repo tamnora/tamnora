@@ -15,7 +15,7 @@ export class DataObject {
         "defaultValue": "",
         "key": "",
         "setDate": 0,
-        "data": []
+        "options": []
       };
     });
     }
@@ -42,6 +42,12 @@ export class DataObject {
     });
   }
 
+  setDataKeys(key, objectNameValue){
+    Object.keys(objectNameValue).forEach((val) => {
+      this.camposRegistro[val][key] = objectNameValue[val];
+    })
+  }
+
   getDataGroup(fieldNames, key) {
     const dataGroup = {};
     fieldNames.forEach(fieldName => {
@@ -63,36 +69,36 @@ export class DataObject {
     }
   }
 
-  newSimpleForm(data = {}){
-    let form = ``;
+  // newSimpleForm(data = {}){
+  //   let form = ``;
 
-    if(data.title){
-      form += `<h6 class="text-normal mb-2 font-bold dark:text-white">${data.title}</h6>`;
-    }
+  //   if(data.title){
+  //     form += `<h6 class="text-normal mb-2 font-bold dark:text-white">${data.title}</h6>`;
+  //   }
 
-    form += '<div class="grid grid-cols-12 gap-4">';
-    this.forEachField((campo, dato)=>{
-      console.log(dato)
-      let dataValue='';
-      if(data.bind){
-        dataValue = `data-value="${data.bind}!${campo}"`
-      }
-      form += `<div class="col-span-12 md:col-span-3 sm:col-span-6">
-      <label for="${campo}" data-tail="label">${dato.name}</label>
-      <input type="${dato.type}" id="${campo}" ${dataValue} value="${dato.value}" ${dato.attribute}  data-tail="input" >
-    </div>`;
+  //   form += '<div class="grid grid-cols-12 gap-4">';
+  //   this.forEachField((campo, dato)=>{
+  
+  //     let dataValue='';
+  //     if(data.bind){
+  //       dataValue = `data-value="${data.bind}!${campo}"`
+  //     }
+  //     form += `<div class="col-span-12 md:col-span-3 sm:col-span-6">
+  //     <label for="${campo}" data-tail="label">${dato.name}</label>
+  //     <input type="${dato.type}" id="${campo}" ${dataValue} value="${dato.value}" ${dato.attribute}  data-tail="input" >
+  //   </div>`;
 
-    })
+  //   })
 
-    form+=`</div>`
+  //   form+=`</div>`
 
-    if(data.textSubmit){
-      form+=`<div class="flex items-center justify-end p-3">
-    <button type="submit" data-tail="btn2">${data.textSubmit}</button>
-    </div>`
-    }
-    return form;
-  }
+  //   if(data.textSubmit){
+  //     form+=`<div class="flex items-center justify-end p-3">
+  //   <button type="submit" data-tail="btn2">${data.textSubmit}</button>
+  //   </div>`
+  //   }
+  //   return form;
+  // }
 
 	// Nuevo método para agregar objetos al array y completar campos
 	addObject(dataObject) {
@@ -113,7 +119,7 @@ export class DataObject {
 					"defaultValue": "",
 					"key": "",
 					"setDate": 0,
-					"data": []
+					"options": []
 				};
 			}
 		}
@@ -136,4 +142,68 @@ export class DataObject {
 		}
 		return "text";
 	}
+
+  newSimpleForm(data = {}) {
+    let form = ``;
+    
+    if (data.title) {
+      form += `<h6 class="text-normal mb-2 font-bold dark:text-white">${data.title}</h6>`;
+    }
+  
+    form += '<div class="grid grid-cols-12 gap-4">';
+    this.forEachField((campo, dato) => {
+      let fieldElement = '';
+      let dataValue = '';
+      if (data.bind) {
+        dataValue = `data-value="${data.bind}!${campo}"`;
+      }
+  
+      if (dato.type === 'select') {
+        const options = dato.options.map(option =>{
+          if(option.value == dato.value){
+            return `<option value="${option.value}" selected>${option.label}</option>`
+          } else {
+            return `<option value="${option.value}">${option.label}</option>`
+          }
+        }).join('');
+        
+        fieldElement = `
+        <div class="col-span-12 md:col-span-3 sm:col-span-6">
+          <label for="${campo}" data-tail="label">${dato.name}</label>
+          <select id="${campo}" ${dataValue} data-tail="select">
+            ${options}
+          </select>
+        </div>`;
+      } else if (dato.type === 'checkbox') {
+        fieldElement = `
+          <div class="col-span-12 md:col-span-3 sm:col-span-6">
+            <input type="checkbox" id="${campo}" ${dataValue} data-tail="checkbox" ${dato.value ? 'checked' : ''}>
+            <label for="${campo}">${dato.name}</label>
+          </div>
+        `;
+      } else {
+        
+        fieldElement = `
+          <div class="col-span-12 md:col-span-3 sm:col-span-6">
+            <label for="${campo}" data-tail="label">${dato.name}</label>
+            <input type="${dato.type}" id="${campo}" ${dataValue} value="${dato.value}" ${dato.attribute}  data-tail="input">
+          </div>
+        `;
+      }
+  
+      form += fieldElement;
+    });
+  
+    form += `</div>`;
+  
+    if (data.textSubmit) {
+      form += `<div class="flex items-center justify-end p-3">
+        <button type="submit" data-tail="btn2">${data.textSubmit}</button>
+      </div>`;
+    }
+    return form;
+  }
+
+
+
 }

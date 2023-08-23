@@ -5,6 +5,7 @@ export class DataArray {
 			fields.forEach(field => {
 				newItem[field] = {
 					"type": "text",
+					"name": field,
 					"required": false,
 					"placeholder": "",
 					"value": "",
@@ -75,6 +76,15 @@ export class DataArray {
 		return this.dataArray;
 	}
 
+	setDataKeys(key, objectNameValue){
+		this.dataArray.forEach((item, index) => {
+			Object.keys(objectNameValue).forEach((val) => {
+			  this.dataArray[index][val][key] = objectNameValue[val];
+			})
+			
+		});
+  }
+
 	// Nuevo método para recorrer y aplicar una función a cada elemento del array
 	forEachItem(callback) {
 		this.dataArray.forEach((item, index) => {
@@ -91,6 +101,7 @@ export class DataArray {
 				const type = this.detectDataType(value);
 				newObject[fieldName] = {
 					"type": type,
+					"name": fieldName,
 					"required": false,
 					"placeholder": "",
 					"value": value,
@@ -181,7 +192,9 @@ export class DataArray {
 		
 		Object.keys(this.dataArray[0]).forEach(item =>{
 			let tipo = this.detectDataType(this.dataArray[0][item].value);
-			let xheader, xfooter, xrow;
+			let xheader, xfooter, xrow, xname;
+
+			xname = this.dataArray[0][item].name;
 
 			if ("header" in options) {
 				xheader = options.header[item] ? options.header[item] : '';
@@ -205,11 +218,11 @@ export class DataArray {
 			row[item]= xrow;
 
 			if(tipo == 'number'){
-				tableHeader+=`<th scope="col" class="text-right" data-tail="th">${item}</th>`;
+				tableHeader+=`<th scope="col" class="text-right" data-tail="th">${xname}</th>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				tableHeader+=`<th scope="col" class="text-left" data-tail="th">${item}</th>`;
+				tableHeader+=`<th scope="col" class="text-left" data-tail="th">${xname}</th>`;
 			} else {
-				tableHeader+=`<th scope="col" data-tail="th">${item}</th>`;
+				tableHeader+=`<th scope="col" data-tail="th">${xname}</th>`;
 			}
 		})
 

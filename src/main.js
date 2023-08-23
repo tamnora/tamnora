@@ -33,6 +33,7 @@ tmn.setFunction('seleccionado',async (params)=>{
   let index = params[0];
   movSeleccionado.addObject(movimientos.getDataObjectForKey(index, 'value'));
   movSeleccionado.setData('id', 'attribute', 'readonly')
+  movSeleccionado.setDataKeys('name', {id_cliente: 'ID Cliente', id_factura: 'ID Factura'})
  
   movSeleccionado.forEachField((campo, dato)=>{
     tmn.setDataRoute(`movimiento!${campo}`, dato.value);
@@ -51,15 +52,13 @@ async function traerCliente(id){
   const tblCliente = await runcode(`-st clientes -wr id_cliente=${id}`);
   cliente.addObject(tblCliente[0]);
   cliente.setData('id_cliente', 'attribute', 'readonly')
-  cliente.setData('id_cliente', 'name', 'ID')
-  cliente.setData('nombre_cliente', 'name', 'Nombre');
-  cliente.setData('telefono_cliente', 'name', 'Teléfono');
-  cliente.setData('email_cliente', 'name', 'Email');
-  cliente.setData('direccion_cliente', 'name', 'Dirección');
-  cliente.setData('status_cliente', 'name', 'Estado');
-  cliente.setData('date_added', 'name', 'Fecha ingreso');
-  
+  cliente.setData('date_added', 'attribute', 'readonly');
+  cliente.setData('status_cliente', 'type', 'select');
+  cliente.setData('status_cliente', 'options', [{value: 0, label: 'Inactivo'}, {value:1, label:'Activo'}]);
 
+  cliente.setDataKeys('name', {id_cliente: 'ID', nombre_cliente: 'Nombre', telefono_cliente: 'Teléfono', 
+  email_cliente: 'Email', direccion_cliente: 'Dirección', status_cliente: 'Status', date_added: 'Fecha Ingreso'});
+  
 
  
   cliente.forEachField((campo, dato)=>{
@@ -88,6 +87,8 @@ async function traerMovimientos(id){
     }
   })
 
+  movimientos.setDataKeys('name', {fechahora: 'Fecha y Hora', tipo_oper: 'Operación'});
+
   const options = {
     header:{
       tipo_oper: {class: 'text-right text-blue-500', value: 'Saldo Pendiente:'},
@@ -102,6 +103,14 @@ async function traerMovimientos(id){
           } else {
             result = `<span class="text-green-700 dark:text-green-500">${valor}</span>`
           }
+          return result;
+        }
+      },
+      tipo_oper:{
+        change:(items, valor)=>{
+          let result;
+          const tipos = ['venta', 'cobro'];
+          result = tipos[valor]
           return result;
         }
       },
