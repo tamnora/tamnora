@@ -192,22 +192,27 @@ export class DataArray {
 		
 		Object.keys(this.dataArray[0]).forEach(item =>{
 			let tipo = this.detectDataType(this.dataArray[0][item].value);
-			let xheader, xfooter, xrow, xname;
+			let xheader = {}; 
+			let xfooter = {}; 
+			let xrow, xname, xattribute;
 
+			xattribute = this.dataArray[0][item].attribute? this.dataArray[0][item].attribute : '';
 			xname = this.dataArray[0][item].name;
 
 			if ("header" in options) {
-				xheader = options.header[item] ? options.header[item] : '';
-			} else {
-				xheader =  '';
-			}
-			header.push(xheader);
-			
+				xheader = options.header[item] ? options.header[item] : {};
+			} 
+
 			if ("footer" in options) {
-				xfooter = options.footer[item] ? options.footer[item] : '';
-			} else {
-				xfooter = '';
+				xfooter = options.footer[item] ? options.footer[item] : {};
+			} 
+
+			if(xattribute){
+				xheader.attribute = xattribute;
+				xfooter.attribute = xattribute;
 			}
+
+			header.push(xheader);
 			footer.push(xfooter);
 
 			if ("row" in options) {
@@ -218,11 +223,11 @@ export class DataArray {
 			row[item]= xrow;
 
 			if(tipo == 'number'){
-				tableHeader+=`<th scope="col" class="text-right" data-tail="th">${xname}</th>`;
+				tableHeader+=`<th scope="col" ${xattribute} class="text-right" data-tail="th">${xname}</th>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				tableHeader+=`<th scope="col" class="text-left" data-tail="th">${xname}</th>`;
+				tableHeader+=`<th scope="col" ${xattribute} class="text-left" data-tail="th">${xname}</th>`;
 			} else {
-				tableHeader+=`<th scope="col" data-tail="th">${xname}</th>`;
+				tableHeader+=`<th scope="col" ${xattribute} data-tail="th">${xname}</th>`;
 			}
 		})
 
@@ -237,12 +242,13 @@ export class DataArray {
 			let valor = this.formatValueByDataType(ref.value);
 			let tipo = this.detectDataType(ref.value);
 			let xcss = ref.class ? ref.class : '';
+			let xattribute = ref.attribute? ref.attribute : '';
 			if(tipo == 'number'){
-				table += `<th class="text-right ${xcss}" data-tail="tdh">${valor}</th>`;
+				table += `<th ${xattribute} class="text-right ${xcss}" data-tail="tdh">${valor}</th>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				table += `<th class="${xcss}" data-tail="tdh">${valor}</th>`;
+				table += `<th ${xattribute} class="${xcss}" data-tail="tdh">${valor}</th>`;
 			} else {
-				table += `<th class="${xcss}" data-tail="tdh">${valor}</th>`;
+				table += `<th ${xattribute} class="${xcss}" data-tail="tdh">${valor}</th>`;
 			}
 		})
 		table+=`</tr>`;
@@ -256,11 +262,14 @@ export class DataArray {
 					table += `<tr data-tail="tr">`;
 					
 					Object.keys(items).forEach((item) =>{
+						let xattribute = this.dataArray[index][item].attribute? this.dataArray[index][item].attribute : '';
 						let value = items[item].value;
 						let tipo = this.detectDataType(value);
 						let valor = this.formatValueByDataType(value);
 						let dataClick = '';
 						let newClass = '';
+
+						
 						if(row[item].change){
 							valor = row[item].change(items, valor);
 						}
@@ -278,11 +287,11 @@ export class DataArray {
 						}
 
 						if(tipo == 'number'){
-							table += `<td class="text-right ${newClass}" ${dataClick}>${valor}</td>`;
+							table += `<td ${xattribute} class="text-right ${newClass}" ${dataClick}>${valor}</td>`;
 						} else if(tipo == 'date' || tipo == 'datetime-local') {
-							table += `<td class="text-left ${newClass}" ${dataClick}>${valor}</td>`;
+							table += `<td ${xattribute} class="text-left ${newClass}" ${dataClick}>${valor}</td>`;
 						} else {
-							table += `<td class=" ${newClass}" ${dataClick}>${valor}</td>`;
+							table += `<td ${xattribute} class=" ${newClass}" ${dataClick}>${valor}</td>`;
 						}
 
 					})
@@ -336,12 +345,13 @@ export class DataArray {
 			let valor = this.formatValueByDataType(ref.value);
 			let tipo = this.detectDataType(ref.value);
 			let xcss = ref.class ? ref.class : '';
+			let xattribute = ref.attribute? ref.attribute : '';
 			if(tipo == 'number'){
-				table += `<td class="text-right ${xcss}" data-tail="td">${valor}</td>`;
+				table += `<td ${xattribute} class="text-right ${xcss}" data-tail="td">${valor}</td>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				table += `<td class="${xcss}" data-tail="td">${valor}</td>`;
+				table += `<td ${xattribute} class="${xcss}" data-tail="td">${valor}</td>`;
 			} else {
-				table += `<td class="${xcss}" data-tail="td">${valor}</td>`;
+				table += `<td ${xattribute} class="${xcss}" data-tail="td">${valor}</td>`;
 			}
 		})
 		table+=`</tr>`;

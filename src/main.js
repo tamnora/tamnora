@@ -24,16 +24,17 @@ tmn.setFunction('guardarMovimiento',()=>{
 
 tmn.setFunction('closeModal',(params)=>{
   let index = params[0];
-  console.log(params[0])
   tmn.select(params[0]).addClass('hidden');
   tmn.select(params[0]).removeClass('flex');
 } )
 
-tmn.setFunction('seleccionado',async (params)=>{
+tmn.setFunction('seleccionado',async(params)=>{
   let index = params[0];
   movSeleccionado.addObject(movimientos.getDataObjectForKey(index, 'value'));
   movSeleccionado.setData('id', 'attribute', 'readonly')
   movSeleccionado.setDataKeys('name', {id_cliente: 'ID Cliente', id_factura: 'ID Factura'})
+  movSeleccionado.setData('tipo_oper', 'type', 'select');
+  movSeleccionado.setData('tipo_oper', 'options', [{value: 0, label: 'Venta'}, {value:1, label:'Cobro'}]);
  
   movSeleccionado.forEachField((campo, dato)=>{
     tmn.setDataRoute(`movimiento!${campo}`, dato.value);
@@ -88,6 +89,7 @@ async function traerMovimientos(id){
   })
 
   movimientos.setDataKeys('name', {fechahora: 'Fecha y Hora', tipo_oper: 'Operación'});
+  movimientos.setDataKeys('attribute', {id_cliente: 'hidden'});
 
   const options = {
     header:{

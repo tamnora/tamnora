@@ -147,7 +147,7 @@ export class DataObject {
     let form = ``;
     
     if (data.title) {
-      form += `<h6 class="text-normal mb-2 font-bold dark:text-white">${data.title}</h6>`;
+      form += `<h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">${data.title}</h3>`;
     }
   
     form += '<div class="grid grid-cols-12 gap-4">';
