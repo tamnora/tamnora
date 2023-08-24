@@ -175,8 +175,11 @@ export function prepararSQL(tabla, json) {
 
 		if (!comprobation.length) {
 			for (const key in json) {
+				console.log(key, json[key].value)
 				if (json[key].key == 'primary') {
-					if (typeInput == 'integer') {
+					typeInput = json[key].type;
+	
+					if (typeInput == 'integer' || typeInput == 'number') {
 						where = `${key} = ${json[key].value}`;
 						keyPrimary = parseInt(json[key].value);
 					} else {
@@ -186,14 +189,24 @@ export function prepararSQL(tabla, json) {
 					tipoSQL = json[key].value == 0 ? 'insert' : 'update';
 				} else {
 					typeInput = json[key].type;
-					if (typeInput == 'integer') {
-						if (json[key].value) {
-							elValor = parseInt(json[key].value);
+
+					if (typeInput == 'integer' || typeInput == 'number') {
+						if (json[key].value > 0) {
+							if(json[key].value > 0){
+								elValor = parseFloat(json[key].value);
+							} else {
+								elValor = json[key].value;
+							}
 						} else {
-							elValor = null;
+							if(json[key].value == 0){
+								elValor = 0;
+							} else {
+								elValor = null;
+							}
 						}
+						
 					} else if (typeInput == 'currency') {
-						if (json[key].value) {
+						if (json[key].value != '') {
 							elValor = parseFloat(json[key].value);
 						} else {
 							elValor = null;
@@ -201,19 +214,18 @@ export function prepararSQL(tabla, json) {
 					} else {
 						elValor = json[key].value;
 					}
-					//console.log(elValor);
 					dataForSave[key] = elValor;
 				}
 			}
 
-			console.log(dataForSave);
+			// console.log(dataForSave);
 			sql = createQuerySQL(tipoSQL, {
 				t: tabla,
 				w: where,
 				d: dataForSave
 			});
 
-			console.log(sql);
+			// console.log(sql);
 			respuesta = {
 				status: 1,
 				tipo: tipoSQL,
@@ -252,6 +264,7 @@ export async function dbSelect(type, sql) {
 		const result = await resp.json();
 		return result;
 	} catch (error) {
+		console.log(error)
 		const err = [{ resp: 'error', msgError: 'Error al consultar datos!' }];
 		return err;
 	}

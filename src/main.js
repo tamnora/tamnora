@@ -2,7 +2,7 @@ import Tamnora from './js/tamnora.js';
 import { styleClass } from './js/style.js';
 import { DataObject } from './js/DataObject';
 import { DataArray } from './js/DataArray';
-import { runcode } from './js/tsql.js';
+import { runcode, prepararSQL, dbSelect } from './js/tsql.js';
 
 const tmn = new Tamnora({styleClasses:styleClass});
 const cliente = new DataObject();
@@ -12,8 +12,25 @@ const movSeleccionado = new DataObject();
 tmn.setData('contador', 0);
 tmn.setData('cliente', {});
 tmn.setData('movimiento',{});
-tmn.setFunction('enviarDatos',()=>{
-  console.log(tmn.getData('cliente'));
+
+tmn.setFunction('enviarDatos',async ()=>{
+  const datos = tmn.getData('cliente');
+  Object.keys(datos).forEach(val => {
+    let valor = datos[val];
+    if (!isNaN(parseFloat(datos[val])) && isFinite(datos[val])) {
+      valor = parseFloat(datos[val])
+    } 
+    cliente.setData(val, 'value', valor)
+  })
+
+  const paraSQL = cliente.getDataAll();
+
+  const resp = prepararSQL('clientes', paraSQL);
+  
+  if(resp.status == 1){
+    await dbSelect(resp.tipo, resp.sql).then(val => console.log(val))
+  }
+
 })
 
 tmn.setFunction('guardarMovimiento',()=>{
@@ -31,8 +48,9 @@ tmn.setFunction('closeModal',(params)=>{
 tmn.setFunction('seleccionado',async(params)=>{
   let index = params[0];
   movSeleccionado.addObject(movimientos.getDataObjectForKey(index, 'value'));
-  movSeleccionado.setData('id', 'attribute', 'readonly')
-  movSeleccionado.setDataKeys('name', {id_cliente: 'ID Cliente', id_factura: 'ID Factura'})
+  movSeleccionado.setData('id', 'attribute', 'readonly');
+  movSeleccionado.setData('concepto', 'column', 12);
+  movSeleccionado.setDataKeys('name', {id_cliente: 'ID Cliente', id_factura: 'ID Factura'});
   movSeleccionado.setData('tipo_oper', 'type', 'select');
   movSeleccionado.setData('tipo_oper', 'options', [{value: 0, label: 'Venta'}, {value:1, label:'Cobro'}]);
  
@@ -41,7 +59,7 @@ tmn.setFunction('seleccionado',async(params)=>{
   })
   
  
-  const form2 = await movSeleccionado.newSimpleForm({textSubmit:'Guardar', title:'Movimiento:', bind:'movimiento'});
+  const form2 = await movSeleccionado.newSimpleForm({textSubmit:'Guardar', title:'Movimiento:', bind:'movimiento', columns:{md:6, lg:6}});
   tmn.select('#formMovimiento').html(form2)
   tmn.select('#modalMovimiento').addClass('flex')
   tmn.select('#modalMovimiento').removeClass('hidden')
@@ -52,7 +70,8 @@ tmn.setFunction('seleccionado',async(params)=>{
 async function traerCliente(id){
   const tblCliente = await runcode(`-st clientes -wr id_cliente=${id}`);
   cliente.addObject(tblCliente[0]);
-  cliente.setData('id_cliente', 'attribute', 'readonly')
+  cliente.setData('id_cliente', 'attribute', 'readonly');
+  cliente.setData('id_cliente', 'key', 'primary');
   cliente.setData('date_added', 'attribute', 'readonly');
   cliente.setData('status_cliente', 'type', 'select');
   cliente.setData('status_cliente', 'options', [{value: 0, label: 'Inactivo'}, {value:1, label:'Activo'}]);

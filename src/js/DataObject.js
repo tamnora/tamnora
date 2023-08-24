@@ -10,7 +10,7 @@ export class DataObject {
         "required": false,
         "placeholder": "",
         "value": "",
-        "column": 1,
+        "column": 0,
         "attribute": 0,
         "defaultValue": "",
         "key": "",
@@ -114,7 +114,7 @@ export class DataObject {
 					"required": false,
 					"placeholder": "",
 					"value": value,
-					"column": 1,
+					"column": 0,
 					"attribute": 0,
 					"defaultValue": "",
 					"key": "",
@@ -145,18 +145,52 @@ export class DataObject {
 
   newSimpleForm(data = {}) {
     let form = ``;
+    let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'
     
     if (data.title) {
       form += `<h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">${data.title}</h3>`;
     }
+
+    
+
+    if ("columns" in data){
+      columns = `col-span-12 sm:col-span-${data.columns.sm ?? 6} 
+      md:col-span-${data.columns.md ?? 4} 
+      lg:col-span-${data.columns.lg ?? 3}`
+     
+    }
+
   
     form += '<div class="grid grid-cols-12 gap-4">';
     this.forEachField((campo, dato) => {
       let fieldElement = '';
       let dataValue = '';
+      let colspan = '';
+
       if (data.bind) {
         dataValue = `data-value="${data.bind}!${campo}"`;
       }
+
+      if('column' in dato){
+        if(typeof dato.column === 'object'){
+          colspan = 'col-span-12 ';
+          if(dato.column.sm > 0) colspan += `sm:col-span-${dato.column.sm} `;
+          if(dato.column.md > 0) colspan += `md:col-span-${dato.column.md} `;
+          if(dato.column.lg > 0) colspan += `lg:col-span-${dato.column.lg} `;
+          if(dato.column.xl > 0) colspan += `xl:col-span-${dato.column.xl} `;
+          console.log(colspan)
+        } else {
+          if(dato.column > 0){
+            colspan = `col-span-${dato.column}`
+          } else {
+            colspan = columns
+          }
+        }
+      }else{
+        colspan = columns
+      }
+
+      
   
       if (dato.type === 'select') {
         const options = dato.options.map(option =>{
@@ -168,7 +202,7 @@ export class DataObject {
         }).join('');
         
         fieldElement = `
-        <div class="col-span-12 md:col-span-3 sm:col-span-6">
+        <div class="${colspan}">
           <label for="${campo}" data-tail="label">${dato.name}</label>
           <select id="${campo}" ${dataValue} data-tail="select">
             ${options}
@@ -176,7 +210,7 @@ export class DataObject {
         </div>`;
       } else if (dato.type === 'checkbox') {
         fieldElement = `
-          <div class="col-span-12 md:col-span-3 sm:col-span-6">
+          <div class="${colspan}">
             <input type="checkbox" id="${campo}" ${dataValue} data-tail="checkbox" ${dato.value ? 'checked' : ''}>
             <label for="${campo}">${dato.name}</label>
           </div>
@@ -184,7 +218,7 @@ export class DataObject {
       } else {
         
         fieldElement = `
-          <div class="col-span-12 md:col-span-3 sm:col-span-6">
+          <div class="${colspan}">
             <label for="${campo}" data-tail="label">${dato.name}</label>
             <input type="${dato.type}" id="${campo}" ${dataValue} value="${dato.value}" ${dato.attribute}  data-tail="input">
           </div>
@@ -203,7 +237,6 @@ export class DataObject {
     }
     return form;
   }
-
 
 
 }
