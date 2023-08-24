@@ -17,18 +17,14 @@ tmn.setFunction('enviarDatos',async ()=>{
   const datos = tmn.getData('cliente');
   Object.keys(datos).forEach(val => {
     let valor = datos[val];
-    if (!isNaN(parseFloat(datos[val])) && isFinite(datos[val])) {
-      valor = parseFloat(datos[val])
-    } 
     cliente.setData(val, 'value', valor)
   })
 
   const paraSQL = cliente.getDataAll();
-
-  const resp = prepararSQL('clientes', paraSQL);
+  const send = prepararSQL('clientes', paraSQL);
   
-  if(resp.status == 1){
-    await dbSelect(resp.tipo, resp.sql).then(val => console.log(val))
+  if(send.status == 1){
+    await dbSelect(send.tipo, send.sql).then(val => console.log(val))
   }
 
 })

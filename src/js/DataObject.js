@@ -23,7 +23,12 @@ export class DataObject {
 
   setData(fieldName, key, value) {
     if (this.camposRegistro[fieldName]) {
-      this.camposRegistro[fieldName][key] = value;
+      if(!isNaN(parseFloat(value)) && isFinite(value)){
+        this.camposRegistro[fieldName][key] = parseFloat(value)
+      } else {
+        this.camposRegistro[fieldName][key] = value;
+
+      }
     }
   }
 
