@@ -12,6 +12,7 @@ export class DataObject {
         "value": "",
         "column": 0,
         "attribute": 0,
+        "pattern": '',
         "defaultValue": "",
         "key": "",
         "setDate": 0,
@@ -27,6 +28,9 @@ export class DataObject {
         this.camposRegistro[fieldName][key] = parseFloat(value)
       } else {
         this.camposRegistro[fieldName][key] = value;
+        if(value == 'currency'){
+          this.camposRegistro[fieldName].pattern = "[0-9.,]*";
+        }
 
       }
     }
@@ -121,6 +125,7 @@ export class DataObject {
 					"value": value,
 					"column": 0,
 					"attribute": 0,
+          "pattern": '',
 					"defaultValue": "",
 					"key": "",
 					"setDate": 0,
@@ -171,10 +176,22 @@ export class DataObject {
       let fieldElement = '';
       let dataValue = '';
       let colspan = '';
+      let esrequired = '';
+      let pattern = '';
 
       if (data.bind) {
         dataValue = `data-value="${data.bind}!${campo}"`;
       }
+
+      if(dato.required == true){
+        esrequired = 'required';
+      }
+
+      if(dato.pattern != ''){
+        pattern = `pattern="${dato.pattern}"`;
+      }
+
+     
 
       if('column' in dato){
         if(typeof dato.column === 'object'){
@@ -209,15 +226,22 @@ export class DataObject {
         fieldElement = `
         <div class="${colspan}">
           <label for="${campo}" data-tail="label">${dato.name}</label>
-          <select id="${campo}" ${dataValue} data-tail="select">
+          <select id="${campo}" ${dataValue} data-tail="select" ${esrequired}>
             ${options}
           </select>
         </div>`;
       } else if (dato.type === 'checkbox') {
         fieldElement = `
           <div class="${colspan}">
-            <input type="checkbox" id="${campo}" ${dataValue} data-tail="checkbox" ${dato.value ? 'checked' : ''}>
+            <input type="checkbox" id="${campo}" ${dataValue}  ${esrequired} data-tail="checkbox" ${dato.value ? 'checked' : ''}>
             <label for="${campo}">${dato.name}</label>
+          </div>
+        `;
+      } else if (dato.type === 'currency'){
+        fieldElement = `
+          <div class="${colspan}">
+            <label for="${campo}" data-tail="label">${dato.name}</label>
+            <input type="text" data-change="currency" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} data-tail="input">
           </div>
         `;
       } else {
@@ -225,7 +249,7 @@ export class DataObject {
         fieldElement = `
           <div class="${colspan}">
             <label for="${campo}" data-tail="label">${dato.name}</label>
-            <input type="${dato.type}" id="${campo}" ${dataValue} value="${dato.value}" ${dato.attribute}  data-tail="input">
+            <input type="${dato.type}" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} data-tail="input">
           </div>
         `;
       }

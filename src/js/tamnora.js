@@ -290,6 +290,29 @@ export default class Tamnora {
     });
   }
 
+  bindChangeEvents(componentDiv) {
+    let elementsWithClick;
+    if(componentDiv){
+      elementsWithClick = componentDiv.querySelectorAll('[data-change]');
+    } else {
+      elementsWithClick = document.querySelectorAll('[data-change]');
+    }
+
+    elementsWithClick.forEach((element) => {
+      const clickData = element.getAttribute('data-change');
+      const [functionName, ...params] = clickData.split(',');
+      if(functionName == 'currency'){
+        element.addEventListener('change', (e)=>{this.currency(e.target.value, e)});
+      } else {
+        if(params){
+          element.addEventListener('change', () => this.executeFunctionByName(functionName, params));
+        } else {
+          element.addEventListener('change', () => this.executeFunctionByName(functionName));
+        }
+      }
+    });
+  }
+
   async bindComponents() {
     // Obtener todos los elementos del DOM
     const allElements = document.getElementsByTagName('*');
@@ -1108,10 +1131,10 @@ export default class Tamnora {
         },
         html: (content) => {
           element.innerHTML = content;
-          console.log(element)
           this.applyStyleClasses(element);
           this.bindElementsWithDataValues(element);
           this.bindClickEvents(element);
+          this.bindChangeEvents(element);
         },
         addClass: (content) => {
           element.classList.add(content);
@@ -1190,6 +1213,7 @@ export default class Tamnora {
           this.applyStyleClasses(element);
           this.bindElementsWithDataValues(element);
           this.bindClickEvents(element);
+          this.bindChangeEvents(element);
         },
         addClass: (content) => {
           element.classList.add(content);
@@ -1218,6 +1242,64 @@ export default class Tamnora {
         this.theme='light';
       }
     }
+  }
+
+  currency(value, element){
+    let newValue = this.formatNumber(value, 2, 'en');
+    element.target.value = newValue;
+    this.setDataRoute(element.target.dataset.value, newValue);
+  }
+
+  formatNumber(str, dec = 2, leng = 'es', mixto = false) {
+    if (!str) {
+      str = '0.00t';
+    } else {
+      str = str + 't';
+    }
+  
+    let numero = str.replace(/[^0-9.,]/g, '');
+    let signo = numero.replace(/[^.,]/g, '');
+    let count = numero.split(/[.,]/).length - 1;
+    let xNumero = numero.replace(/[.,]/g, ',').split(',');
+    let ultimoValor = xNumero.length - 1;
+    let xDecimal = xNumero[ultimoValor];
+  
+    let numeroFinal = '';
+    let resultado = '';
+  
+    xNumero.forEach((parte, index) => {
+      if (index == ultimoValor) {
+        numeroFinal += `${parte}`;
+      } else if (index == ultimoValor - 1) {
+        numeroFinal += `${parte}.`;
+      } else {
+        numeroFinal += `${parte}`;
+      }
+    });
+  
+    if (dec > 0) {
+      numeroFinal = parseFloat(numeroFinal).toFixed(dec);
+    } else {
+      numeroFinal = `${Math.round(parseFloat(numeroFinal))}`;
+    }
+  
+    if (leng == 'en') {
+      resultado = numeroFinal;
+    } else {
+      resultado = new Intl.NumberFormat('de-DE', { minimumFractionDigits: dec }).format(
+        parseFloat(numeroFinal)
+      );
+    }
+  
+    if (mixto) {
+      let sep = leng == 'en' ? '.' : ',';
+      let umo = resultado.split(sep);
+      if (parseInt(umo[1]) == 0) {
+        resultado = umo[0];
+      }
+    }
+  
+    return resultado;
   }
   
 }

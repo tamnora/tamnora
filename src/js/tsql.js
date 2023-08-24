@@ -175,7 +175,7 @@ export function prepararSQL(tabla, json) {
 
 		if (!comprobation.length) {
 			for (const key in json) {
-				console.log(key, json[key].value)
+				//console.log(key, json[key].value)
 				if (json[key].key == 'primary') {
 					typeInput = json[key].type;
 	

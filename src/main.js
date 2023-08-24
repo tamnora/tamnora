@@ -29,10 +29,25 @@ tmn.setFunction('enviarDatos',async ()=>{
 
 })
 
-tmn.setFunction('guardarMovimiento',()=>{
-  console.log(tmn.getData('movimiento'));
-  tmn.select('#modalMovimiento').addClass('hidden');
-  tmn.select('#modalMovimiento').removeClass('flex');
+tmn.setFunction('guardarMovimiento',async()=>{
+  const datos = tmn.getData('movimiento');
+  Object.keys(datos).forEach(val => {
+    let valor = datos[val];
+    movSeleccionado.setData(val, 'value', valor)
+  })
+
+   const paraSQL = movSeleccionado.getDataAll();
+   const send = prepararSQL('movimientos', paraSQL);
+  
+  if(send.status == 1){
+    await dbSelect(send.tipo, send.sql).then(val => {
+      console.log(val);
+      traerMovimientos(tmn.data.contador);
+      tmn.select('#modalMovimiento').addClass('hidden');
+      tmn.select('#modalMovimiento').removeClass('flex');
+    })
+  }
+  
 })
 
 tmn.setFunction('closeModal',(params)=>{
@@ -44,9 +59,12 @@ tmn.setFunction('closeModal',(params)=>{
 tmn.setFunction('seleccionado',async(params)=>{
   let index = params[0];
   movSeleccionado.addObject(movimientos.getDataObjectForKey(index, 'value'));
+  movSeleccionado.setData('id', 'key', 'primary');
   movSeleccionado.setData('id', 'attribute', 'readonly');
   movSeleccionado.setData('concepto', 'column', 12);
   movSeleccionado.setDataKeys('name', {id_cliente: 'ID Cliente', id_factura: 'ID Factura'});
+  movSeleccionado.setData('importe', 'type', 'currency');
+  movSeleccionado.setData('importe', 'required', true);
   movSeleccionado.setData('tipo_oper', 'type', 'select');
   movSeleccionado.setData('tipo_oper', 'options', [{value: 0, label: 'Venta'}, {value:1, label:'Cobro'}]);
  
@@ -54,7 +72,7 @@ tmn.setFunction('seleccionado',async(params)=>{
     tmn.setDataRoute(`movimiento!${campo}`, dato.value);
   })
   
- 
+  
   const form2 = await movSeleccionado.newSimpleForm({textSubmit:'Guardar', title:'Movimiento:', bind:'movimiento', columns:{md:6, lg:6}});
   tmn.select('#formMovimiento').html(form2)
   tmn.select('#modalMovimiento').addClass('flex')
