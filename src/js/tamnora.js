@@ -1156,6 +1156,12 @@ export default class Tamnora {
         toggleClass: (content) => {
           element.classList.toggle(content);
         },
+        classRefresh: ()=>{
+          this.applyStyleClasses(element);
+          this.bindElementsWithDataValues(element);
+          this.bindClickEvents(element);
+          this.bindChangeEvents(element);
+        },
         value: element
         // Agregar más eventos aquí según sea necesario
       };

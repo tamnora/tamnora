@@ -176,8 +176,8 @@ function verTabla(){
     }
   }
 
-  const tabla = tableMovimientos.newSimpleTable(options);
-  tmn.select('#tabla').html(tabla)
+  const tabla = tableMovimientos.newSimpleTable('#tabla',options);
+  tmn.select('#tabla').classRefresh();
  
 }
 

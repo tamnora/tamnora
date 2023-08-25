@@ -4,6 +4,8 @@ export class DataArray {
 		this.recordsPerView = 10;
 		this.paginations = true;
 		this.nameArray = '';
+		this.tableOptions = {};
+		this.tableElement = '';
 		this.dataArray = initialData.map(item => {
 			const newItem = {};
 			fields.forEach(field => {
@@ -183,7 +185,16 @@ export class DataArray {
 		return [];
 	}
 
-	newSimpleTable(options = {}){
+	newSimpleTable(elem, options = {}){
+		let element;
+
+		if(!this.tableElement){
+			element = document.querySelector(elem);
+			this.tableElement = element;
+		} else {
+			element = this.tableElement;
+		}
+		this.tableOptions = options;
     let table = ``;
 		let tableHeader = ``;
 		let count = 0;
@@ -479,22 +490,43 @@ export class DataArray {
 		}
 
 	
-
+		element.innerHTML = table;
+		this.bindClickPaginations(element);
     return table;
   }
 
-	paginations(value){
-		let pos = this.from;
-		let cant = this.recordsPerView;
+	bindClickPaginations(componentDiv) {
+    let elementsWithClick;
+    if(componentDiv){
+      elementsWithClick = componentDiv.querySelectorAll('[data-pagination]');
+    } else {
+      elementsWithClick = document.querySelectorAll('[data-pagination]');
+    }
+
+    elementsWithClick.forEach((element) => {
+      const action = element.getAttribute('data-pagination');
+      
+      element.addEventListener('click', () => {
+				let pos = this.from;
+				let cant = this.recordsPerView;
+			
+				if(action == 'next'){
+					pos = pos + cant;
+					this.from = pos;
+					this.newSimpleTable(this.tableElement, this.tableOptions);
+					console.log(pos);
+				} else {
+					pos = pos - cant;
+					this.from = pos;
+					this.newSimpleTable(this.tableElement, this.tableOptions);
+					console.log(pos);
+				}
+			});
+      
+    });
+  }
+
 	
-		if(value == 'next'){
-			pos = pos + cant;
-			console.log(pos);
-		} else {
-			pos = pos - cant;
-			console.log(pos);
-		}
-	}
 
 }
 
