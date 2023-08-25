@@ -189,7 +189,7 @@ export function prepararSQL(tabla, json) {
 					tipoSQL = json[key].value == 0 ? 'insert' : 'update';
 				} else {
 					typeInput = json[key].type;
-
+					// console.log(typeInput, json[key].value)
 					if (typeInput == 'integer' || typeInput == 'number') {
 						if (json[key].value > 0) {
 							if(json[key].value > 0){
@@ -212,7 +212,11 @@ export function prepararSQL(tabla, json) {
 							elValor = null;
 						}
 					} else {
-						elValor = json[key].value;
+						if (json[key].value != '') {
+							elValor = json[key].value;
+						} else {
+							elValor = null;
+						}
 					}
 					dataForSave[key] = elValor;
 				}

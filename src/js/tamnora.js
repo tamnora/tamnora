@@ -87,7 +87,6 @@ export default class Tamnora {
     return new Proxy(data, recursiveHandler);
   }
 
-
   setClass(name, styleClass){
     if(name && styleClass){
       this.styleClasses[name] = styleClass;
@@ -108,8 +107,20 @@ export default class Tamnora {
         return undefined; // Si la propiedad no existe, retornamos undefined
       }
     }
-  
     return valorActual;
+  }
+
+  existData(camino){
+    const propiedades = camino.split('!');
+    let valorActual = this.data;
+    let existe = false;
+  
+    for (let propiedad of propiedades) {
+      if (valorActual.hasOwnProperty(propiedad)) {
+        existe = true;
+      } 
+    }
+    return existe;
   }
 
   getDef(camino) {

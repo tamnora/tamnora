@@ -1,5 +1,9 @@
 export class DataArray {
 	constructor(fields, initialData = []) {
+		this.from = 1;
+		this.recordsPerView = 10;
+		this.paginations = true;
+		this.nameArray = '';
 		this.dataArray = initialData.map(item => {
 			const newItem = {};
 			fields.forEach(field => {
@@ -179,22 +183,36 @@ export class DataArray {
 		return [];
 	}
 
-	newSimpleTable(desde = 0, hasta = 0, options = {}){
+	newSimpleTable(options = {}){
     let table = ``;
 		let tableHeader = ``;
 		let count = 0;
+		let desde = 0;
+		let hasta = 0;
+		let recordsPerView = 0;
 		let footer = [];
 		let header = [];
-		let row = {};
+		let field = {};
+		let xRow = {};
 		let hayMas = false;
+		let hayMenos = false;
     table += '<table data-tail="table"><thead data-tail="thead">';
 		tableHeader += '<tr>';
+
+		if ("row" in options) {
+			xRow = options.row;
+		}
+
+				desde = this.from > 0 ? this.from : 1;
+				recordsPerView = this.recordsPerView;
+				hasta = desde + this.recordsPerView - 1;
+			
 		
 		Object.keys(this.dataArray[0]).forEach(item =>{
 			let tipo = this.detectDataType(this.dataArray[0][item].value);
 			let xheader = {}; 
 			let xfooter = {}; 
-			let xrow, xname, xattribute;
+			let xfield, xname, xattribute;
 
 			xattribute = this.dataArray[0][item].attribute? this.dataArray[0][item].attribute : '';
 			xname = this.dataArray[0][item].name;
@@ -205,7 +223,7 @@ export class DataArray {
 
 			if ("footer" in options) {
 				xfooter = options.footer[item] ? options.footer[item] : {};
-			} 
+			}
 
 			if(xattribute){
 				xheader.attribute = xattribute;
@@ -215,12 +233,12 @@ export class DataArray {
 			header.push(xheader);
 			footer.push(xfooter);
 
-			if ("row" in options) {
-				xrow = options.row[item] ? options.row[item] : '';
+			if ("field" in options) {
+				xfield = options.field[item] ? options.field[item] : '';
 			} else {
-				xrow = '';
+				xfield = '';
 			}
-			row[item]= xrow;
+			field[item]= xfield;
 
 			if(tipo == 'number'){
 				tableHeader+=`<th scope="col" ${xattribute} class="text-right" data-tail="th">${xname}</th>`;
@@ -257,10 +275,37 @@ export class DataArray {
 		table +=`</thead><tbody>`;
 		
 		this.dataArray.forEach((items, index) => {
-			if(hasta > desde){
-				if(index >= desde && index <= hasta){
-					table += `<tr data-tail="tr">`;
-					
+			count++;
+			if(this.paginations){
+				if((index + 1) < desde){
+					hayMenos = true;
+				} else if((index + 1) >= desde && (index + 1) <= hasta){
+					let actionClick = '';
+					let actionClass = '';
+					if('click' in xRow){
+						if(xRow.click.function && xRow.click.field){
+							actionClick =	`data-click="${xRow.click.function}, ${index}, ${items[xRow.click.field].value}" `;
+							actionClass =	'cursor-pointer';
+						} else {
+							console.error('row.click.function',xRow.click.function);
+							console.error('row.click.field', xRow.click.field);
+						}
+					}
+
+					if('class' in xRow){
+						if('alternative' in xRow.class){
+							if(index % 2 === 0){
+								table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.normal} ${actionClass}">`;
+							} else {
+								table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.alternative} ${actionClass}">`;
+							}
+						} else {
+							table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.normal} ${actionClass}">`;
+						}
+					} else {
+						table += `<tr ${actionClick} data-tail="tr" class="${actionClass}">`;
+					}
+
 					Object.keys(items).forEach((item) =>{
 						let xattribute = this.dataArray[index][item].attribute? this.dataArray[index][item].attribute : '';
 						let value = items[item].value;
@@ -270,18 +315,18 @@ export class DataArray {
 						let newClass = '';
 
 						
-						if(row[item].change){
-							valor = row[item].change(items, valor);
+						if(field[item].change){
+							valor = field[item].change(items, valor);
 						}
 
-						if(row[item].click){
-							dataClick = `data-click="${row[item].click}, ${index}, ${value}" data-tail="tdclick"`;
+						if(field[item].click){
+							dataClick = `data-click="${field[item].click}, ${index}, ${value}" data-tail="tdclick"`;
 						} else {
 							dataClick = `data-tail="td"`;
 						}
 
-						if(row[item].class){
-							newClass = row[item].class;
+						if(field[item].class){
+							newClass = field[item].class;
 						} else {
 							newClass = '';
 						}
@@ -296,46 +341,72 @@ export class DataArray {
 
 					})
 					table += `</tr>`;
-				} else if(index > hasta){
+				} else if((index + 1) > hasta){
 					hayMas = true;
 				}
 			} else {
-				table += `<tr data-tail="tr">`;
+					let actionClick = '';
+					let actionClass = '';
+					if('click' in xRow){
+						if(xRow.click.function && xRow.click.field){
+							actionClick =	`data-click="${xRow.click.function}, ${index}, ${items[xRow.click.field].value}" `;
+							actionClass =	'cursor-pointer';
+						} else {
+							console.error('row.click.function',xRow.click.function);
+							console.error('row.click.field', xRow.click.field);
+						}
+					}
+
+					if('class' in xRow){
+						if('alternative' in xRow.class){
+							if(index % 2 === 0){
+								table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.normal} ${actionClass}">`;
+							} else {
+								table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.alternative} ${actionClass}">`;
+							}
+						} else {
+							table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.normal} ${actionClass}">`;
+						}
+					} else {
+						table += `<tr ${actionClick} data-tail="tr" class="${actionClass}">`;
+					}
+
+				Object.keys(items).forEach((item) =>{
+					let xattribute = this.dataArray[index][item].attribute? this.dataArray[index][item].attribute : '';
+					let value = items[item].value;
+					let tipo = this.detectDataType(value);
+					let valor = this.formatValueByDataType(value);
+					let dataClick = '';
+					let newClass = '';
+
 					
-					Object.keys(items).forEach((item, i) =>{
-						let value = items[item].value;
-						let tipo = this.detectDataType(value);
-						let valor = this.formatValueByDataType(value);
-						let dataClick = '';
-						let newClass = '';
-						if(row[item].change){
-							valor = row[item].change(items, valor);
-						}
+					if(field[item].change){
+						valor = field[item].change(items, valor);
+					}
 
-						
-						if(row[item].click){
-							dataClick = `data-click="${row[item].click}, ${index}, ${value}" data-tail="tdclick"`;
-						} else {
-							dataClick = `data-tail="td"`;
-						}
+					if(field[item].click){
+						dataClick = `data-click="${field[item].click}, ${index}, ${value}" data-tail="tdclick"`;
+					} else {
+						dataClick = `data-tail="td"`;
+					}
 
-						if(row[item].class){
-							newClass = row[item].class;
-						} else {
-							newClass = '';
-						}
+					if(field[item].class){
+						newClass = field[item].class;
+					} else {
+						newClass = '';
+					}
 
-						if(tipo == 'number'){
-							table += `<td class="text-right ${newClass}" ${dataClick}>${valor}</td>`;
-						} else if(tipo == 'date' || tipo == 'datetime-local') {
-							table += `<td class="text-left ${newClass}" ${dataClick}>${valor}</td>`;
-						} else {
-							table += `<td class=" ${newClass}" ${dataClick}>${valor}</td>`;
-						}
+					if(tipo == 'number'){
+						table += `<td ${xattribute} class="text-right ${newClass}" ${dataClick}>${valor}</td>`;
+					} else if(tipo == 'date' || tipo == 'datetime-local') {
+						table += `<td ${xattribute} class="text-left ${newClass}" ${dataClick}>${valor}</td>`;
+					} else {
+						table += `<td ${xattribute} class=" ${newClass}" ${dataClick}>${valor}</td>`;
+					}
 
-					})
-					table += `</tr>`;
-			}
+				})
+				table += `</tr>`;
+			} //fin
 			
 		});
 
@@ -355,13 +426,76 @@ export class DataArray {
 			}
 		})
 		table+=`</tr>`;
-		if(hayMas){
-			table += `<tr><td colspan="${footer.length}" data-tail="td">Hay mas registros</td><tr>`;
-		}
+		// if(hayMas){
+		// 	table += `<tr><td colspan="${footer.length}" data-tail="td">Hay mas registros</td><tr>`;
+		// }
 		table+=`</tfoot></table>`;
+
+		if(hayMas || hayMenos){
+			if(count < hasta){
+				hasta = count;
+			}
+			let buttons = {
+				prev:{
+					class:'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white',
+				  click:`data-pagination="prev"`
+				}, 
+				next:{
+					class:'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white',
+				  click:`data-pagination="next"`
+				}
+			}
+			
+			
+			if(hayMas == true && hayMenos == false){
+				buttons.prev.click = '';
+				buttons.prev.class = 'bg-gray-100 text-gray-400  dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600';
+			} else if(hayMas == false && hayMenos == true){
+				buttons.next.click = '';
+				buttons.next.class = 'bg-gray-100 text-gray-400  dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600';
+			}
+
+			table+=`<div class="flex flex-col items-center pb-3">
+			<!-- Help text -->
+			<span class="text-sm text-gray-700 dark:text-gray-400">
+					Registro <span class="font-semibold text-gray-900 dark:text-white">${desde}</span> al <span class="font-semibold text-gray-900 dark:text-white">${hasta }</span> (total: <span class="font-semibold text-gray-900 dark:text-white">${count}</span> registros)
+			</span>
+			<div class="inline-flex mt-2 xs:mt-0">
+				<!-- Buttons -->
+				<button ${buttons.prev.click} class="flex items-center justify-center px-3 h-8 text-sm font-medium ${buttons.prev.class} rounded-l ">
+						<svg class="w-3.5 h-3.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
+						</svg>
+						Prev
+				</button>
+				<button ${buttons.next.click} class="flex items-center justify-center px-3 h-8 text-sm font-medium ${buttons.next.class} border-0 border-l  rounded-r ">
+						Next
+						<svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+					</svg>
+				</button>
+			</div>
+		</div>`
+		}
+
+	
 
     return table;
   }
+
+	paginations(value){
+		let pos = this.from;
+		let cant = this.recordsPerView;
+	
+		if(value == 'next'){
+			pos = pos + cant;
+			console.log(pos);
+		} else {
+			pos = pos - cant;
+			console.log(pos);
+		}
+	}
+
 }
 
 
