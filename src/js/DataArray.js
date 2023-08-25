@@ -6,6 +6,18 @@ export class DataArray {
 		this.nameArray = '';
 		this.tableOptions = {};
 		this.tableElement = '';
+		this.functions = {};
+		this.tableClass = {
+			table: "w-full text-sm text-left text-gray-500 dark:text-gray-400",
+			thead: "bg-white dark:bg-gray-800 text-gray-700  dark:text-gray-400",
+			th: "px-6 py-3 select-none text-xs text-gray-700 uppercase dark:text-gray-400",
+			tr: "border-b border-gray-200 dark:border-gray-700",
+			td: "px-6 py-3 select-none",
+			tdclick: "px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400",
+			trh: "text-md font-semibold",
+			tdh: "px-6 py-2 select-none ",
+			tdnumber: "px-6 py-4 text-right",
+		};
 		this.dataArray = initialData.map(item => {
 			const newItem = {};
 			fields.forEach(field => {
@@ -32,6 +44,14 @@ export class DataArray {
 			this.dataArray[index][fieldName][key] = value;
 		}
 	}
+
+	getFunction(){
+    console.log(this.functions);
+  }
+
+  setFunction(name, fn){
+    this.functions[name] = fn
+  }
 
 	getData(index, fieldName, key) {
 		if (this.dataArray[index] && this.dataArray[index][fieldName]) {
@@ -207,7 +227,7 @@ export class DataArray {
 		let xRow = {};
 		let hayMas = false;
 		let hayMenos = false;
-    table += '<table data-tail="table"><thead data-tail="thead">';
+    table += `<table class="${this.tableClass.table}"><thead class="${this.tableClass.thead}">`;
 		tableHeader += '<tr>';
 
 		if ("row" in options) {
@@ -252,11 +272,11 @@ export class DataArray {
 			field[item]= xfield;
 
 			if(tipo == 'number'){
-				tableHeader+=`<th scope="col" ${xattribute} class="text-right" data-tail="th">${xname}</th>`;
+				tableHeader+=`<th scope="col" ${xattribute} class="text-right ${this.tableClass.th}" >${xname}</th>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				tableHeader+=`<th scope="col" ${xattribute} class="text-left" data-tail="th">${xname}</th>`;
+				tableHeader+=`<th scope="col" ${xattribute} class="text-left ${this.tableClass.th}" >${xname}</th>`;
 			} else {
-				tableHeader+=`<th scope="col" ${xattribute} data-tail="th">${xname}</th>`;
+				tableHeader+=`<th scope="col" ${xattribute} class="${this.tableClass.th}">${xname}</th>`;
 			}
 		})
 
@@ -266,18 +286,18 @@ export class DataArray {
 
 		table += `<tr>`;
 
-		table+=`<tr data-tail="trh">`
+		table+=`<tr class="${this.tableClass.trh}">`
 		header.forEach(ref => {
 			let valor = this.formatValueByDataType(ref.value);
 			let tipo = this.detectDataType(ref.value);
 			let xcss = ref.class ? ref.class : '';
 			let xattribute = ref.attribute? ref.attribute : '';
 			if(tipo == 'number'){
-				table += `<th ${xattribute} class="text-right ${xcss}" data-tail="tdh">${valor}</th>`;
+				table += `<th ${xattribute} class="text-right ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				table += `<th ${xattribute} class="${xcss}" data-tail="tdh">${valor}</th>`;
+				table += `<th ${xattribute} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
 			} else {
-				table += `<th ${xattribute} class="${xcss}" data-tail="tdh">${valor}</th>`;
+				table += `<th ${xattribute} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
 			}
 		})
 		table+=`</tr>`;
@@ -306,15 +326,15 @@ export class DataArray {
 					if('class' in xRow){
 						if('alternative' in xRow.class){
 							if(index % 2 === 0){
-								table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.normal} ${actionClass}">`;
+								table += `<tr ${actionClick} class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
 							} else {
-								table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.alternative} ${actionClass}">`;
+								table += `<tr ${actionClick} class="${this.tableClass.tr} ${xRow.class.alternative} ${actionClass}">`;
 							}
 						} else {
-							table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.normal} ${actionClass}">`;
+							table += `<tr ${actionClick} class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
 						}
 					} else {
-						table += `<tr ${actionClick} data-tail="tr" class="${actionClass}">`;
+						table += `<tr ${actionClick} class="${this.tableClass.tr} ${actionClass}">`;
 					}
 
 					Object.keys(items).forEach((item) =>{
@@ -331,9 +351,9 @@ export class DataArray {
 						}
 
 						if(field[item].click){
-							dataClick = `data-click="${field[item].click}, ${index}, ${value}" data-tail="tdclick"`;
+							dataClick = `data-click="${field[item].click}, ${index}, ${value}"`;
 						} else {
-							dataClick = `data-tail="td"`;
+							dataClick = ``;
 						}
 
 						if(field[item].class){
@@ -343,11 +363,11 @@ export class DataArray {
 						}
 
 						if(tipo == 'number'){
-							table += `<td ${xattribute} class="text-right ${newClass}" ${dataClick}>${valor}</td>`;
+							table += `<td ${xattribute} class="text-right ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 						} else if(tipo == 'date' || tipo == 'datetime-local') {
-							table += `<td ${xattribute} class="text-left ${newClass}" ${dataClick}>${valor}</td>`;
+							table += `<td ${xattribute} class="text-left ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 						} else {
-							table += `<td ${xattribute} class=" ${newClass}" ${dataClick}>${valor}</td>`;
+							table += `<td ${xattribute} class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 						}
 
 					})
@@ -371,15 +391,15 @@ export class DataArray {
 					if('class' in xRow){
 						if('alternative' in xRow.class){
 							if(index % 2 === 0){
-								table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.normal} ${actionClass}">`;
+								table += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
 							} else {
-								table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.alternative} ${actionClass}">`;
+								table += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.alternative} ${actionClass}">`;
 							}
 						} else {
-							table += `<tr ${actionClick} data-tail="tr" class="${xRow.class.normal} ${actionClass}">`;
+							table += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
 						}
 					} else {
-						table += `<tr ${actionClick} data-tail="tr" class="${actionClass}">`;
+						table += `<tr ${actionClick}  class="${this.tableClass.tr} ${actionClass}">`;
 					}
 
 				Object.keys(items).forEach((item) =>{
@@ -396,9 +416,9 @@ export class DataArray {
 					}
 
 					if(field[item].click){
-						dataClick = `data-click="${field[item].click}, ${index}, ${value}" data-tail="tdclick"`;
+						dataClick = `data-click="${field[item].click}, ${index}, ${value}" `;
 					} else {
-						dataClick = `data-tail="td"`;
+						dataClick = ``;
 					}
 
 					if(field[item].class){
@@ -408,11 +428,11 @@ export class DataArray {
 					}
 
 					if(tipo == 'number'){
-						table += `<td ${xattribute} class="text-right ${newClass}" ${dataClick}>${valor}</td>`;
+						table += `<td ${xattribute} class="text-right ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 					} else if(tipo == 'date' || tipo == 'datetime-local') {
-						table += `<td ${xattribute} class="text-left ${newClass}" ${dataClick}>${valor}</td>`;
+						table += `<td ${xattribute} class="text-left ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 					} else {
-						table += `<td ${xattribute} class=" ${newClass}" ${dataClick}>${valor}</td>`;
+						table += `<td ${xattribute} class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 					}
 
 				})
@@ -429,11 +449,11 @@ export class DataArray {
 			let xcss = ref.class ? ref.class : '';
 			let xattribute = ref.attribute? ref.attribute : '';
 			if(tipo == 'number'){
-				table += `<td ${xattribute} class="text-right ${xcss}" data-tail="td">${valor}</td>`;
+				table += `<td ${xattribute} class="text-right ${this.tableClass.td} ${xcss}" >${valor}</td>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				table += `<td ${xattribute} class="${xcss}" data-tail="td">${valor}</td>`;
+				table += `<td ${xattribute} class="${this.tableClass.td}${xcss}" >${valor}</td>`;
 			} else {
-				table += `<td ${xattribute} class="${xcss}" data-tail="td">${valor}</td>`;
+				table += `<td ${xattribute} class="${this.tableClass.td}${xcss}" >${valor}</td>`;
 			}
 		})
 		table+=`</tr>`;
@@ -492,6 +512,7 @@ export class DataArray {
 	
 		element.innerHTML = table;
 		this.bindClickPaginations(element);
+		this.bindClickEvents(element)
     return table;
   }
 
@@ -525,6 +546,36 @@ export class DataArray {
       
     });
   }
+
+	bindClickEvents(componentDiv) {
+    let elementsWithClick;
+    if(componentDiv){
+      elementsWithClick = componentDiv.querySelectorAll('[data-click]');
+    } else {
+      elementsWithClick = document.querySelectorAll('[data-click]');
+    }
+
+    elementsWithClick.forEach((element) => {
+      const clickData = element.getAttribute('data-click');
+      const [functionName, ...params] = clickData.split(',');
+      if(params){
+        element.addEventListener('click', () => this.executeFunctionByName(functionName, params));
+      } else {
+        element.addEventListener('click', () => this.executeFunctionByName(functionName));
+      }
+    });
+  }
+
+	// Ejecuta una función pasando el nombre como string
+  executeFunctionByName(functionName, ...args) {
+    if (this.functions && typeof this.functions[functionName] === 'function') {
+      const func = this.functions[functionName];
+      func(...args);
+    } else {
+      console.error(`La función '${functionName}' no está definida en la librería Tamnora.`);
+    }
+  }
+
 
 	
 

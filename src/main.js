@@ -58,7 +58,9 @@ tmn.setFunction('closeModal',(params)=>{
   tmn.select(params[0]).removeClass('flex');
 } )
 
-tmn.setFunction('seleccionado',async(params)=>{
+
+
+tableMovimientos.setFunction('seleccionado',async(params)=>{
   let index = params[0];
   frmMovim.addObject(tableMovimientos.getDataObjectForKey(index, 'value'));
   frmMovim.setData('id', 'key', 'primary');
@@ -177,7 +179,7 @@ function verTabla(){
   }
 
   const tabla = tableMovimientos.newSimpleTable('#tabla',options);
-  tmn.select('#tabla').classRefresh();
+  
  
 }
 
