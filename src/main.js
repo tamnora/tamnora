@@ -13,12 +13,18 @@ tmn.setData('cliente', {});
 tmn.setData('movimiento',{});
 tableMovimientos.name = 'Movim';
 
-tmn.setFunction('enviarDatos',async ()=>{
+
+
+
+frmCliente.setFunction('enviarDatos',async ()=>{
   const datos = tmn.getData('cliente');
+
   Object.keys(datos).forEach(val => {
     let valor = datos[val];
     frmCliente.setData(val, 'value', valor)
   })
+
+  console.log(frmCliente.getDataAll())
 
   const paraSQL = frmCliente.getDataAll();
   const send = prepararSQL('clientes', paraSQL);
@@ -29,7 +35,7 @@ tmn.setFunction('enviarDatos',async ()=>{
 
 })
 
-tmn.setFunction('guardarMovimiento',async()=>{
+frmMovim.setFunction('submit',async()=>{
   const datos = tmn.getData('movimiento');
   Object.keys(datos).forEach(val => {
     let valor = datos[val];
@@ -50,6 +56,8 @@ tmn.setFunction('guardarMovimiento',async()=>{
   }
   
 })
+
+
 
 tmn.setFunction('closeModal',(params)=>{
   let index = params[0];
@@ -76,8 +84,8 @@ tableMovimientos.setFunction('seleccionado',async(params)=>{
   })
   
   
-  const form2 = await frmMovim.newSimpleForm({textSubmit:'Guardar', title:'Movimiento:', bind:'movimiento', columns:{md:6, lg:6}});
-  tmn.select('#formMovimiento').html(form2)
+  frmMovim.createForm('#formMovimiento', {textSubmit:'Guardar', title:'Movimiento:', bind:'movimiento', columns:{md:6, lg:6}});
+  tmn.select('#formMovimiento').bindModel()
   tmn.select('#modalMovimiento').addClass('flex')
   tmn.select('#modalMovimiento').removeClass('hidden')
   
@@ -104,16 +112,17 @@ async function traerCliente(id){
     tmn.setDataRoute(`cliente!${campo}`, dato.value);
   })
   
-  const form = frmCliente.newSimpleForm({textSubmit:'Guardar Datos', title:'Cliente:', bind:'cliente'});
-  tmn.select('#formCliente').html(form)
-
+  frmCliente.createForm('#formCliente', {textSubmit:'Guardar Datos', title:'Cliente:', bind:'cliente'});
+  tmn.select('#formCliente').bindModel()
+  
 };
 
-async function traerMovimientos(id){
+async function traerMovimientos(id, reset= false){
   const rst = await runcode(`-st movimientos -wr id_cliente=${id} -ob fechahora -ds`);
   let saldo = 0;
   
   tableMovimientos.removeAll();
+  if(reset) tableMovimientos.resetFrom();
 
   rst.forEach(row => {
     tableMovimientos.addObject(row);
@@ -188,7 +197,7 @@ function verTabla(){
 tmn.select('#myButton').click(async ()=>{ 
     tmn.data.contador++
     traerCliente(tmn.data.contador);
-    traerMovimientos(tmn.data.contador);
+    traerMovimientos(tmn.data.contador, true);
 })
 
 

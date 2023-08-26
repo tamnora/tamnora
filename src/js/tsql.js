@@ -211,25 +211,27 @@ export function prepararSQL(tabla, json) {
 						} else {
 							elValor = null;
 						}
-					} else {
+					} else if (typeInput == 'select') {
 						if (json[key].value != '') {
 							elValor = json[key].value;
 						} else {
 							elValor = null;
 						}
+					} else {
+							elValor = json[key].value;
 					}
 					dataForSave[key] = elValor;
 				}
 			}
 
-			// console.log(dataForSave);
+			//console.log(dataForSave);
 			sql = createQuerySQL(tipoSQL, {
 				t: tabla,
 				w: where,
 				d: dataForSave
 			});
 
-			// console.log(sql);
+			//console.log(sql);
 			respuesta = {
 				status: 1,
 				tipo: tipoSQL,

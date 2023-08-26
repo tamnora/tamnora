@@ -1162,6 +1162,11 @@ export class Tamnora {
           this.bindClickEvents(element);
           this.bindChangeEvents(element);
         },
+        bindModel: ()=>{
+          this.bindElementsWithDataValues(element);
+          this.bindClickEvents(element);
+          this.bindChangeEvents(element);
+        },
         value: element
         // Agregar más eventos aquí según sea necesario
       };
@@ -1325,6 +1330,23 @@ export class Tamnora {
 export class DataObject {
   constructor(fields = {}) {
     this.camposRegistro = {};
+    this.formOptions = {};
+		this.formElement = '';
+		this.functions = {};
+		this.formClass = {
+      label: 'block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400',
+      input: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
+      select: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
+      btn: "h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500",
+      btnSubmit: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-bg duration-500",
+      darkBlue: "bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700",
+      darkRed: "bg-red-700 text-white hover:bg-red-800 focus:ring-red-700",
+      darkGreen: "bg-green-700 text-white hover:bg-green-800 focus:ring-green-700",
+      darkNeutral: "bg-neutral-700 text-white hover:bg-neutral-800 focus:ring-neutral-700",
+      dark: "bg-neutral-300 text-neutral-800 hover:bg-neutral-100 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 hover:dark:bg-neutral-700 hover:dark:text-white focus:ring-neutral-700",
+      navactive: "text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500",
+      inactive: "text-neutral-600",
+    };
 
     if(Object.keys(fields).length > 0){
       fields.forEach(field => {
@@ -1345,6 +1367,20 @@ export class DataObject {
     });
     }
   }
+
+  getFunction(){
+    console.log(this.functions);
+  }
+
+  setFunction(name, fn){
+    if(typeof fn === 'function'){
+      this.functions[name] = fn;
+    } else {
+      console.error('La función no es válida!')
+    }
+  }
+
+  
 
   setData(fieldName, key, value) {
     if (this.camposRegistro[fieldName]) {
@@ -1447,8 +1483,18 @@ export class DataObject {
 		return "text";
 	}
 
-  newSimpleForm(data = {}) {
-    let form = ``;
+  createForm(elem, data = {}) {
+    let element;
+
+		if(!this.formElement){
+			element = document.querySelector(elem);
+			this.formElement = element;
+		} else {
+			element = this.formElement;
+		}
+		this.formOptions = data;
+
+    let form = `<form id="formCliente" data-action="submit">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'
     
     if (data.title) {
@@ -1456,7 +1502,6 @@ export class DataObject {
     }
 
     
-
     if ("columns" in data){
       columns = `col-span-12 sm:col-span-${data.columns.sm ?? 6} 
       md:col-span-${data.columns.md ?? 4} 
@@ -1519,31 +1564,31 @@ export class DataObject {
         
         fieldElement = `
         <div class="${colspan}">
-          <label for="${campo}" data-tail="label">${dato.name}</label>
-          <select id="${campo}" ${dataValue} data-tail="select" ${esrequired}>
+          <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
+          <select id="${campo}" ${dataValue} class="${this.formClass.select}" ${esrequired}>
             ${options}
           </select>
         </div>`;
       } else if (dato.type === 'checkbox') {
         fieldElement = `
           <div class="${colspan}">
-            <input type="checkbox" id="${campo}" ${dataValue}  ${esrequired} data-tail="checkbox" ${dato.value ? 'checked' : ''}>
-            <label for="${campo}">${dato.name}</label>
+            <input type="checkbox" id="${campo}" ${dataValue}  ${esrequired} class="${this.formClass.checkbox}" ${dato.value ? 'checked' : ''}>
+            <label class="${this.formClass.labelCheckbox}" for="${campo}">${dato.name}</label>
           </div>
         `;
       } else if (dato.type === 'currency'){
         fieldElement = `
           <div class="${colspan}">
-            <label for="${campo}" data-tail="label">${dato.name}</label>
-            <input type="text" autocomplete="off" data-change="currency" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} data-tail="input">
+            <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
+            <input type="text" autocomplete="off" data-change="currency" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
           </div>
         `;
       } else {
         
         fieldElement = `
           <div class="${colspan}">
-            <label for="${campo}" data-tail="label">${dato.name}</label>
-            <input type="${dato.type}" autocomplete="off" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} data-tail="input">
+            <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
+            <input type="${dato.type}" autocomplete="off" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
           </div>
         `;
       }
@@ -1554,12 +1599,90 @@ export class DataObject {
     form += `</div>`;
   
     if (data.textSubmit) {
-      form += `<div class="flex items-center justify-end p-3">
-        <button type="submit" data-tail="btn2">${data.textSubmit}</button>
+      form += `<div class="flex items-center justify-end p-6 space-x-2 border-t border-neutral-300 rounded-b dark:border-neutral-600 mt-6">
+        <button type="submit" class="${this.formClass.btnSubmit}">${data.textSubmit}</button>
       </div>`;
     }
+    form += '</form>'
+
+    element.innerHTML = form;
+		this.bindSubmitEvents(element);
     return form;
+
   }
+
+  // Vincula los eventos submit del formulario con sus functions personalizadas
+  bindSubmitEvents(componentDiv) {
+    let forms;
+    if(componentDiv){
+      forms = componentDiv.querySelectorAll('form[data-action]');
+    } else {
+      forms = document.querySelectorAll('form[data-action]');
+    }
+
+    forms.forEach((form) => {
+      const functionName = form.getAttribute('data-action');
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault(); // Prevenir el comportamiento por defecto del formulario        
+        this.executeFunctionByName(functionName);
+      });
+
+      form.addEventListener('keypress', function (event) {
+        // Verificamos si la tecla presionada es "Enter" (código 13)
+        if (event.keyCode === 13) {
+          // Prevenimos la acción predeterminada (envío del formulario)
+          event.preventDefault();
+
+          // Obtenemos el elemento activo (el que tiene el foco)
+          const elementoActivo = document.activeElement;
+
+          // Obtenemos la lista de elementos del formulario
+          const elementosFormulario = form.elements;
+
+          // Buscamos el índice del elemento activo en la lista
+          const indiceElementoActivo = Array.prototype.indexOf.call(elementosFormulario, elementoActivo);
+
+          // Movemos el foco al siguiente elemento del formulario
+          const siguienteElemento = elementosFormulario[indiceElementoActivo + 1];
+          if (siguienteElemento) {
+            siguienteElemento.focus();
+          }
+        }
+      });
+    });
+  }
+
+  bindClickEvents(componentDiv) {
+    let elementsWithClick;
+    if(componentDiv){
+      elementsWithClick = componentDiv.querySelectorAll('[data-action]');
+    } else {
+      elementsWithClick = document.querySelectorAll('[data-action]');
+    }
+
+    elementsWithClick.forEach((element) => {
+      const clickData = element.getAttribute('data-action');
+      const [functionName, ...params] = clickData.split(',');
+      if(params){
+        element.addEventListener('click', () => this.executeFunctionByName(functionName, params));
+      } else {
+        element.addEventListener('click', () => this.executeFunctionByName(functionName));
+      }
+    });
+  }
+
+	// Ejecuta una función pasando el nombre como string
+  executeFunctionByName(functionName, ...args) {
+    if (this.functions && typeof this.functions[functionName] === 'function') {
+      const func = this.functions[functionName];
+      func(...args);
+    } else {
+      console.error(`La función '${functionName}' no está definida en el Objeto Form.`);
+    }
+  }
+
+  
 
 
 }
@@ -1760,8 +1883,11 @@ export class DataArray {
 
 	removeAll() {
 			this.dataArray = [];
-      this.from = 1
 	}
+
+  resetFrom(){
+    this.from = 1
+  }
 
 	
 	// Nuevo método para obtener los nombres de las claves de un objeto
@@ -2102,12 +2228,10 @@ export class DataArray {
 					pos = pos + cant;
 					this.from = pos;
 					this.createTable(this.tableElement, this.tableOptions);
-					console.log(pos);
 				} else {
 					pos = pos - cant;
 					this.from = pos;
 					this.createTable(this.tableElement, this.tableOptions);
-					console.log(pos);
 				}
 			});
       
