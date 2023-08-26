@@ -8,10 +8,10 @@ export class DataArray {
 		this.tableElement = '';
 		this.functions = {};
 		this.tableClass = {
-			table: "w-full text-sm text-left text-gray-500 dark:text-gray-400",
-			thead: "bg-white dark:bg-gray-800 text-gray-700  dark:text-gray-400",
-			th: "px-6 py-3 select-none text-xs text-gray-700 uppercase dark:text-gray-400",
-			tr: "border-b border-gray-200 dark:border-gray-700",
+			table: "w-full text-sm text-left text-neutral-500 dark:text-neutral-400",
+			thead: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
+			th: "px-6 py-3 select-none text-xs text-neutral-700 uppercase dark:text-neutral-400",
+			tr: "border-b border-neutral-200 dark:border-neutral-700",
 			td: "px-6 py-3 select-none",
 			tdclick: "px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400",
 			trh: "text-md font-semibold",
@@ -468,11 +468,11 @@ export class DataArray {
 			}
 			let buttons = {
 				prev:{
-					class:'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white',
+					class:'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white',
 				  click:`data-pagination="prev"`
 				}, 
 				next:{
-					class:'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white',
+					class:'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white',
 				  click:`data-pagination="next"`
 				}
 			}
@@ -480,16 +480,16 @@ export class DataArray {
 			
 			if(hayMas == true && hayMenos == false){
 				buttons.prev.click = '';
-				buttons.prev.class = 'bg-gray-100 text-gray-400  dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600';
+				buttons.prev.class = 'bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600';
 			} else if(hayMas == false && hayMenos == true){
 				buttons.next.click = '';
-				buttons.next.class = 'bg-gray-100 text-gray-400  dark:bg-gray-800 dark:border-gray-700 dark:text-gray-600';
+				buttons.next.class = 'bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600';
 			}
 
 			table+=`<div class="flex flex-col items-center pb-3">
 			<!-- Help text -->
-			<span class="text-sm text-gray-700 dark:text-gray-400">
-					Registro <span class="font-semibold text-gray-900 dark:text-white">${desde}</span> al <span class="font-semibold text-gray-900 dark:text-white">${hasta }</span> (total: <span class="font-semibold text-gray-900 dark:text-white">${count}</span> registros)
+			<span class="text-sm text-neutral-700 dark:text-neutral-400">
+					Registro <span class="font-semibold text-neutral-900 dark:text-white">${desde}</span> al <span class="font-semibold text-neutral-900 dark:text-white">${hasta }</span> (total: <span class="font-semibold text-neutral-900 dark:text-white">${count}</span> registros)
 			</span>
 			<div class="inline-flex mt-2 xs:mt-0">
 				<!-- Buttons -->

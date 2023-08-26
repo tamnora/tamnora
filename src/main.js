@@ -1,7 +1,6 @@
-import Tamnora from './js/tamnora.js';
+import {Tamnora, DataObject, DataArray} from './js/tamnora.js';
 import { styleClass } from './js/style.js';
-import { DataObject } from './js/DataObject.js';
-import { DataArray } from './js/DataArray.js';
+
 import { runcode, prepararSQL, dbSelect } from './js/tsql.js';
 
 const tmn = new Tamnora({styleClasses:styleClass});
@@ -168,8 +167,8 @@ function verTabla(){
     },
     row:{
       class:{
-        normal: 'bg-gray-50 dark:bg-gray-700',
-        alternative: 'bg-gray-100 dark:bg-gray-800'
+        normal: 'bg-neutral-50 dark:bg-neutral-700',
+        alternative: 'bg-neutral-100 dark:bg-neutral-800'
       },
       click:{
         function: 'seleccionado',

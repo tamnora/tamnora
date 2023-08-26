@@ -1,7 +1,6 @@
-import Tamnora from './js/tamnora.js';
+import {Tamnora, DataObject, DataArray} from './js/tamnora.js';
 import { styleClass } from './js/style.js';
-import { DataObject } from './js/DataObject.js';
-import { DataArray } from './js/DataArray.js';
+
 import { runcode, prepararSQL, dbSelect } from './js/tsql.js';
 
 const tmn = new Tamnora({styleClasses:styleClass});

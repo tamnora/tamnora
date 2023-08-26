@@ -78,37 +78,7 @@ export class DataObject {
     }
   }
 
-  // newSimpleForm(data = {}){
-  //   let form = ``;
-
-  //   if(data.title){
-  //     form += `<h6 class="text-normal mb-2 font-bold dark:text-white">${data.title}</h6>`;
-  //   }
-
-  //   form += '<div class="grid grid-cols-12 gap-4">';
-  //   this.forEachField((campo, dato)=>{
   
-  //     let dataValue='';
-  //     if(data.bind){
-  //       dataValue = `data-value="${data.bind}!${campo}"`
-  //     }
-  //     form += `<div class="col-span-12 md:col-span-3 sm:col-span-6">
-  //     <label for="${campo}" data-tail="label">${dato.name}</label>
-  //     <input type="${dato.type}" id="${campo}" ${dataValue} value="${dato.value}" ${dato.attribute}  data-tail="input" >
-  //   </div>`;
-
-  //   })
-
-  //   form+=`</div>`
-
-  //   if(data.textSubmit){
-  //     form+=`<div class="flex items-center justify-end p-3">
-  //   <button type="submit" data-tail="btn2">${data.textSubmit}</button>
-  //   </div>`
-  //   }
-  //   return form;
-  // }
-
 	// Nuevo método para agregar objetos al array y completar campos
 	addObject(dataObject) {
 		const newObject = {};
@@ -158,7 +128,7 @@ export class DataObject {
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'
     
     if (data.title) {
-      form += `<h3 class="text-xl font-semibold text-gray-900 lg:text-2xl dark:text-white">${data.title}</h3>`;
+      form += `<h3 class="text-xl font-semibold text-neutral-900 lg:text-2xl dark:text-white">${data.title}</h3>`;
     }
 
     
