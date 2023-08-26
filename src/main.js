@@ -138,8 +138,8 @@ async function traerMovimientos(id){
 function verTabla(){
   const options = {
     header:{
-      tipo_oper: {class: 'text-right text-blue-500 text-lg', value: 'Saldo Pendiente:'},
-      importe:{class: 'text-right text-blue-500 text-lg', value: tmn.getData('saldoMov')},
+      tipo_oper: {class: 'text-right text-blue-700 text-lg', value: 'Saldo Pendiente:'},
+      importe:{class: 'text-right text-blue-700 text-lg', value: tmn.getData('saldoMov')},
     },
     field:{
       importe: {

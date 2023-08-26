@@ -1760,6 +1760,7 @@ export class DataArray {
 
 	removeAll() {
 			this.dataArray = [];
+      this.from = 1
 	}
 
 	

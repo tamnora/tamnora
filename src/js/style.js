@@ -18,7 +18,7 @@ const styleClass = {
   darkRed: "bg-red-700 text-white hover:bg-red-800 focus:ring-red-700",
   darkGreen: "bg-green-700 text-white hover:bg-green-800 focus:ring-green-700",
   darkNeutral: "bg-neutral-700 text-white hover:bg-neutral-800 focus:ring-neutral-700",
-  dark: "bg-neutral-200 text-neutral-900 hover:bg-neutral-100 dark:bg-neutral-800 dark:text-neutral-100 hover:dark:bg-neutral-900 hover:text-white focus:ring-neutral-700",
+  dark: "bg-neutral-300 text-neutral-800 hover:bg-neutral-100 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 hover:dark:bg-neutral-700 hover:dark:text-white focus:ring-neutral-700",
   navactive: "text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500",
   inactive: "text-neutral-600",
 };
