@@ -110,6 +110,23 @@ export class Tamnora {
     return valorActual;
   }
 
+  getDataFormat(camino, format){
+    const propiedades = camino.split('!');
+    let valorActual = this.data;
+  
+    for (let propiedad of propiedades) {
+      if (valorActual.hasOwnProperty(propiedad)) {
+        valorActual = valorActual[propiedad];
+        if(format == 'pesos'){
+          valorActual = this.esMoneda(valorActual, 2, '$')
+        }
+      } else {
+        return undefined; // Si la propiedad no existe, retornamos undefined
+      }
+    }
+    return valorActual;
+  }
+
   existData(camino){
     const propiedades = camino.split('!');
     let valorActual = this.data;
@@ -1323,9 +1340,31 @@ export class Tamnora {
   
     return resultado;
   }
+
+  esMoneda(numero, decimales, signo = '') {
+    // Convertimos el string a número flotante
+    let numeroFlotante = parseFloat(numero);
+  
+    // Redondeamos el número a la cantidad de decimales especificada
+    let numeroFlotante2 = numeroFlotante.toFixed(decimales);
+  
+    // Convertimos el número flotante a string
+    let numeroString = numeroFlotante2.toString();
+  
+    // Agregamos los ceros necesarios para completar la cantidad de decimales solicitada
+    // while (numeroString.length < numero.length + decimales) {
+    //   numeroString += "0";
+    // }
+  
+    // Devolvemos el número formateado como moneda
+    if (signo) {
+      return `${signo} ${numeroString}`;
+    } else {
+      return `${numeroString}`;
+    }
+  }
   
 }
-
 
 export class DataObject {
   constructor(fields = {}) {
@@ -1569,6 +1608,23 @@ export class DataObject {
             ${options}
           </select>
         </div>`;
+      } else if (dato.type === 'datalist') {
+        const options = dato.options.map(option =>{
+          if(option.value == dato.value){
+            return `<option value="${option.value}" selected>${option.label}</option>`
+          } else {
+            return `<option value="${option.value}">${option.label}</option>`
+          }
+        }).join('');
+        
+        fieldElement = `
+        <div class="${colspan}">
+        <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
+        <input type="text" autocomplete="off" list="lista-${campo}" data-change="currency" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
+          <datalist id="lista-${campo}">
+            ${options}
+          </datalist>
+        </div>`;
       } else if (dato.type === 'checkbox') {
         fieldElement = `
           <div class="${colspan}">
@@ -1698,12 +1754,15 @@ export class DataArray {
 		this.functions = {};
 		this.tableClass = {
 			table: "w-full text-sm text-left text-neutral-500 dark:text-neutral-400",
-			thead: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
+			thead: "bg-neutral-300 dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
+      tfoot: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
+      pagination: "bg-white dark:bg-neutral-800 text-neutral-700 py-3 dark:text-neutral-400",
 			th: "px-6 py-3 select-none text-xs text-neutral-700 uppercase dark:text-neutral-400",
 			tr: "border-b border-neutral-200 dark:border-neutral-700",
 			td: "px-6 py-3 select-none",
 			tdclick: "px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400",
-			trh: "text-md font-semibold",
+			trh: "text-md font-semibold ",
+      trtitle: "text-md font-semibold ",
 			tdh: "px-6 py-2 select-none ",
 			tdnumber: "px-6 py-4 text-right",
 		};
@@ -1921,7 +1980,7 @@ export class DataArray {
 		let hayMas = false;
 		let hayMenos = false;
     table += `<table class="${this.tableClass.table}"><thead class="${this.tableClass.thead}">`;
-		tableHeader += '<tr>';
+		tableHeader += `<tr class="${this.tableClass.trtitle}">`;
 
 		if ("row" in options) {
 			xRow = options.row;
@@ -2135,7 +2194,7 @@ export class DataArray {
 		});
 
     table+=`</tbody>`;
-		table+=`<tfoot><tr class="text-md font-semibold">`
+		table+=`<tfoot class="${this.tableClass.tfoot}"><tr class="text-md font-semibold">`
 		footer.forEach(ref => {
 			let valor = this.formatValueByDataType(ref.value);
 			let tipo = this.detectDataType(ref.value);
@@ -2179,7 +2238,7 @@ export class DataArray {
 				buttons.next.class = 'bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600';
 			}
 
-			table+=`<div class="flex flex-col items-center pb-3">
+			table+=`<div class="flex flex-col items-center ${this.tableClass.pagination}">
 			<!-- Help text -->
 			<span class="text-sm text-neutral-700 dark:text-neutral-400">
 					Registro <span class="font-semibold text-neutral-900 dark:text-white">${desde}</span> al <span class="font-semibold text-neutral-900 dark:text-white">${hasta }</span> (total: <span class="font-semibold text-neutral-900 dark:text-white">${count}</span> registros)

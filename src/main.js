@@ -16,7 +16,7 @@ tableMovimientos.name = 'Movim';
 
 
 
-frmCliente.setFunction('enviarDatos',async ()=>{
+frmCliente.setFunction('submit',async ()=>{
   const datos = tmn.getData('cliente');
 
   Object.keys(datos).forEach(val => {
@@ -82,8 +82,7 @@ tableMovimientos.setFunction('seleccionado',async(params)=>{
   frmMovim.forEachField((campo, dato)=>{
     tmn.setDataRoute(`movimiento!${campo}`, dato.value);
   })
-  
-  
+    
   frmMovim.createForm('#formMovimiento', {textSubmit:'Guardar', title:'Movimiento:', bind:'movimiento', columns:{md:6, lg:6}});
   tmn.select('#formMovimiento').bindModel()
   tmn.select('#modalMovimiento').addClass('flex')
@@ -105,12 +104,15 @@ async function traerCliente(id){
 
   frmCliente.setDataKeys('name', {id_cliente: 'ID', nombre_cliente: 'Nombre', telefono_cliente: 'Teléfono', 
   email_cliente: 'Email', direccion_cliente: 'Dirección', status_cliente: 'Status', date_added: 'Fecha Ingreso'});
+
   
 
  
   frmCliente.forEachField((campo, dato)=>{
     tmn.setDataRoute(`cliente!${campo}`, dato.value);
   })
+
+  tmn.data.nombreCliente = tmn.getData('cliente!nombre_cliente');
   
   frmCliente.createForm('#formCliente', {textSubmit:'Guardar Datos', title:'Cliente:', bind:'cliente'});
   tmn.select('#formCliente').bindModel()
@@ -148,7 +150,7 @@ function verTabla(){
   const options = {
     header:{
       tipo_oper: {class: 'text-right text-blue-700 text-lg', value: 'Saldo Pendiente:'},
-      importe:{class: 'text-right text-blue-700 text-lg', value: tmn.getData('saldoMov')},
+      importe:{class: 'text-right text-blue-700 text-lg', value: tmn.getDataFormat('saldoMov', 'pesos')},
     },
     field:{
       importe: {
@@ -187,14 +189,22 @@ function verTabla(){
   }
 
   tableMovimientos.createTable('#tabla',options);
+
   
  
 }
 
+tmn.select('#prevClient').click(async ()=>{ 
+  if(tmn.data.contador > 1){
+    tmn.data.contador--
+    traerCliente(tmn.data.contador);
+    traerMovimientos(tmn.data.contador, true);
+  }
+})
 
 
 
-tmn.select('#myButton').click(async ()=>{ 
+tmn.select('#nextClient').click(async ()=>{ 
     tmn.data.contador++
     traerCliente(tmn.data.contador);
     traerMovimientos(tmn.data.contador, true);

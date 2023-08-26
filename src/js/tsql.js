@@ -206,13 +206,14 @@ export function prepararSQL(tabla, json) {
 						}
 						
 					} else if (typeInput == 'currency') {
-						if (json[key].value != '') {
+						if (json[key].value !== '') {
 							elValor = parseFloat(json[key].value);
 						} else {
 							elValor = null;
 						}
 					} else if (typeInput == 'select') {
-						if (json[key].value != '') {
+						
+						if (json[key].value !== '') {
 							elValor = json[key].value;
 						} else {
 							elValor = null;
@@ -224,14 +225,14 @@ export function prepararSQL(tabla, json) {
 				}
 			}
 
-			//console.log(dataForSave);
+			// console.log(dataForSave);
 			sql = createQuerySQL(tipoSQL, {
 				t: tabla,
 				w: where,
 				d: dataForSave
 			});
 
-			//console.log(sql);
+			// console.log(sql);
 			respuesta = {
 				status: 1,
 				tipo: tipoSQL,

@@ -14,7 +14,24 @@
         <div class="container mx-auto animated fadeIn p-5 transition-bg duration-500 ">
           
           <div class="flex justify-between items-center mb-4">
-            <button id="myButton" data-tail="btn dark">Datos del cliente <span class="ml-2" data-value="contador"></span></button>
+            <div class="flex items-center justify-center col-span-2">
+              <div class="flex items-center justify-between w-full text-neutral-600 dark:text-neutral-400 bg-neutral-300 rounded-lg dark:bg-neutral-600  mx-2">
+                  <button id="prevClient" type="button" class="inline-flex items-center justify-center h-8 px-2 w-8 bg-neutral-300 rounded-l-lg dark:bg-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-0">
+                      <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 1 1 5l4 4"/>
+                      </svg>
+                      <span class="sr-only">Previous page</span>
+                  </button>
+                  <span class="flex-shrink-0 mx-1 px-5 text-sm font-medium">Cliente Nro<span class="ml-2" data-value="contador"></span></span>
+                  <button id="nextClient" type="button" class="inline-flex items-center justify-center h-8 px-2 w-8 bg-neutral-300 rounded-r-lg dark:bg-neutral-600 hover:bg-neutral-100 dark:hover:bg-neutral-800 focus:outline-none focus:ring-0">
+                      <svg class="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
+                      </svg>
+                      <span class="sr-only">Next page</span>
+                  </button>
+              </div>
+          </div>
+            <div data-value="nombreCliente" class="text-3xl font-bold dark:text-white"></div>
             <button data-tail="btn dark" data-theme></button>
           </div>
 
