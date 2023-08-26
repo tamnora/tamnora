@@ -178,25 +178,12 @@ function verTabla(){
     }
   }
 
-  const tabla = tableMovimientos.newSimpleTable('#tabla',options);
+  tableMovimientos.createTable('#tabla',options);
   
  
 }
 
-tmn.setFunction('paginations',(arg)=>{
-  let pos = tmn.getData('from');
-  let cant = tmn.getData('perView');
 
-  if(arg[0] == 'next'){
-    pos = pos + cant;
-    tmn.setData('from', pos);
-    verTabla();
-  } else {
-    pos = pos - cant;
-    tmn.setData('from', pos);
-    verTabla();
-  }
-})
 
 
 tmn.select('#myButton').click(async ()=>{ 

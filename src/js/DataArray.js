@@ -205,7 +205,7 @@ export class DataArray {
 		return [];
 	}
 
-	newSimpleTable(elem, options = {}){
+	createTable(elem, options = {}){
 		let element;
 
 		if(!this.tableElement){
@@ -315,7 +315,7 @@ export class DataArray {
 					let actionClass = '';
 					if('click' in xRow){
 						if(xRow.click.function && xRow.click.field){
-							actionClick =	`data-click="${xRow.click.function}, ${index}, ${items[xRow.click.field].value}" `;
+							actionClick =	`data-action="${xRow.click.function}, ${index}, ${items[xRow.click.field].value}" `;
 							actionClass =	'cursor-pointer';
 						} else {
 							console.error('row.click.function',xRow.click.function);
@@ -351,7 +351,7 @@ export class DataArray {
 						}
 
 						if(field[item].click){
-							dataClick = `data-click="${field[item].click}, ${index}, ${value}"`;
+							dataClick = `data-action="${field[item].click}, ${index}, ${value}"`;
 						} else {
 							dataClick = ``;
 						}
@@ -380,7 +380,7 @@ export class DataArray {
 					let actionClass = '';
 					if('click' in xRow){
 						if(xRow.click.function && xRow.click.field){
-							actionClick =	`data-click="${xRow.click.function}, ${index}, ${items[xRow.click.field].value}" `;
+							actionClick =	`data-action="${xRow.click.function}, ${index}, ${items[xRow.click.field].value}" `;
 							actionClass =	'cursor-pointer';
 						} else {
 							console.error('row.click.function',xRow.click.function);
@@ -416,7 +416,7 @@ export class DataArray {
 					}
 
 					if(field[item].click){
-						dataClick = `data-click="${field[item].click}, ${index}, ${value}" `;
+						dataClick = `data-action="${field[item].click}, ${index}, ${value}" `;
 					} else {
 						dataClick = ``;
 					}
@@ -534,12 +534,12 @@ export class DataArray {
 				if(action == 'next'){
 					pos = pos + cant;
 					this.from = pos;
-					this.newSimpleTable(this.tableElement, this.tableOptions);
+					this.createTable(this.tableElement, this.tableOptions);
 					console.log(pos);
 				} else {
 					pos = pos - cant;
 					this.from = pos;
-					this.newSimpleTable(this.tableElement, this.tableOptions);
+					this.createTable(this.tableElement, this.tableOptions);
 					console.log(pos);
 				}
 			});
@@ -550,13 +550,13 @@ export class DataArray {
 	bindClickEvents(componentDiv) {
     let elementsWithClick;
     if(componentDiv){
-      elementsWithClick = componentDiv.querySelectorAll('[data-click]');
+      elementsWithClick = componentDiv.querySelectorAll('[data-action]');
     } else {
-      elementsWithClick = document.querySelectorAll('[data-click]');
+      elementsWithClick = document.querySelectorAll('[data-action]');
     }
 
     elementsWithClick.forEach((element) => {
-      const clickData = element.getAttribute('data-click');
+      const clickData = element.getAttribute('data-action');
       const [functionName, ...params] = clickData.split(',');
       if(params){
         element.addEventListener('click', () => this.executeFunctionByName(functionName, params));

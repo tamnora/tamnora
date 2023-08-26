@@ -110,7 +110,7 @@ async function traerCanales(desde){
     }
   }
 
-  const tabla = tblCanales.newSimpleTable(0, 100, options);
+  const tabla = tblCanales.createTable(0, 100, options);
   tmn.select('#tabla').html(tabla)
   tmn.setData('desde', desde);
   
