@@ -106,7 +106,6 @@ async function traerCliente(id){
   email_cliente: 'Email', direccion_cliente: 'Dirección', status_cliente: 'Status', date_added: 'Fecha Ingreso'});
 
   
-
  
   frmCliente.forEachField((campo, dato)=>{
     tmn.setDataRoute(`cliente!${campo}`, dato.value);
@@ -149,8 +148,8 @@ async function traerMovimientos(id, reset= false){
 function verTabla(){
   const options = {
     header:{
-      tipo_oper: {class: 'text-right text-blue-700 text-lg', value: 'Saldo Pendiente:'},
-      importe:{class: 'text-right text-blue-700 text-lg', value: tmn.getDataFormat('saldoMov', 'pesos')},
+      tipo_oper: {class: 'text-right text-neutral-500 text-lg', value: 'Saldo Pendiente:'},
+      importe:{class: 'text-right text-neutral-500 text-lg', value: tmn.getDataFormat('saldoMov', 'pesos')},
     },
     field:{
       importe: {

@@ -118,7 +118,7 @@ export class Tamnora {
       if (valorActual.hasOwnProperty(propiedad)) {
         valorActual = valorActual[propiedad];
         if(format == 'pesos'){
-          valorActual = this.esMoneda(valorActual, 2, '$')
+          valorActual = this.pesos(valorActual, 2, '$')
         }
       } else {
         return undefined; // Si la propiedad no existe, retornamos undefined
@@ -1341,22 +1341,8 @@ export class Tamnora {
     return resultado;
   }
 
-  esMoneda(numero, decimales, signo = '') {
-    // Convertimos el string a número flotante
-    let numeroFlotante = parseFloat(numero);
-  
-    // Redondeamos el número a la cantidad de decimales especificada
-    let numeroFlotante2 = numeroFlotante.toFixed(decimales);
-  
-    // Convertimos el número flotante a string
-    let numeroString = numeroFlotante2.toString();
-  
-    // Agregamos los ceros necesarios para completar la cantidad de decimales solicitada
-    // while (numeroString.length < numero.length + decimales) {
-    //   numeroString += "0";
-    // }
-  
-    // Devolvemos el número formateado como moneda
+  pesos(numero, decimales, signo = '') {
+    let numeroString = this.formatNumber(numero, decimales);
     if (signo) {
       return `${signo} ${numeroString}`;
     } else {
@@ -1655,7 +1641,7 @@ export class DataObject {
     form += `</div>`;
   
     if (data.textSubmit) {
-      form += `<div class="flex items-center justify-end p-6 space-x-2 border-t border-neutral-300 rounded-b dark:border-neutral-600 mt-6">
+      form += `<div class="flex items-center justify-end p-6 space-x-2  mt-6">
         <button type="submit" class="${this.formClass.btnSubmit}">${data.textSubmit}</button>
       </div>`;
     }
@@ -1692,6 +1678,9 @@ export class DataObject {
 
           // Obtenemos el elemento activo (el que tiene el foco)
           const elementoActivo = document.activeElement;
+          if(elementoActivo.type == 'submit'){
+            console.log(form);
+          }
 
           // Obtenemos la lista de elementos del formulario
           const elementosFormulario = form.elements;
