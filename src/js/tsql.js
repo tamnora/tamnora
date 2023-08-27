@@ -212,27 +212,32 @@ export function prepararSQL(tabla, json) {
 							elValor = null;
 						}
 					} else if (typeInput == 'select') {
-						
+						if (json[key].value !== '') {
+							elValor = json[key].value;
+						} else {
+							elValor = null;
+						}
+					} else if (typeInput == 'datetime-local' || typeInput == 'date') {
 						if (json[key].value !== '') {
 							elValor = json[key].value;
 						} else {
 							elValor = null;
 						}
 					} else {
-							elValor = json[key].value;
+							elValor = `${json[key].value}`;
 					}
 					dataForSave[key] = elValor;
 				}
 			}
 
-			// console.log(dataForSave);
+			//console.log(dataForSave);
 			sql = createQuerySQL(tipoSQL, {
 				t: tabla,
 				w: where,
 				d: dataForSave
 			});
 
-			// console.log(sql);
+			//console.log(sql);
 			respuesta = {
 				status: 1,
 				tipo: tipoSQL,
@@ -272,7 +277,7 @@ export async function dbSelect(type, sql) {
 		return result;
 	} catch (error) {
 		console.log(error)
-		const err = [{ resp: 'error', msgError: 'Error al consultar datos!' }];
+		const err = [{ resp: 'error', msgError: 'Error 222 al consultar datos!' }];
 		return err;
 	}
 }

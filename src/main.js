@@ -18,14 +18,7 @@ tableMovimientos.name = 'Movim';
 
 frmCliente.setFunction('submit',async ()=>{
   const datos = tmn.getData('cliente');
-
-  Object.keys(datos).forEach(val => {
-    let valor = datos[val];
-    frmCliente.setData(val, 'value', valor)
-  })
-
-  console.log(frmCliente.getDataAll())
-
+  frmCliente.setDataFromModel(datos)
   const paraSQL = frmCliente.getDataAll();
   const send = prepararSQL('clientes', paraSQL);
   
@@ -37,10 +30,8 @@ frmCliente.setFunction('submit',async ()=>{
 
 frmMovim.setFunction('submit',async()=>{
   const datos = tmn.getData('movimiento');
-  Object.keys(datos).forEach(val => {
-    let valor = datos[val];
-    frmMovim.setData(val, 'value', valor)
-  })
+  frmMovim.setDataFromModel(datos)
+  
 
    const paraSQL = frmMovim.getDataAll();
    const send = prepararSQL('movimientos', paraSQL);
@@ -50,8 +41,7 @@ frmMovim.setFunction('submit',async()=>{
     await dbSelect(send.tipo, send.sql).then(val => {
       console.log(val);
       traerMovimientos(tmn.data.contador);
-      tmn.select('#modalMovimiento').addClass('hidden');
-      tmn.select('#modalMovimiento').removeClass('flex');
+      
     })
   }
   
@@ -59,11 +49,7 @@ frmMovim.setFunction('submit',async()=>{
 
 
 
-tmn.setFunction('closeModal',(params)=>{
-  let index = params[0];
-  tmn.select(params[0]).addClass('hidden');
-  tmn.select(params[0]).removeClass('flex');
-} )
+
 
 
 
@@ -72,6 +58,7 @@ tableMovimientos.setFunction('seleccionado',async(params)=>{
   frmMovim.addObject(tableMovimientos.getDataObjectForKey(index, 'value'));
   frmMovim.setData('id', 'key', 'primary');
   frmMovim.setData('id', 'attribute', 'readonly');
+  frmMovim.setData('id', 'hidden', true);
   frmMovim.setData('concepto', 'column', 12);
   frmMovim.setDataKeys('name', {id_cliente: 'ID Cliente', id_factura: 'ID Factura'});
   frmMovim.setData('importe', 'type', 'currency');
@@ -83,21 +70,32 @@ tableMovimientos.setFunction('seleccionado',async(params)=>{
     tmn.setDataRoute(`movimiento!${campo}`, dato.value);
   })
     
-  frmMovim.createForm('#formMovimiento', {textSubmit:'Guardar', title:'Movimiento:', bind:'movimiento', columns:{md:6, lg:6}});
-  tmn.select('#formMovimiento').bindModel()
-  tmn.select('#modalMovimiento').addClass('flex')
-  tmn.select('#modalMovimiento').removeClass('hidden')
+  frmMovim.createFormModal('#modalMovimiento', {textSubmit:'Guardar', title:'ABM - Movimientos', bind:'movimiento', columns:{md:6, lg:6}});
+  tmn.select('#modalMovimiento').bindModel();
+  
   
  
 })
 
 async function traerCliente(id){
-  const tblCliente = await runcode(`-st clientes -wr id_cliente=${id}`);
-  frmCliente.addObject(tblCliente[0]);
+let tblCliente;
+
+  if(id == 0){
+    tblCliente = await runcode(`-st clientes`);
+    frmCliente.addObject(tblCliente[0], true);
+    frmCliente.setData('date_added', 'value', tmn.formatDate(new Date()).fechaHora);
+  }else {
+    tblCliente = await runcode(`-st clientes -wr id_cliente=${id}`);
+    frmCliente.addObject(tblCliente[0]);
+  }
+  
   frmCliente.setData('id_cliente', 'attribute', 'readonly');
   frmCliente.setData('id_cliente', 'key', 'primary');
-  frmCliente.setData('date_added', 'attribute', 'readonly');
+  frmCliente.setData('id_cliente', 'hidden', true);
+  frmCliente.setData('date_added', 'defaultValue', tmn.formatDate(new Date()).fechaHora);
   frmCliente.setData('status_cliente', 'type', 'select');
+  frmCliente.setData('telefono_cliente', 'type', 'text');
+  frmCliente.setData('date_added','type', 'datetime-local')
   frmCliente.setData('status_cliente', 'options', [{value: 0, label: 'Inactivo'}, {value:1, label:'Activo'}]);
   frmCliente.setData('tipo', 'type', 'select');
   frmCliente.setData('tipo', 'options', [{value: 0, label: 'Cliente'}, {value:1, label:'Proveedor'}]);
@@ -125,22 +123,31 @@ async function traerMovimientos(id, reset= false){
   tableMovimientos.removeAll();
   if(reset) tableMovimientos.resetFrom();
 
-  rst.forEach(row => {
-    tableMovimientos.addObject(row);
-    if(row.tipo_oper > 0){
-      saldo = saldo - parseFloat(row.importe)
-    } else {
-      saldo = saldo + parseFloat(row.importe)
-    }
-  })
-
-  tmn.setData('saldoMov', saldo);
-
-  tableMovimientos.setDataKeys('name', {fechahora: 'Fecha y Hora', tipo_oper: 'Operación'});
-  tableMovimientos.setDataKeys('attribute', {id_cliente: 'hidden'});
-
+  if(id > 0){
+    rst.forEach(row => {
+      tableMovimientos.addObject(row);
+      if(row.tipo_oper > 0){
+        saldo = saldo - parseFloat(row.importe)
+      } else {
+        saldo = saldo + parseFloat(row.importe)
+      }
+    })
   
-  verTabla();
+    if(!rst[0].Ninguno){
+      tmn.setData('saldoMov', saldo);
+      tableMovimientos.setDataKeys('name', {fechahora: 'Fecha y Hora', tipo_oper: 'Operación'});
+      tableMovimientos.setDataKeys('attribute', {id_cliente: 'hidden'});
+      tableMovimientos.setDataKeys('hidden', {id: true});
+    
+      
+      verTabla();
+    } else {
+      tmn.select('#tabla').html('');
+    }
+  } else {
+    console.log('Que hacemos');
+    tmn.select('#tabla').html('');
+  }
   
 };
 
@@ -158,7 +165,7 @@ function verTabla(){
           if(items.tipo_oper.value > 0 ){
             result = `<span class="text-red-700 dark:text-red-500"> -${valor}</span>`
           } else {
-            result = `<span class="text-green-700 dark:text-green-500">${valor}</span>`
+            result = `<span class="text-blue-700 dark:text-blue-500">${valor}</span>`
           }
           return result;
         }
@@ -172,7 +179,7 @@ function verTabla(){
         }
       },
       id:{
-        class:'text-green-500'
+        class:'text-blue-700'
       }
     },
     row:{
@@ -193,8 +200,10 @@ function verTabla(){
  
 }
 
+traerCliente(106);
+
 tmn.select('#prevClient').click(async ()=>{ 
-  if(tmn.data.contador > 1){
+  if(tmn.data.contador > 0){
     tmn.data.contador--
     traerCliente(tmn.data.contador);
     traerMovimientos(tmn.data.contador, true);

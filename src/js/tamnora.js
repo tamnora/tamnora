@@ -1349,6 +1349,137 @@ export class Tamnora {
       return `${numeroString}`;
     }
   }
+
+  formatDate(valor = null, separador = '-') {
+    let fechaHora;
+    let myDate;
+    let sep = separador || '-';
+    if (valor == null){
+      myDate = new Date();
+    } 
+  
+    let exp = /^\d{2,4}\-\d{1,2}\-\d{1,2}\s\d{1,2}\:\d{1,2}\:\d{1,2}$/gm;
+    const arrayDias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const arrayDia = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const arrayMeses = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
+    ];
+    const arrayMes = [
+      'Ene',
+      'Feb',
+      'Mar',
+      'Abr',
+      'May',
+      'jun',
+      'Jul',
+      'Ago',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dic'
+    ];
+  
+    if (typeof valor == 'string') {
+      if (valor.match(exp)) {
+        fechaHora = valor;
+        myDate = new Date(valor);
+      } else {
+        return '';
+      }
+    }
+  
+    if (typeof valor == 'object') {
+      myDate = valor;
+    }
+  
+    if (typeof valor !== 'string' && typeof valor !== 'object') {
+      return 'parametro incorrecto';
+    }
+  
+    let anio = myDate.getFullYear();
+    let mes = myDate.getMonth() + 1;
+    let dia = myDate.getDate();
+    let dsem = myDate.getDay();
+    let hora = myDate.getHours();
+    let minutos = myDate.getMinutes();
+    let segundos = myDate.getSeconds();
+  
+    mes = mes < 10 ? '0' + mes : mes;
+    dia = dia < 10 ? '0' + dia : dia;
+    hora = hora < 10 ? '0' + hora : hora;
+    minutos = minutos < 10 ? '0' + minutos : minutos;
+    segundos = segundos < 10 ? '0' + segundos : segundos;
+  
+    let myObject = {
+      fecha: '' + myDate.getFullYear() + '-' + mes + '-' + dia,
+      fechaEs: '' + dia + sep + mes + sep + myDate.getFullYear(),
+      anio: myDate.getFullYear(),
+      mes: mes,
+      mesCorto: arrayMes[myDate.getMonth()],
+      mesLargo: arrayMeses[myDate.getMonth()],
+      dia: dia,
+      diaSem: dsem,
+      anioMes: anio + sep + mes,
+      mesDia: mes + sep + dia,
+      diaCorto: arrayDia[dsem],
+      diaLargo: arrayDias[dsem],
+      fechaCarta:
+        arrayDias[dsem] +
+        ' ' +
+        myDate.getDate() +
+        ' de ' +
+        arrayMeses[myDate.getMonth()] +
+        ' de ' +
+        myDate.getFullYear(),
+      fechaTonic:
+        '' + myDate.getDate() + sep + arrayMes[myDate.getMonth()] + sep + myDate.getFullYear(),
+      fechaHoraEs:
+        '' +
+        dia +
+        sep +
+        mes +
+        sep +
+        myDate.getFullYear() +
+        ' ' +
+        hora +
+        ':' +
+        minutos +
+        ':' +
+        segundos,
+      fechaHora:
+        '' +
+        myDate.getFullYear() +
+        '-' +
+        mes +
+        '-' +
+        dia +
+        ' ' +
+        hora +
+        ':' +
+        minutos +
+        ':' +
+        segundos,
+      fechaHoraT: '' + myDate.getFullYear() + '-' + mes + '-' + dia + 'T' + hora + ':' + minutos,
+      horaLarga: hora + ':' + minutos + ':' + segundos,
+      horaCorta: hora + ':' + minutos,
+      hora: hora,
+      minutos: minutos,
+      segundos: segundos
+    };
+  
+    return myObject;
+  }
   
 }
 
@@ -1357,7 +1488,18 @@ export class DataObject {
     this.camposRegistro = {};
     this.formOptions = {};
 		this.formElement = '';
-		this.functions = {};
+		this.functions = {
+      closeModal: (e)=>{
+        const modal = document.querySelector(e);
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+      },
+      openModal:(e)=>{
+        const modal = document.querySelector(e);
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    };
 		this.formClass = {
       label: 'block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400',
       input: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
@@ -1383,6 +1525,7 @@ export class DataObject {
         "value": "",
         "column": 0,
         "attribute": 0,
+        "hidden": false,
         "pattern": '',
         "defaultValue": "",
         "key": "",
@@ -1419,6 +1562,25 @@ export class DataObject {
 
       }
     }
+  }
+
+
+  setDataFromModel(objectModel){
+    Object.keys(objectModel).forEach((fieldName) => {
+      let value = objectModel[fieldName];
+
+      if(this.camposRegistro[fieldName].type == 'number' || this.camposRegistro[fieldName].type == 'select'){
+        if(!isNaN(parseFloat(value)) && isFinite(value)){
+          this.camposRegistro[fieldName].value = parseFloat(value)
+        } else {
+          this.camposRegistro[fieldName].value = value;
+        }
+      } else {
+        this.camposRegistro[fieldName].value = value;
+
+      }
+
+    })
   }
 
   getData(fieldName, key) {
@@ -1465,13 +1627,21 @@ export class DataObject {
 
   
 	// Nuevo método para agregar objetos al array y completar campos
-	addObject(dataObject) {
+	addObject(dataObject, clean = false, objectDefault = {}) {
 		const newObject = {};
 	
 		for (const fieldName in dataObject) {
 			if (dataObject.hasOwnProperty(fieldName)) {
-				const value = dataObject[fieldName];
+				let value = dataObject[fieldName];
 				const type = this.detectDataType(value);
+        if(clean == true){
+          if(type == 'number'){
+            value = 0;
+          }else{
+            value = '';
+          }
+        } 
+
 				newObject[fieldName] = {
 					"type": type,
           "name": fieldName,
@@ -1480,6 +1650,7 @@ export class DataObject {
 					"value": value,
 					"column": 0,
 					"attribute": 0,
+          "hidden": false,
           "pattern": '',
 					"defaultValue": "",
 					"key": "",
@@ -1519,12 +1690,18 @@ export class DataObject {
 		}
 		this.formOptions = data;
 
-    let form = `<form id="formCliente" data-action="submit">`;
+    let form = `<form data-action="submit">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'
+
+    form+= `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-neutral-600">`
     
     if (data.title) {
-      form += `<h3 class="text-xl font-semibold text-neutral-900 lg:text-2xl dark:text-white">${data.title}</h3>`;
+      form += ` <h3 class="text-xl font-semibold text-neutral-900 lg:text-2xl dark:text-white">${data.title}</h3>`;
     }
+
+    form+= ``;
+
+    form+='</div><div class="p-6">'
 
     
     if ("columns" in data){
@@ -1574,6 +1751,13 @@ export class DataObject {
         }
       }else{
         colspan = columns
+      }
+
+      
+     
+      
+      if(dato.hidden == true){
+        colspan += ' hidden';
       }
 
       
@@ -1638,10 +1822,10 @@ export class DataObject {
       form += fieldElement;
     });
   
-    form += `</div>`;
+    form += `</div></div>`;
   
     if (data.textSubmit) {
-      form += `<div class="flex items-center justify-end p-6 space-x-2  mt-6">
+      form += `<div class="flex items-center justify-end p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">
         <button type="submit" class="${this.formClass.btnSubmit}">${data.textSubmit}</button>
       </div>`;
     }
@@ -1649,6 +1833,169 @@ export class DataObject {
 
     element.innerHTML = form;
 		this.bindSubmitEvents(element);
+    return form;
+
+  }
+
+  createFormModal(elem, data = {}) {
+    let element;
+
+		if(!this.formElement){
+			element = document.querySelector(elem);
+			this.formElement = element;
+		} else {
+			element = this.formElement;
+		}
+		this.formOptions = data;
+    let nameModal =  elem.slice(1) + '_modal';
+
+
+    let form = `<div id="${nameModal}" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-800/50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center">
+    <div class="relative w-full max-w-3xl max-h-full ">
+        <div class="relative bg-white rounded-lg shadow dark:bg-neutral-700">`;
+    let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3';
+
+    form+= `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-neutral-600">`
+    
+    if (data.title) {
+      form += ` <h3 class="text-xl font-semibold text-neutral-900 lg:text-2xl dark:text-white">${data.title}</h3>`;
+    }
+
+    form+= `<button data-modal="closeModal,#${nameModal}" type="button" class="text-neutral-400 bg-transparent hover:bg-neutral-200 hover:text-neutral-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-neutral-600 dark:hover:text-white">
+    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+    </svg>
+    <span class="sr-only">Close modal</span>
+</button>`
+
+    form+=`</div><form data-action="submit" data-inmodal="${nameModal}"><div class="p-6">`;
+
+    
+    if ("columns" in data){
+      columns = `col-span-12 sm:col-span-${data.columns.sm ?? 6} 
+      md:col-span-${data.columns.md ?? 4} 
+      lg:col-span-${data.columns.lg ?? 3}`
+     
+    }
+
+  
+    form += '<div class="grid grid-cols-12 gap-4">';
+    this.forEachField((campo, dato) => {
+      let fieldElement = '';
+      let dataValue = '';
+      let colspan = '';
+      let esrequired = '';
+      let pattern = '';
+
+      if (data.bind) {
+        dataValue = `data-value="${data.bind}!${campo}"`;
+      }
+
+      if(dato.required == true){
+        esrequired = 'required';
+      }
+
+      if(dato.pattern != ''){
+        pattern = `pattern="${dato.pattern}"`;
+      }
+
+     
+
+      if('column' in dato){
+        if(typeof dato.column === 'object'){
+          colspan = 'col-span-12 ';
+          if(dato.column.sm > 0) colspan += `sm:col-span-${dato.column.sm} `;
+          if(dato.column.md > 0) colspan += `md:col-span-${dato.column.md} `;
+          if(dato.column.lg > 0) colspan += `lg:col-span-${dato.column.lg} `;
+          if(dato.column.xl > 0) colspan += `xl:col-span-${dato.column.xl} `;
+          console.log(colspan)
+        } else {
+          if(dato.column > 0){
+            colspan = `col-span-${dato.column}`
+          } else {
+            colspan = columns
+          }
+        }
+      }else{
+        colspan = columns
+      }
+
+      if(dato.hidden == true){
+        colspan += ' hidden';
+      }
+  
+      if (dato.type === 'select') {
+        const options = dato.options.map(option =>{
+          if(option.value == dato.value){
+            return `<option value="${option.value}" selected>${option.label}</option>`
+          } else {
+            return `<option value="${option.value}">${option.label}</option>`
+          }
+        }).join('');
+        
+        fieldElement = `
+        <div class="${colspan}">
+          <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
+          <select id="${campo}" ${dataValue} class="${this.formClass.select}" ${esrequired}>
+            ${options}
+          </select>
+        </div>`;
+      } else if (dato.type === 'datalist') {
+        const options = dato.options.map(option =>{
+          if(option.value == dato.value){
+            return `<option value="${option.value}" selected>${option.label}</option>`
+          } else {
+            return `<option value="${option.value}">${option.label}</option>`
+          }
+        }).join('');
+        
+        fieldElement = `
+        <div class="${colspan}">
+        <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
+        <input type="text" autocomplete="off" list="lista-${campo}" data-change="currency" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
+          <datalist id="lista-${campo}">
+            ${options}
+          </datalist>
+        </div>`;
+      } else if (dato.type === 'checkbox') {
+        fieldElement = `
+          <div class="${colspan}">
+            <input type="checkbox" id="${campo}" ${dataValue}  ${esrequired} class="${this.formClass.checkbox}" ${dato.value ? 'checked' : ''}>
+            <label class="${this.formClass.labelCheckbox}" for="${campo}">${dato.name}</label>
+          </div>
+        `;
+      } else if (dato.type === 'currency'){
+        fieldElement = `
+          <div class="${colspan}">
+            <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
+            <input type="text" autocomplete="off" data-change="currency" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
+          </div>
+        `;
+      } else {
+        
+        fieldElement = `
+          <div class="${colspan}">
+            <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
+            <input type="${dato.type}" autocomplete="off" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
+          </div>
+        `;
+      }
+  
+      form += fieldElement;
+    });
+  
+    form += `</div></div>`;
+  
+    if (data.textSubmit) {
+      form += `<div class="flex items-center justify-end p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">
+        <button type="submit" class="${this.formClass.btnSubmit}">${data.textSubmit}</button>
+      </div>`;
+    }
+    form += `</form></div></div></div>`
+    
+    element.innerHTML = form;
+		this.bindSubmitEvents(element);
+    this.bindClickModal(element);
     return form;
 
   }
@@ -1664,10 +2011,18 @@ export class DataObject {
 
     forms.forEach((form) => {
       const functionName = form.getAttribute('data-action');
+      let modalName = '';
+
+      if(form.getAttribute('data-inmodal')){
+        modalName = form.getAttribute('data-inmodal');
+      }
 
       form.addEventListener('submit', (event) => {
         event.preventDefault(); // Prevenir el comportamiento por defecto del formulario        
         this.executeFunctionByName(functionName);
+        if(modalName){
+          this.closeModal(modalName);
+        }
       });
 
       form.addEventListener('keypress', function (event) {
@@ -1698,16 +2053,22 @@ export class DataObject {
     });
   }
 
-  bindClickEvents(componentDiv) {
+  closeModal(modalName){
+    const modal = document.querySelector(`#${modalName}`);
+          modal.classList.remove('flex');
+          modal.classList.add('hidden');
+  }
+
+  bindClickModal(componentDiv) {
     let elementsWithClick;
     if(componentDiv){
-      elementsWithClick = componentDiv.querySelectorAll('[data-action]');
+      elementsWithClick = componentDiv.querySelectorAll('[data-modal]');
     } else {
-      elementsWithClick = document.querySelectorAll('[data-action]');
+      elementsWithClick = document.querySelectorAll('[data-modal]');
     }
 
     elementsWithClick.forEach((element) => {
-      const clickData = element.getAttribute('data-action');
+      const clickData = element.getAttribute('data-modal');
       const [functionName, ...params] = clickData.split(',');
       if(params){
         element.addEventListener('click', () => this.executeFunctionByName(functionName, params));
@@ -1742,6 +2103,7 @@ export class DataArray {
 		this.tableElement = '';
 		this.functions = {};
 		this.tableClass = {
+      divPadre:"relative overflow-x-auto shadow-md sm:rounded-lg",
 			table: "w-full text-sm text-left text-neutral-500 dark:text-neutral-400",
 			thead: "bg-neutral-300 dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
       tfoot: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
@@ -1766,6 +2128,7 @@ export class DataArray {
 					"value": "",
 					"column": 1,
 					"attribute": 0,
+          "hidden": false,
 					"defaultValue": "",
 					"key": "",
 					"setDate": 0,
@@ -1870,6 +2233,7 @@ export class DataArray {
 					"value": value,
 					"column": 1,
 					"attribute": 0,
+          "hidden": false,
 					"defaultValue": "",
 					"key": "",
 					"setDate": 0,
@@ -1968,6 +2332,9 @@ export class DataArray {
 		let xRow = {};
 		let hayMas = false;
 		let hayMenos = false;
+
+    table+=`<div class="${this.tableClass.divPadre}">`
+    
     table += `<table class="${this.tableClass.table}"><thead class="${this.tableClass.thead}">`;
 		tableHeader += `<tr class="${this.tableClass.trtitle}">`;
 
@@ -1984,9 +2351,12 @@ export class DataArray {
 			let tipo = this.detectDataType(this.dataArray[0][item].value);
 			let xheader = {}; 
 			let xfooter = {}; 
-			let xfield, xname, xattribute;
+			let xfield, xname, xattribute, xhidden;
 
 			xattribute = this.dataArray[0][item].attribute? this.dataArray[0][item].attribute : '';
+      xhidden = this.dataArray[0][item].hidden? 'hidden' : '';
+
+      
 			xname = this.dataArray[0][item].name;
 
 			if ("header" in options) {
@@ -2002,6 +2372,11 @@ export class DataArray {
 				xfooter.attribute = xattribute;
 			}
 
+      if(xhidden){
+        xheader.hidden = xhidden;
+				xfooter.hidden = xhidden;
+      }
+
 			header.push(xheader);
 			footer.push(xfooter);
 
@@ -2013,11 +2388,11 @@ export class DataArray {
 			field[item]= xfield;
 
 			if(tipo == 'number'){
-				tableHeader+=`<th scope="col" ${xattribute} class="text-right ${this.tableClass.th}" >${xname}</th>`;
+				tableHeader+=`<th scope="col" ${xattribute} ${xhidden} class="text-right ${this.tableClass.th}" >${xname}</th>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				tableHeader+=`<th scope="col" ${xattribute} class="text-left ${this.tableClass.th}" >${xname}</th>`;
+				tableHeader+=`<th scope="col" ${xattribute} ${xhidden} class="text-left ${this.tableClass.th}" >${xname}</th>`;
 			} else {
-				tableHeader+=`<th scope="col" ${xattribute} class="${this.tableClass.th}">${xname}</th>`;
+				tableHeader+=`<th scope="col" ${xattribute} ${xhidden} class="${this.tableClass.th}">${xname}</th>`;
 			}
 		})
 
@@ -2033,12 +2408,14 @@ export class DataArray {
 			let tipo = this.detectDataType(ref.value);
 			let xcss = ref.class ? ref.class : '';
 			let xattribute = ref.attribute? ref.attribute : '';
+      let xhidden = ref.hidden ? 'hidden': '';
+       
 			if(tipo == 'number'){
-				table += `<th ${xattribute} class="text-right ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
+				table += `<th ${xattribute} ${xhidden} class="text-right ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				table += `<th ${xattribute} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
+				table += `<th ${xattribute} ${xhidden} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
 			} else {
-				table += `<th ${xattribute} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
+				table += `<th ${xattribute} ${xhidden} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
 			}
 		})
 		table+=`</tr>`;
@@ -2080,6 +2457,7 @@ export class DataArray {
 
 					Object.keys(items).forEach((item) =>{
 						let xattribute = this.dataArray[index][item].attribute? this.dataArray[index][item].attribute : '';
+            let xhidden = this.dataArray[index][item].hidden? 'hidden' : '';
 						let value = items[item].value;
 						let tipo = this.detectDataType(value);
 						let valor = this.formatValueByDataType(value);
@@ -2104,11 +2482,11 @@ export class DataArray {
 						}
 
 						if(tipo == 'number'){
-							table += `<td ${xattribute} class="text-right ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+							table += `<td ${xattribute} ${xhidden} class="text-right ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 						} else if(tipo == 'date' || tipo == 'datetime-local') {
-							table += `<td ${xattribute} class="text-left ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+							table += `<td ${xattribute} ${xhidden} class="text-left ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 						} else {
-							table += `<td ${xattribute} class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+							table += `<td ${xattribute} ${xhidden} class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 						}
 
 					})
@@ -2178,7 +2556,7 @@ export class DataArray {
 
 				})
 				table += `</tr>`;
-			} //fin
+			} 
 			
 		});
 
@@ -2189,12 +2567,13 @@ export class DataArray {
 			let tipo = this.detectDataType(ref.value);
 			let xcss = ref.class ? ref.class : '';
 			let xattribute = ref.attribute? ref.attribute : '';
+      let xhidden = ref.hidden ? 'hidden': '';
 			if(tipo == 'number'){
-				table += `<td ${xattribute} class="text-right ${this.tableClass.td} ${xcss}" >${valor}</td>`;
+				table += `<td ${xattribute} ${xhidden} class="text-right ${this.tableClass.td} ${xcss}" >${valor}</td>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				table += `<td ${xattribute} class="${this.tableClass.td}${xcss}" >${valor}</td>`;
+				table += `<td ${xattribute} ${xhidden} class="${this.tableClass.td}${xcss}" >${valor}</td>`;
 			} else {
-				table += `<td ${xattribute} class="${this.tableClass.td}${xcss}" >${valor}</td>`;
+				table += `<td ${xattribute} ${xhidden} class="${this.tableClass.td}${xcss}" >${valor}</td>`;
 			}
 		})
 		table+=`</tr>`;
@@ -2249,6 +2628,8 @@ export class DataArray {
 			</div>
 		</div>`
 		}
+
+    table+='</div>'
 
 	
 		element.innerHTML = table;
