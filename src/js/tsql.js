@@ -280,6 +280,7 @@ export async function dbSelect(type, sql) {
 		return result;
 	} catch (error) {
 		console.log(error)
+		console.log(informe)
 		const err = [{ resp: 'error', msgError: 'Error 222 al consultar datos!' }];
 		return err;
 	}
@@ -292,6 +293,27 @@ export async function login(user, password) {
   
 	try {
     const resp = await fetch(`${SERVER}/login.php`, {
+      method: 'POST',
+      body: JSON.stringify({
+        data: datos
+      })
+    });
+		
+    const result = await resp.json();
+		return result;
+	} catch (error) {
+		const err = [{ resp: 'error', msgError: 'Error al consultar datos!' }];
+		return err;
+	}
+}
+
+export async function structure(table) {
+	let datos = {
+		table
+	};
+  
+	try {
+    const resp = await fetch(`${SERVER}/structure.php`, {
       method: 'POST',
       body: JSON.stringify({
         data: datos

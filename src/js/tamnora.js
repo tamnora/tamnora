@@ -1494,6 +1494,7 @@ export class DataObject {
   constructor(fields = {}) {
     this.camposRegistro = {};
     this.formOptions = {};
+    this.structure = [];
 		this.formElement = '';
 		this.functions = {
       closeModal: (e)=>{
@@ -1557,6 +1558,13 @@ export class DataObject {
     }
   }
 
+  getStructure(){
+    return this.structure
+  }
+
+  setStructure(struc){
+    this.structure = [...struc]
+  }
   
 
   setData(fieldName, key, value) {
@@ -1655,15 +1663,36 @@ export class DataObject {
     }
   }
 
+  typeToType(inType = 'text'){
+    let outType = 'text';
+    if(inType == 'int') outType = 'number';
+    if(inType == 'tinyint') outType = 'number';
+    if(inType == 'char') outType = 'text';
+    if(inType == 'varchar') outType = 'text';
+    if(inType == 'datetime') outType = 'datetime-local';
+    if(inType == 'date') outType = 'date';
+    if(inType == 'time') outType = 'time';
+    if(inType == 'decimal') outType = 'currency';
+
+    return outType
+  }
+
   
 	// Nuevo método para agregar objetos al array y completar campos
-	addObject(dataObject, clean = false) {
+	addObject(dataObject, clean = false, structure = []) {
 		const newObject = {};
+    let groupType = {};
+
+    if(structure.length > 0){
+      structure.forEach(val => {
+        groupType[val.column_name] = this.typeToType(val.data_type);
+      })
+    }
 	
 		for (const fieldName in dataObject) {
 			if (dataObject.hasOwnProperty(fieldName)) {
 				let value = dataObject[fieldName];
-				const type = this.detectDataType(value);
+				let type = this.detectDataType(value);
         if(clean == true){
           if(type == 'number'){
             value = 0;
@@ -1671,6 +1700,10 @@ export class DataObject {
             value = '';
           }
         } 
+
+        if(fieldName in groupType){
+          type = groupType[fieldName];
+        }
 
 				newObject[fieldName] = {
 					"type": type,
@@ -2170,6 +2203,7 @@ export class DataArray {
 		this.tableOptions = {};
 		this.tableElement = '';
 		this.functions = {};
+    this.structure = [];
 		this.tableClass = {
       divPadre:"relative bg-white overflow-x-auto shadow-md sm:rounded-lg",
 			table: "w-full text-sm text-left text-neutral-500 dark:text-neutral-400",
@@ -2220,6 +2254,14 @@ export class DataArray {
 
   setFunction(name, fn){
     this.functions[name] = fn
+  }
+
+  getStructure(){
+    return this.structure;
+  }
+
+  setStructure(struc){
+    this.structure = [...struc]
   }
 
 	getData(index, fieldName, key) {
