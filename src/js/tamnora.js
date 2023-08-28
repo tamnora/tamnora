@@ -274,23 +274,26 @@ export class Tamnora {
         if (!this.data[dataObj]) {
           this.data[dataObj] = {};
         }
-       
+        if(!this.data[dataObj][dataProp]){
+          this.data[dataObj][dataProp] = value;
+        }
+
         if (element.type === 'checkbox') {
-          element.checked = this.data[dataObj][dataProp] || false;
+          element.checked = value ?? false;
         } else if (element.tagName === 'SELECT') {
-          element.value = this.data[dataObj][dataProp] || '';
+          element.value = value ?? '';
         } else if (element.tagName === 'INPUT') {
-          element.value = this.data[dataObj][dataProp] || '';
+          element.value = value ?? '';
         } else {
-          element.textContent = this.data[dataObj][dataProp] || '';
+          element.textContent = value ?? '';
         }
       } else {
         if (element.tagName === 'INPUT' && element.type !== 'checkbox') {
-          element.value = value || '';
+          element.value = value ?? '';
         } else if (element.tagName === 'SELECT') {
-          element.value = value || '';
+          element.value = value ?? '';
         } else if (element.type === 'checkbox') {
-          element.checked = value || false;
+          element.checked = value ?? false;
         } else {
           element.textContent = value;
         }
@@ -762,13 +765,13 @@ export class Tamnora {
           if(!this.data[dataObj][dataProp]){
             this.data[dataObj][dataProp] = false;
           }
-          element.checked = this.data[dataObj][dataProp] || false;
+          element.checked = this.data[dataObj][dataProp] ?? false;
           
           element.addEventListener('change', (event) => {
             this.data[dataObj][dataProp] = event.target.checked;
           });
         }else if (element.tagName === 'INPUT') {
-          element.value = this.data[dataObj][dataProp] || '';
+          element.value = this.data[dataObj][dataProp] ?? '';
          
           if (isUpperCase) {
             element.addEventListener('input', (event) => {
@@ -782,7 +785,7 @@ export class Tamnora {
             });
           }
         } else {
-          element.textContent = this.data[dataObj][dataProp] || '';
+          element.textContent = this.data[dataObj][dataProp] ?? '';
         }
   
       } else {
@@ -834,7 +837,7 @@ export class Tamnora {
             });
           }
         } else {
-          element.textContent = this.data[dataKey] || '';
+          element.textContent = this.data[dataKey] ?? '';
         }
       }
 
@@ -1285,7 +1288,11 @@ export class Tamnora {
 
   currency(value, element){
     let newValue = this.formatNumber(value, 2, 'en');
-    element.target.value = newValue;
+    if(newValue == 'NaN'){
+      newValue = 0;
+    }
+      element.target.value = newValue;
+    
     this.setDataRoute(element.target.dataset.value, newValue);
   }
 
@@ -1501,10 +1508,12 @@ export class DataObject {
       }
     };
 		this.formClass = {
+      divPadre:'relative overflow-x-auto shadow-md sm:rounded-lg mb-5',
       label: 'block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400',
       input: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
       select: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
       btn: "h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500",
+      btnSmall: "text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500",
       btnSubmit: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-bg duration-500",
       darkBlue: "bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700",
       darkRed: "bg-red-700 text-white hover:bg-red-800 focus:ring-red-700",
@@ -1625,9 +1634,30 @@ export class DataObject {
     }
   }
 
+  getDataClone(){
+    return this.camposRegistro;
+  }
+
+  cloneFrom(newObject, clean = false){
+    this.camposRegistro = newObject;
+    
+    for (const fieldName in this.camposRegistro) {
+      const type = this.camposRegistro[fieldName].type;
+      let value = this.camposRegistro[fieldName].value;
+      if(clean == true){
+        if(type == 'number'){
+          value = 0;
+        }else{
+          value = '';
+        }
+        this.camposRegistro[fieldName].value = value;
+      } 
+    }
+  }
+
   
 	// Nuevo método para agregar objetos al array y completar campos
-	addObject(dataObject, clean = false, objectDefault = {}) {
+	addObject(dataObject, clean = false) {
 		const newObject = {};
 	
 		for (const fieldName in dataObject) {
@@ -1681,6 +1711,7 @@ export class DataObject {
 
   createForm(elem, data = {}) {
     let element;
+    let form = '';
 
 		if(!this.formElement){
 			element = document.querySelector(elem);
@@ -1690,18 +1721,27 @@ export class DataObject {
 		}
 		this.formOptions = data;
 
-    let form = `<form data-action="submit">`;
+    form += `<div class="${this.formClass.divPadre}">`;
+    form += `<div class=" bg-white dark:bg-neutral-800">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'
 
-    form+= `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-neutral-600">`
+    form += `<div class="flex flex-col md:flex-row  justify-between items-start p-5 border-b rounded-t dark:border-neutral-600">`
+    form += `<div class="flex flex-col mb-3">`;
     
-    if (data.title) {
-      form += ` <h3 class="text-lg font-semibold text-neutral-900  dark:text-white">${data.title}</h3>`;
-    }
+    if ("title" in data) {
+			form += `<h3 class="text-lg font-semibold text-left text-neutral-900 bg-white dark:text-white dark:bg-neutral-800">${data.title}</h3>`;
+		}
+    if ("subtitle" in data) {
+			form += `<p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">${data.subtitle}</p>`;
+		}
+    form += '</div>';
 
-    form+= ``;
+    if ("buttons" in data) {
+			form += `${data.buttons}`;
+		}
+    
 
-    form+='</div><div class="p-6">'
+    form+='</div><form data-action="submit"><div class="p-6">'
 
     
     if ("columns" in data){
@@ -1825,11 +1865,11 @@ export class DataObject {
     form += `</div></div>`;
   
     if (data.textSubmit) {
-      form += `<div class="flex items-center justify-end p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">
+      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">
         <button type="submit" class="${this.formClass.btnSubmit}">${data.textSubmit}</button>
       </div>`;
     }
-    form += '</form>'
+    form += '</form></div>'
 
     element.innerHTML = form;
 		this.bindSubmitEvents(element);
@@ -1856,10 +1896,19 @@ export class DataObject {
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3';
 
     form+= `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-neutral-600">`
-    
+    form+='<div class="flex flex-col ">';
     if (data.title) {
-      form += ` <h3 class="text-xl font-semibold text-neutral-900 lg:text-2xl dark:text-white">${data.title}</h3>`;
+      form += `<h3 class="text-lg font-semibold text-left text-neutral-900  dark:text-white">${data.title}</h3>`;
     }
+
+    if ("subtitle" in data) {
+			form += `<p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">${data.subtitle}</p>`;
+		}
+    if ("buttons" in data) {
+			form += `<div>${data.buttons}</div>`;
+		}
+    form +='</div>'
+
 
     form+= `<button data-modal="closeModal,#${nameModal}" type="button" class="text-neutral-400 bg-transparent hover:bg-neutral-200 hover:text-neutral-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-neutral-600 dark:hover:text-white">
     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
@@ -1899,6 +1948,7 @@ export class DataObject {
         pattern = `pattern="${dato.pattern}"`;
       }
 
+      
      
 
       if('column' in dato){
@@ -1972,7 +2022,6 @@ export class DataObject {
           </div>
         `;
       } else {
-        
         fieldElement = `
           <div class="${colspan}">
             <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
@@ -1987,7 +2036,7 @@ export class DataObject {
     form += `</div></div>`;
   
     if (data.textSubmit) {
-      form += `<div class="flex items-center justify-end p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">
+      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">
         <button type="submit" class="${this.formClass.btnSubmit}">${data.textSubmit}</button>
       </div>`;
     }
@@ -2078,6 +2127,25 @@ export class DataObject {
     });
   }
 
+  bindClickEvent(componentDiv) {
+    let elementsWithClick;
+    if(componentDiv){
+      elementsWithClick = componentDiv.querySelectorAll('[data-click]');
+    } else {
+      elementsWithClick = document.querySelectorAll('[data-click]');
+    }
+
+    elementsWithClick.forEach((element) => {
+      const clickData = element.getAttribute('data-click');
+      const [functionName, ...params] = clickData.split(',');
+      if(params){
+        element.addEventListener('click', () => this.executeFunctionByName(functionName, params));
+      } else {
+        element.addEventListener('click', () => this.executeFunctionByName(functionName));
+      }
+    });
+  }
+
 	// Ejecuta una función pasando el nombre como string
   executeFunctionByName(functionName, ...args) {
     if (this.functions && typeof this.functions[functionName] === 'function') {
@@ -2103,18 +2171,19 @@ export class DataArray {
 		this.tableElement = '';
 		this.functions = {};
 		this.tableClass = {
-      divPadre:"relative overflow-x-auto shadow-md sm:rounded-lg",
+      divPadre:"relative bg-white overflow-x-auto shadow-md sm:rounded-lg",
 			table: "w-full text-sm text-left text-neutral-500 dark:text-neutral-400",
-			thead: "bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600",
+      btnSmall: "text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500",
+			thead: "bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600",
       tfoot: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
       pagination: "bg-white dark:bg-neutral-800 text-neutral-700 py-3 dark:text-neutral-400",
-			th: "px-6 py-3 select-none text-xs text-neutral-700 uppercase dark:text-neutral-400",
+			th: "px-6 py-3 select-none text-xs text-neutral-600 uppercase dark:text-neutral-400 whitespace-nowrap",
 			tr: "border-b border-neutral-200 dark:border-neutral-700",
-			td: "px-6 py-3 select-none",
+			td: "px-6 py-3 select-none whitespace-nowrap",
 			tdclick: "px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400",
-			trh: "text-md font-semibold ",
+			trh: "text-md font-semibold whitespace-nowrap",
       trtitle: "text-md font-semibold ",
-			tdh: "px-6 py-2 select-none ",
+			tdh: "px-6 py-2 select-none whitespace-nowrap",
 			tdnumber: "px-6 py-4 text-right",
 		};
 		this.dataArray = initialData.map(item => {
@@ -2335,22 +2404,22 @@ export class DataArray {
 
     table +=`<div class="${this.tableClass.divPadre}">`;
     table += `<table class="${this.tableClass.table}">`;
-    table += `<caption class="p-5 text-lg font-semibold text-left text-neutral-900 bg-white dark:text-white dark:bg-neutral-800">`;
+    table += `<div class="flex flex-col md:flex-row justify-between items-start w-full p-5 text-lg font-semibold text-left text-neutral-900 bg-white dark:text-white dark:bg-neutral-800">`;
+    table += `<div class="flex flex-col mb-2">`;
 
     if ("title" in options) {
 			table += `${options.title}`;
 		}
-    table += `<div class="flex justify-between items-start">`;
     if ("subtitle" in options) {
 			table += `<p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">${options.subtitle}</p>`;
 		}
-
+    table += `</div>`;
     if ("btnNew" in options) {
-			table += `<button type="button" data-action="seleccionado,0,0" class="px-3 py-2 text-sm font-medium text-center text-white bg-neutral-700 rounded-lg hover:bg-neutral-800 focus:ring-4 focus:outline-none focus:ring-neutral-300 dark:bg-neutral-600 dark:hover:bg-neutral-700 dark:focus:ring-neutral-800">${options.btnNew}</button>`;
+			table += `<button type="button" data-action="seleccionado,0,0" class="${this.tableClass.btnSmall}">${options.btnNew}</button>`;
 		}
     
 
-    table += `</div></caption><thead class="${this.tableClass.thead}">`;
+    table += `</div><thead class="${this.tableClass.thead}">`;
 
     table+=`<thead class="${this.tableClass.thead}">`;
 		tableHeader += `<tr class="${this.tableClass.trtitle}">`;

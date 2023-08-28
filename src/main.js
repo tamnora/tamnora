@@ -7,9 +7,11 @@ const tmn = new Tamnora({styleClasses:styleClass});
 const frmCliente = new DataObject();
 const tableMovimientos = new DataArray();
 const frmMovim = new DataObject();
+const frmClienteModal = new DataObject();
 
 tmn.setData('contador', 0);
 tmn.setData('cliente', {});
+tmn.setData('newCliente', {});
 tmn.setData('movimiento',{});
 tableMovimientos.name = 'Movim';
 
@@ -19,6 +21,18 @@ tableMovimientos.name = 'Movim';
 frmCliente.setFunction('submit',async ()=>{
   const datos = tmn.getData('cliente');
   frmCliente.setDataFromModel(datos)
+  const paraSQL = frmCliente.getDataAll();
+  const send = prepararSQL('clientes', paraSQL);
+  
+  if(send.status == 1){
+    await dbSelect(send.tipo, send.sql).then(val => console.log(val))
+  }
+
+})
+
+frmClienteModal.setFunction('submit',async ()=>{
+  const datos = tmn.getData('newCliente');
+  frmClienteModal.setDataFromModel(datos)
   const paraSQL = frmCliente.getDataAll();
   const send = prepararSQL('clientes', paraSQL);
   
@@ -48,6 +62,21 @@ frmMovim.setFunction('submit',async()=>{
 })
 
 
+tmn.setFunction('nuevoCliente', ()=>{
+  frmClienteModal.cloneFrom(frmCliente.getDataClone(), true);
+  frmClienteModal.setData('date_added', 'value', tmn.formatDate(new Date()).fechaHora);
+  
+  frmClienteModal.forEachField((campo, dato)=>{
+    tmn.setDataRoute(`newCliente!${campo}`, dato.value);
+  })
+
+  frmClienteModal.setDataKeys('name', {id_cliente: 'ID', nombre_cliente: 'Nombre', telefono_cliente: 'Teléfono', 
+  email_cliente: 'Email', direccion_cliente: 'Dirección', status_cliente: 'Status', date_added: 'Fecha Ingreso'});
+
+  frmClienteModal.createFormModal('#modalCliente', {textSubmit:'Guardar', title:'Nuevo cliente/Proveedor', bind:'newCliente', columns:{md:6, lg:6}});
+  tmn.select('#modalCliente').bindModel();
+  
+})
 
 
 tableMovimientos.setFunction('seleccionado',async(params)=>{
@@ -58,6 +87,7 @@ tableMovimientos.setFunction('seleccionado',async(params)=>{
     let tblMov = tableMovimientos.getDataObjectForKey(index, 'value');
     frmMovim.addObject(tblMov, true);
     frmMovim.setData('id_cliente', 'value', tmn.data.contador);
+    frmMovim.setData('id_factura', 'type', 'number');
     frmMovim.setData('importe', 'value', 0);
     frmMovim.setData('tipo_oper', 'value', 0);
     frmMovim.setData('fechahora', 'value', tmn.formatDate(new Date()).fechaHora);
@@ -78,6 +108,8 @@ tableMovimientos.setFunction('seleccionado',async(params)=>{
   frmMovim.forEachField((campo, dato)=>{
     tmn.setDataRoute(`movimiento!${campo}`, dato.value);
   })
+
+  console.log(frmMovim.getDataAll())
     
   frmMovim.createFormModal('#modalMovimiento', {textSubmit:'Guardar', title:'ABM - Movimientos', bind:'movimiento', columns:{md:6, lg:6}});
   tmn.select('#modalMovimiento').bindModel();
@@ -100,7 +132,6 @@ let tblCliente;
   
   frmCliente.setData('id_cliente', 'attribute', 'readonly');
   frmCliente.setData('id_cliente', 'key', 'primary');
-  frmCliente.setData('id_cliente', 'hidden', true);
   frmCliente.setData('date_added', 'defaultValue', tmn.formatDate(new Date()).fechaHora);
   frmCliente.setData('status_cliente', 'type', 'select');
   frmCliente.setData('telefono_cliente', 'type', 'text');
@@ -120,7 +151,9 @@ let tblCliente;
 
   tmn.data.nombreCliente = tmn.getData('cliente!nombre_cliente');
   
-  frmCliente.createForm('#formCliente', {textSubmit:'Guardar Datos', title:'Cliente:', bind:'cliente'});
+  frmCliente.createForm('#formCliente', {textSubmit:'Guardar Datos', title:'Cliente', bind:'cliente', btnNew: 'Nuevo Usuario', buttons: `
+  <button type="button" data-click="nuevoCliente" class="text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500" >Nuevo Cliente</button>
+  `});
   tmn.select('#formCliente').bindModel()
   
 };
@@ -233,9 +266,9 @@ function verTablaVacia(){
  
 }
 
-tmn.data.contador = 1;
-traerCliente(1);
-traerMovimientos(1, true);
+tmn.data.contador = 100;
+traerCliente(100);
+traerMovimientos(100, true);
 
 tmn.select('#prevClient').click(async ()=>{ 
   if(tmn.data.contador > 0){

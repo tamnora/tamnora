@@ -1,5 +1,6 @@
-const SERVER = import.meta.env.VITE_SERVER;
+const SERVER = import.meta.env.VITE_SERVER_DEV;
 
+let informe = {};
 
 function createQuerySQL(type, params) {
 	if (typeof type !== 'string') {
@@ -230,14 +231,16 @@ export function prepararSQL(tabla, json) {
 				}
 			}
 
-			//console.log(dataForSave);
+			//console.log('Primer Paso',dataForSave);
+			informe.primero = dataForSave; 
 			sql = createQuerySQL(tipoSQL, {
 				t: tabla,
 				w: where,
 				d: dataForSave
 			});
 
-			//console.log(sql);
+			//console.log('Segundo Paso', sql);
+			informe.segundo = sql
 			respuesta = {
 				status: 1,
 				tipo: tipoSQL,
