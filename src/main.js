@@ -59,6 +59,7 @@ tableMovimientos.setFunction('seleccionado',async(params)=>{
     frmMovim.addObject(tblMov, true);
     frmMovim.setData('id_cliente', 'value', tmn.data.contador);
     frmMovim.setData('importe', 'value', 0);
+    frmMovim.setData('tipo_oper', 'value', 0);
     frmMovim.setData('fechahora', 'value', tmn.formatDate(new Date()).fechaHora);
   } else {
     frmMovim.addObject(tableMovimientos.getDataObjectForKey(index, 'value'));
@@ -153,13 +154,13 @@ async function traerMovimientos(id, reset= false){
       tableMovimientos.addObject({
         id: "0",
         id_cliente: tmn.data.contador,
-        id_factura: "0",
-        fechahora: tmn.formatDate(new Date()).fechaHora,
-        tipo_oper: "0",
-        importe: "0.00",
-        concepto: "Nuevo"
+        id_factura: "",
+        fechahora: "",
+        tipo_oper: "",
+        importe: "0",
+        concepto: "SIN REGISTROS"
     });
-      verTabla();
+      verTablaVacia();
     }
   } else {
     tmn.select('#tabla').html('');
@@ -211,6 +212,19 @@ function verTabla(){
         field: 'id'
       }
     }
+  }
+
+  tableMovimientos.createTable('#tabla',options);
+
+  
+ 
+}
+
+function verTablaVacia(){
+  const options = {
+    title: 'Movimientos',
+    subtitle:'Detalle de los movimirntos del cliente',
+    btnNew: 'Nuevo Movimiento'
   }
 
   tableMovimientos.createTable('#tabla',options);
