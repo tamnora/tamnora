@@ -1696,7 +1696,7 @@ export class DataObject {
     form+= `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-neutral-600">`
     
     if (data.title) {
-      form += ` <h3 class="text-xl font-semibold text-neutral-900 lg:text-2xl dark:text-white">${data.title}</h3>`;
+      form += ` <h3 class="text-lg font-semibold text-neutral-900  dark:text-white">${data.title}</h3>`;
     }
 
     form+= ``;
@@ -2105,7 +2105,7 @@ export class DataArray {
 		this.tableClass = {
       divPadre:"relative overflow-x-auto shadow-md sm:rounded-lg",
 			table: "w-full text-sm text-left text-neutral-500 dark:text-neutral-400",
-			thead: "bg-neutral-300 dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
+			thead: "bg-neutral-200 dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600",
       tfoot: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
       pagination: "bg-white dark:bg-neutral-800 text-neutral-700 py-3 dark:text-neutral-400",
 			th: "px-6 py-3 select-none text-xs text-neutral-700 uppercase dark:text-neutral-400",
@@ -2333,9 +2333,26 @@ export class DataArray {
 		let hayMas = false;
 		let hayMenos = false;
 
-    table+=`<div class="${this.tableClass.divPadre}">`
+    table +=`<div class="${this.tableClass.divPadre}">`;
+    table += `<table class="${this.tableClass.table}">`;
+    table += `<caption class="p-5 text-lg font-semibold text-left text-neutral-900 bg-white dark:text-white dark:bg-neutral-800">`;
+
+    if ("title" in options) {
+			table += `${options.title}`;
+		}
+    table += `<div class="flex justify-between items-start">`;
+    if ("subtitle" in options) {
+			table += `<p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">${options.subtitle}</p>`;
+		}
+
+    if ("btnNew" in options) {
+			table += `<button type="button" data-action="seleccionado,0,0" class="px-3 py-2 text-sm font-medium text-center text-white bg-neutral-700 rounded-lg hover:bg-neutral-800 focus:ring-4 focus:outline-none focus:ring-neutral-300 dark:bg-neutral-600 dark:hover:bg-neutral-700 dark:focus:ring-neutral-800">${options.btnNew}</button>`;
+		}
     
-    table += `<table class="${this.tableClass.table}"><thead class="${this.tableClass.thead}">`;
+
+    table += `</div></caption><thead class="${this.tableClass.thead}">`;
+
+    table+=`<thead class="${this.tableClass.thead}">`;
 		tableHeader += `<tr class="${this.tableClass.trtitle}">`;
 
 		if ("row" in options) {

@@ -35,7 +35,7 @@ frmMovim.setFunction('submit',async()=>{
 
    const paraSQL = frmMovim.getDataAll();
    const send = prepararSQL('movimientos', paraSQL);
-   console.log(send)
+
   
   if(send.status == 1){
     await dbSelect(send.tipo, send.sql).then(val => {
@@ -50,15 +50,23 @@ frmMovim.setFunction('submit',async()=>{
 
 
 
-
-
-
 tableMovimientos.setFunction('seleccionado',async(params)=>{
   let index = params[0];
-  frmMovim.addObject(tableMovimientos.getDataObjectForKey(index, 'value'));
+  let value = params[1];
+
+  if(value == 0){
+    let tblMov = tableMovimientos.getDataObjectForKey(index, 'value');
+    frmMovim.addObject(tblMov, true);
+    frmMovim.setData('id_cliente', 'value', tmn.data.contador);
+    frmMovim.setData('importe', 'value', 0);
+    frmMovim.setData('fechahora', 'value', tmn.formatDate(new Date()).fechaHora);
+  } else {
+    frmMovim.addObject(tableMovimientos.getDataObjectForKey(index, 'value'));
+  }
+  
   frmMovim.setData('id', 'key', 'primary');
   frmMovim.setData('id', 'attribute', 'readonly');
-  frmMovim.setData('id', 'hidden', true);
+  // frmMovim.setData('id', 'hidden', true);
   frmMovim.setData('concepto', 'column', 12);
   frmMovim.setDataKeys('name', {id_cliente: 'ID Cliente', id_factura: 'ID Factura'});
   frmMovim.setData('importe', 'type', 'currency');
@@ -124,28 +132,36 @@ async function traerMovimientos(id, reset= false){
   if(reset) tableMovimientos.resetFrom();
 
   if(id > 0){
-    rst.forEach(row => {
-      tableMovimientos.addObject(row);
-      if(row.tipo_oper > 0){
-        saldo = saldo - parseFloat(row.importe)
-      } else {
-        saldo = saldo + parseFloat(row.importe)
-      }
-    })
-  
     if(!rst[0].Ninguno){
+      rst.forEach(row => {
+        tableMovimientos.addObject(row);
+        if(row.tipo_oper > 0){
+          saldo = saldo - parseFloat(row.importe)
+        } else {
+          saldo = saldo + parseFloat(row.importe)
+        }
+      })
       tmn.setData('saldoMov', saldo);
       tableMovimientos.setDataKeys('name', {fechahora: 'Fecha y Hora', tipo_oper: 'Operación'});
-      tableMovimientos.setDataKeys('attribute', {id_cliente: 'hidden'});
-      tableMovimientos.setDataKeys('hidden', {id: true});
+      // tableMovimientos.setDataKeys('attribute', {id_cliente: 'hidden'});
+      // tableMovimientos.setDataKeys('hidden', {id: true});
     
       
       verTabla();
     } else {
-      tmn.select('#tabla').html('');
+      tmn.setData('saldoMov', saldo);
+      tableMovimientos.addObject({
+        id: "0",
+        id_cliente: tmn.data.contador,
+        id_factura: "0",
+        fechahora: tmn.formatDate(new Date()).fechaHora,
+        tipo_oper: "0",
+        importe: "0.00",
+        concepto: "Nuevo"
+    });
+      verTabla();
     }
   } else {
-    console.log('Que hacemos');
     tmn.select('#tabla').html('');
   }
   
@@ -154,6 +170,9 @@ async function traerMovimientos(id, reset= false){
 
 function verTabla(){
   const options = {
+    title: 'Movimientos',
+    subtitle:'Detalle de los movimirntos del cliente',
+    btnNew: 'Nuevo Movimiento',
     header:{
       tipo_oper: {class: 'text-right text-neutral-500 text-lg', value: 'Saldo Pendiente:'},
       importe:{class: 'text-right text-neutral-500 text-lg', value: tmn.getDataFormat('saldoMov', 'pesos')},
@@ -200,7 +219,9 @@ function verTabla(){
  
 }
 
-traerCliente(106);
+tmn.data.contador = 1;
+traerCliente(1);
+traerMovimientos(1, true);
 
 tmn.select('#prevClient').click(async ()=>{ 
   if(tmn.data.contador > 0){
