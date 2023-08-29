@@ -1,9 +1,8 @@
 import {Tamnora, DataObject, DataArray} from './js/tamnora.js';
-import { styleClass } from './js/style.js';
 
 import { runcode, prepararSQL, dbSelect, structure } from './js/tsql.js';
 
-const tmn = new Tamnora({styleClasses:styleClass});
+const tmn = new Tamnora();
 const frmCliente = new DataObject();
 const tableMovimientos = new DataArray();
 const frmMovim = new DataObject();
@@ -14,8 +13,6 @@ tmn.setData('cliente', {});
 tmn.setData('newCliente', {});
 tmn.setData('movimiento',{});
 tableMovimientos.name = 'Movim';
-
-
 
 
 frmCliente.setFunction('submit',async ()=>{
@@ -84,10 +81,11 @@ tableMovimientos.setFunction('seleccionado',async(params)=>{
   let value = params[1];
 
   if(value == 0){
+    console.log(tableMovimientos.getDataObjectForIndex(index))
     let tblMov = tableMovimientos.getDataObjectForKey(index, 'value');
     let struct = tableMovimientos.getStructure();
     console.log('struct', struct)
-    frmMovim.addObject(tblMov, true, struct);
+    frmMovim.addObject(tblMov, struct, true);
     frmMovim.setData('id_cliente', 'value', tmn.data.contador);
     frmMovim.setData('importe', 'value', 0);
     frmMovim.setData('tipo_oper', 'value', 0);
@@ -95,10 +93,10 @@ tableMovimientos.setFunction('seleccionado',async(params)=>{
   } else {
     let struct = tableMovimientos.getStructure();
     console.log('struct', struct)
-    frmMovim.addObject(tableMovimientos.getDataObjectForKey(index, 'value'), false, struct);
+    frmMovim.addObject(tableMovimientos.getDataObjectForKey(index, 'value'), struct);
   }
   
-  frmMovim.setData('id', 'key', 'primary');
+  // frmMovim.setData('id', 'key', 'primary');
   frmMovim.setData('id', 'attribute', 'readonly');
   // frmMovim.setData('id', 'hidden', true);
   frmMovim.setData('concepto', 'column', 12);
@@ -122,19 +120,19 @@ tableMovimientos.setFunction('seleccionado',async(params)=>{
 
 async function traerCliente(id){
 let tblCliente;
-let strucClientes = await structure('clientes');
+let strucClientes = await structure('t','clientes');
 
 if(id == 0){
   tblCliente = await runcode(`-st clientes`);
-  frmCliente.addObject(tblCliente[0], true, strucClientes);
+  frmCliente.addObject(tblCliente[0], strucClientes, true);
   frmCliente.setData('date_added', 'value', tmn.formatDate(new Date()).fechaHora);
 }else {
   tblCliente = await runcode(`-st clientes -wr id_cliente=${id}`);
-  frmCliente.addObject(tblCliente[0], false, strucClientes);
+  frmCliente.addObject(tblCliente[0], strucClientes);
 }
 
   frmCliente.setData('id_cliente', 'attribute', 'readonly');
-  frmCliente.setData('id_cliente', 'key', 'primary');
+  // frmCliente.setData('id_cliente', 'key', 'primary');
   frmCliente.setData('date_added', 'defaultValue', tmn.formatDate(new Date()).fechaHora);
   frmCliente.setData('status_cliente', 'type', 'select');
   frmCliente.setData('status_cliente', 'options', [{value: 0, label: 'Inactivo'}, {value:1, label:'Activo'}]);
@@ -164,12 +162,12 @@ async function traerMovimientos(id, reset= false){
   
   
   if(!tableMovimientos.getStructure().length){
-    await structure('movimientos').then(struc => {
+    await structure('t','movimientos').then(struc => {
       tableMovimientos.setStructure(struc);
     });
   }
 
-  console.log(tableMovimientos.getStructure())
+  
 
   let saldo = 0;
   
@@ -179,7 +177,7 @@ async function traerMovimientos(id, reset= false){
   if(id > 0){
     if(!rst[0].Ninguno){
       rst.forEach(row => {
-        tableMovimientos.addObject(row);
+        tableMovimientos.addObject(row, tableMovimientos.getStructure());
         if(row.tipo_oper > 0){
           saldo = saldo - parseFloat(row.importe)
         } else {
@@ -212,9 +210,6 @@ async function traerMovimientos(id, reset= false){
   
 };
 
-structure('movimientos').then(resp => {
-  console.log(resp)
-});
 
 
 function verTabla(){
@@ -297,5 +292,9 @@ tmn.select('#nextClient').click(async ()=>{
     traerMovimientos(tmn.data.contador, true);
 })
 
+
+structure('t','clientes').then(resp => {
+  console.log(resp)
+});
 
 

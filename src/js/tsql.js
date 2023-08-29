@@ -177,7 +177,7 @@ export function prepararSQL(tabla, json) {
 		if (!comprobation.length) {
 			for (const key in json) {
 				//console.log(key, json[key].value)
-				if (json[key].key == 'primary') {
+				if (json[key].key == 'PRI') {
 					typeInput = json[key].type;
 	
 					if (typeInput == 'integer' || typeInput == 'number') {
@@ -307,9 +307,10 @@ export async function login(user, password) {
 	}
 }
 
-export async function structure(table) {
+export async function structure(type, name) {
 	let datos = {
-		table
+		type,
+		name
 	};
   
 	try {
