@@ -1535,12 +1535,15 @@ export class DataObject {
     };
 		this.formClass = {
       divPadre:'relative overflow-x-auto shadow-md sm:rounded-lg mb-5',
+      header: "bg-white dark:bg-neutral-800",
+      title: "text-lg font-semibold text-left text-neutral-900 dark:text-white",
+      subtitle: "mt-1 text-sm font-normal text-gray-500 dark:text-gray-400",
       label: 'block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400',
       input: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
       select: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
       btn: "h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500",
       btnSmall: "text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500",
-      btnSubmit: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-bg duration-500",
+      submit: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-bg duration-500",
       darkBlue: "bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700",
       darkRed: "bg-red-700 text-white hover:bg-red-800 focus:ring-red-700",
       darkGreen: "bg-green-700 text-white hover:bg-green-800 focus:ring-green-700",
@@ -1795,23 +1798,27 @@ export class DataObject {
     form += `<div class=" bg-white dark:bg-neutral-800">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'
 
-    form += `<div class="flex flex-col md:flex-row  justify-between items-start p-5 border-b rounded-t dark:border-neutral-600">`
-    form += `<div class="flex flex-col mb-3">`;
-    
-    if ("title" in data) {
-			form += `<h3 class="text-lg font-semibold text-left text-neutral-900 bg-white dark:text-white dark:bg-neutral-800">${data.title}</h3>`;
-		}
-    if ("subtitle" in data) {
-			form += `<p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">${data.subtitle}</p>`;
-		}
-    form += '</div>';
+    if("title" in data || "subtitle" in data || "buttons" in data){
+      form += `<div class="flex flex-col md:flex-row  justify-between items-start p-5 border-b rounded-t dark:border-neutral-600">`
+      if("title" in data || "subtitle" in data){
+        form += `<div class="flex flex-col mb-3">`;
+        if ("title" in data) {
+          form += `<h3 class="${this.formClass.title}">${data.title}</h3>`;
+        }
+        if ("subtitle" in data) {
+          form += `<p class="${this.formClass.subtitle}">${data.subtitle}</p>`;
+        }
+        form += '</div>';
+      }
+  
+      if ("buttons" in data) {
+        form += `${data.buttons}`;
+      }
+      form +='</div>'
 
-    if ("buttons" in data) {
-			form += `${data.buttons}`;
-		}
-    
+    }
 
-    form+='</div><form data-action="submit"><div class="p-6">'
+    form+='<form data-action="submit"><div class="p-6">'
 
     
     if ("columns" in data){
@@ -1934,9 +1941,9 @@ export class DataObject {
   
     form += `</div></div>`;
   
-    if (data.textSubmit) {
+    if (data.submit) {
       form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">
-        <button type="submit" class="${this.formClass.btnSubmit}">${data.textSubmit}</button>
+        <button type="submit" class="${this.formClass.submit}">${data.submit}</button>
       </div>`;
     }
     form += '</form></div>'
@@ -2105,9 +2112,9 @@ export class DataObject {
   
     form += `</div></div>`;
   
-    if (data.textSubmit) {
+    if (data.submit) {
       form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">
-        <button type="submit" class="${this.formClass.btnSubmit}">${data.textSubmit}</button>
+        <button type="submit" class="${this.formClass.submit}">${data.submit}</button>
       </div>`;
     }
     form += `</form></div></div></div>`
@@ -2242,8 +2249,10 @@ export class DataArray {
 		this.functions = {};
     this.structure = [];
 		this.tableClass = {
-      divPadre:"relative bg-white overflow-x-auto shadow-md sm:rounded-lg",
+      divPadre:"relative bg-white dark:bg-neutral-800 overflow-x-auto shadow-md sm:rounded-lg",
 			table: "w-full text-sm text-left text-neutral-500 dark:text-neutral-400",
+      header: "bg-white dark:bg-neutral-800",
+      title: "text-lg font-semibold text-left text-neutral-900 dark:text-white",
       btnSmall: "text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500",
 			thead: "bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600",
       tfoot: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
@@ -2557,22 +2566,24 @@ export class DataArray {
 
     table +=`<div class="${this.tableClass.divPadre}">`;
     table += `<table class="${this.tableClass.table}">`;
-    table += `<div class="flex flex-col md:flex-row justify-between items-start w-full p-5 text-lg font-semibold text-left text-neutral-900 bg-white dark:text-white dark:bg-neutral-800">`;
-    table += `<div class="flex flex-col mb-2">`;
-
-    if ("title" in options) {
-			table += `${options.title}`;
-		}
-    if ("subtitle" in options) {
-			table += `<p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">${options.subtitle}</p>`;
-		}
-    table += `</div>`;
-    if ("btnNew" in options) {
-			table += `<button type="button" data-action="seleccionado,0,0" class="${this.tableClass.btnSmall}">${options.btnNew}</button>`;
-		}
+    table += `<div class="flex flex-col md:flex-row justify-between items-start w-full p-5 ${this.tableClass.header}">`;
     
+    if ("title" in options || "subtitle" in options || "btnNew" in options) {
+      table += `<div class="flex flex-col mb-2">`;
+      if ("title" in options) {
+        table += `<h3 class="${this.tableClass.title}">${options.title}</h3>`;
+      }
+      if ("subtitle" in options) {
+        table += `<p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">${options.subtitle}</p>`;
+      }
+      table += `</div>`;
+      if ("btnNew" in options) {
+        table += `<button type="button" data-action="seleccionado,0,0" class="${this.tableClass.btnSmall}">${options.btnNew}</button>`;
+      }
+      table += '</div>';
+    }
 
-    table += `</div><thead class="${this.tableClass.thead}">`;
+    table += `<thead class="${this.tableClass.thead}">`;
 
     table+=`<thead class="${this.tableClass.thead}">`;
 		tableHeader += `<tr class="${this.tableClass.trtitle}">`;
