@@ -346,6 +346,24 @@ export class Tamnora {
     });
   }
 
+  bindToggleEvents(componentDiv) {
+    let elementsWithClick;
+    if(componentDiv){
+      elementsWithClick = componentDiv.querySelectorAll('[data-dropdown-toggle]');
+    } else {
+      elementsWithClick = document.querySelectorAll('[data-dropdown-toggle]');
+    }
+
+    elementsWithClick.forEach((element) => {
+      const toggleData = element.getAttribute('data-dropdown-toggle');
+      
+        element.addEventListener('click', () => {
+          document.querySelector(`#${toggleData}`).classList.toggle('hidden')
+        });
+     
+    });
+  }
+
   bindChangeEvents(componentDiv) {
     let elementsWithClick;
     if(componentDiv){
@@ -1211,8 +1229,15 @@ export class Tamnora {
           this.bindElementsWithDataValues(element);
           this.bindClickEvents(element);
           this.bindChangeEvents(element);
+          this.bindToggleEvents(element);
         },
-        value: element
+        value: ()=>{
+          return element.value
+        },
+        target: ()=>{
+          return element.target
+        },
+
         // Agregar más eventos aquí según sea necesario
       };
     } else {
@@ -1539,8 +1564,8 @@ export class DataObject {
       title: "text-lg font-semibold text-left text-neutral-900 dark:text-white",
       subtitle: "mt-1 text-sm font-normal text-gray-500 dark:text-gray-400",
       label: 'block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400',
-      input: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
-      select: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
+      input: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-900 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
+      select: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-900 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
       btn: "h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500",
       btnSmall: "text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500",
       submit: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-bg duration-500",
@@ -2394,32 +2419,6 @@ export class DataArray {
 		});
 	}
 
-	// Nuevo método para agregar objetos al array y completar campos
-	// addObject(dataObject) {
-	// 	const newObject = {};
-	// 	for (const fieldName in dataObject) {
-	// 		if (dataObject.hasOwnProperty(fieldName)) {
-	// 			const value = dataObject[fieldName];
-	// 			const type = this.detectDataType(value);
-	// 			newObject[fieldName] = {
-	// 				"type": type,
-	// 				"name": fieldName,
-	// 				"required": false,
-	// 				"placeholder": "",
-	// 				"value": value,
-	// 				"column": 1,
-	// 				"attribute": 0,
-  //         "hidden": false,
-	// 				"defaultValue": "",
-	// 				"key": "",
-	// 				"setDate": 0,
-	// 				"data": []
-	// 			};
-	// 		}
-	// 	}
-	// 	this.dataArray.push(newObject);
-	// }
-
   // Nuevo método para agregar objetos al array y completar campos
 	addObject(dataObject, structure = [], clean = false) {
 		const newObject = {};
@@ -2568,8 +2567,8 @@ export class DataArray {
     table += `<table class="${this.tableClass.table}">`;
     table += `<div class="flex flex-col md:flex-row justify-between items-start w-full p-5 ${this.tableClass.header}">`;
     
-    if ("title" in options || "subtitle" in options || "btnNew" in options) {
-      table += `<div class="flex flex-col mb-2">`;
+    if ("title" in options || "subtitle" in options || "btnNew" in options || "buttons" in options) {
+      table += `<div class="flex flex-col flex-grow mb-2">`;
       if ("title" in options) {
         table += `<h3 class="${this.tableClass.title}">${options.title}</h3>`;
       }
@@ -2577,6 +2576,9 @@ export class DataArray {
         table += `<p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">${options.subtitle}</p>`;
       }
       table += `</div>`;
+      if ("buttons" in options) {
+        table += `${options.buttons}`;
+      }
       if ("btnNew" in options) {
         table += `<button type="button" data-action="seleccionado,0,0" class="${this.tableClass.btnSmall}">${options.btnNew}</button>`;
       }
@@ -2601,6 +2603,7 @@ export class DataArray {
 			let tipo = this.detectDataType(this.dataArray[0][item].value);
 			let xheader = {}; 
 			let xfooter = {}; 
+      let classTitleColumn = '';
 			let xfield, xname, xattribute, xhidden;
 
 			xattribute = this.dataArray[0][item].attribute? this.dataArray[0][item].attribute : '';
@@ -2637,12 +2640,25 @@ export class DataArray {
 			}
 			field[item]= xfield;
 
+      if(tipo == 'number'){
+        classTitleColumn = 'text-right'
+      }
+
+      if ("header" in options) {
+        if(options.header[item]){
+          if('class' in options.header[item]){
+            classTitleColumn = options.header[item].class;
+          }
+          if('title' in options.header[item]){
+            xname = options.header[item].title;
+          }
+        }
+			} 
+
 			if(tipo == 'number'){
-				tableHeader+=`<th scope="col" ${xattribute} ${xhidden} class="text-right ${this.tableClass.th}" >${xname}</th>`;
-			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				tableHeader+=`<th scope="col" ${xattribute} ${xhidden} class="text-left ${this.tableClass.th}" >${xname}</th>`;
+				tableHeader+=`<th scope="col" ${xattribute} ${xhidden} class="${this.tableClass.th} ${classTitleColumn}">${xname}</th>`;
 			} else {
-				tableHeader+=`<th scope="col" ${xattribute} ${xhidden} class="${this.tableClass.th}">${xname}</th>`;
+				tableHeader+=`<th scope="col" ${xattribute} ${xhidden} class="${this.tableClass.th} ${classTitleColumn}">${xname}</th>`;
 			}
 		})
 
@@ -2661,7 +2677,7 @@ export class DataArray {
       let xhidden = ref.hidden ? 'hidden': '';
        
 			if(tipo == 'number'){
-				table += `<th ${xattribute} ${xhidden} class="text-right ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
+				table += `<th ${xattribute} ${xhidden} class="${this.tableClass.tdh} ${xcss ? xcss : 'text-right'}" >${valor}</th>`;
 			} else if(tipo == 'date' || tipo == 'datetime-local') {
 				table += `<th ${xattribute} ${xhidden} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
 			} else {
@@ -2728,13 +2744,17 @@ export class DataArray {
 						if(field[item].class){
 							newClass = field[item].class;
 						} else {
-							newClass = '';
+              if(tipo == 'number'){
+                newClass = 'text-right'
+              } else {
+                newClass = '';
+              }
 						}
 
 						if(tipo == 'number'){
-							table += `<td ${xattribute} ${xhidden} class="text-right ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+							table += `<td ${xattribute} ${xhidden} class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 						} else if(tipo == 'date' || tipo == 'datetime-local') {
-							table += `<td ${xattribute} ${xhidden} class="text-left ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+							table += `<td ${xattribute} ${xhidden} class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 						} else {
 							table += `<td ${xattribute} ${xhidden} class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 						}
@@ -2793,13 +2813,17 @@ export class DataArray {
 					if(field[item].class){
 						newClass = field[item].class;
 					} else {
-						newClass = '';
+						if(tipo == 'number'){
+              newClass = 'text-right'
+            } else {
+              newClass = '';
+            }
 					}
 
 					if(tipo == 'number'){
-						table += `<td ${xattribute} class="text-right ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+						table += `<td ${xattribute} class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 					} else if(tipo == 'date' || tipo == 'datetime-local') {
-						table += `<td ${xattribute} class="text-left ${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+						table += `<td ${xattribute} class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 					} else {
 						table += `<td ${xattribute} class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
 					}
@@ -2884,7 +2908,7 @@ export class DataArray {
 	
 		element.innerHTML = table;
 		this.bindClickPaginations(element);
-		this.bindClickEvents(element)
+		this.bindClickEvents(element);
     return table;
   }
 
@@ -2935,6 +2959,8 @@ export class DataArray {
       }
     });
   }
+
+  
 
 	// Ejecuta una función pasando el nombre como string
   executeFunctionByName(functionName, ...args) {
