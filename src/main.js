@@ -9,76 +9,12 @@ const factura = new DataObject;
 tmn.setData('textoBuscado');
 tmn.setData('textSearch', 'Cliente')
 
-tmn.setFunction('searchSelect', (param)=>{
-  let inputSearch = document.querySelector('#search-dropdown');
-  tmn.setData('textSearch', param[0])
-  document.querySelector('#dropdown-button').click();
-  if(param[0] == 'Fecha'){
-    inputSearch.setAttribute('type', 'date');
-  } else if(param[0] == 'Factura'){
-    inputSearch.setAttribute('type', 'number');
-  } else if(param[0] == 'Importe'){
-    inputSearch.setAttribute('type', 'number');
-  } else {
-    inputSearch.setAttribute('type', 'search');
-  }
-})
-
-tmn.select('#search-dropdown').change(e => {
-  let type = e.target.getAttribute('type');
-  let value = e.target.value;
-  let buscarEn = tmn.getData('textSearch');
-  let param = '';
-  let cliente;
-  
-  
-  console.log(buscarEn, type, value)
-
-  if(buscarEn == 'Cliente'){
-    if(value != ''){
-      value = value.toLowerCase();
-      cliente = tmn.getData('listaClientes').filter(cliente => cliente.nombre_cliente.toLowerCase().includes(value));
-      if(cliente.length > 0){
-        cliente.forEach(v =>{
-          param +=` id_cliente = ${v.id_cliente} OR`;
-        })
-        param +='-';
-        param = param.replace('OR-', ' ');
-        console.log(param);
-      } else {
-        param +=`id_cliente = 0`;
-      }
-    } else {
-      console.log('Esta vacio')
-      param +=``;
-    }
-    
-  } else if(buscarEn == 'Factura'){
-    param = `numero_factura like '%${value}%' `;
-  } else if(buscarEn == 'Fecha'){
-    param = `fecha_factura like '%${value}%' `;
-  } else if(buscarEn == 'Importe'){
-    value = value.replace(',', '.');
-    param = `total_venta like '%${value}%' `;
-  }
-
-
-  console.log(param)
-  listarFacturas(param)
-
-})
-
-listaFactura.setFunction('verfactura', (a, b)=>{
-  console.log('Mostramos la factura', a, b);
-})
-
 
 tmn.setFunction('buscar', ()=>{
   let buscarEn = tmn.select('#textSelect').value();
   let valorABuscar = tmn.select('#searchValue').value();
   valorABuscar = valorABuscar.toLowerCase();
   
-
 })
 
 
@@ -95,10 +31,8 @@ async function listarFacturas(param = ''){
 let facturas = '';
 if(param != ''){
   facturas = await runcode(`-st facturas -wr ${param} -ob numero_factura -ds`);
-  console.log(facturas)
 } else {
   facturas = await runcode('-st facturas -ob numero_factura -ds -lt 100');
-  console.log(facturas)
 }
 if(!tmn.getData('listaClientes')){
   let listaClientes = await runcode('-sl id_cliente, nombre_cliente -fr clientes -ob nombre_cliente');
@@ -119,7 +53,6 @@ if(!facturas[0].Ninguno){
   })
 } else {
   listaFactura.loadDefaultRow();
-  console.log(listaFactura.getDefaultRow());
 }
 
 listaFactura.setDataKeys('attribute',{id_factura: 'hidden', id_vendedor: 'hidden', estado_factura: 'hidden'})
@@ -180,5 +113,76 @@ tmn.select('#listaFacturas').bindModel()
 
 }
 
-listarFacturas()
+listarFacturas();
+tmn.getParams();
+
+tmn.setFunction('searchSelect', (param)=>{
+  let inputSearch = document.querySelector('#search-dropdown');
+  tmn.setData('textSearch', param[0])
+  document.querySelector('#dropdown-button').click();
+  if(param[0] == 'Fecha'){
+    inputSearch.setAttribute('type', 'date');
+  } else if(param[0] == 'Factura'){
+    inputSearch.setAttribute('type', 'number');
+  } else if(param[0] == 'Importe'){
+    inputSearch.setAttribute('type', 'number');
+  } else {
+    inputSearch.setAttribute('type', 'search');
+  }
+})
+
+tmn.select('#search-dropdown').change(e => {
+  let type = e.target.getAttribute('type');
+  let value = e.target.value;
+  let buscarEn = tmn.getData('textSearch');
+  let param = '';
+  let cliente;
+  
+  
+ 
+
+  if(buscarEn == 'Cliente'){
+    if(value != ''){
+      value = value.toLowerCase();
+      cliente = tmn.getData('listaClientes').filter(cliente => cliente.nombre_cliente.toLowerCase().includes(value));
+      if(cliente.length > 0){
+        cliente.forEach(v =>{
+          param +=` id_cliente = ${v.id_cliente} OR`;
+        })
+        param +='-';
+        param = param.replace('OR-', ' ');
+        
+      } else {
+        param +=`id_cliente = 0`;
+      }
+    } else {
+      param +=``;
+    }
+    
+  } else if(buscarEn == 'Factura'){
+    param = `numero_factura like '%${value}%' `;
+  } else if(buscarEn == 'Fecha'){
+    param = `fecha_factura like '%${value}%' `;
+  } else if(buscarEn == 'Importe'){
+    value = value.replace(',', '.');
+    param = `total_venta like '%${value}%' `;
+  }
+
+
+ 
+  listarFacturas(param)
+
+})
+
+listaFactura.setFunction('verfactura', (index, value)=>{
+  const params = [{name: 'factura', value: value}]
+  tmn.goTo('./index2.html', params)  
+})
+
+tmn.select("#dropdown-button").click(()=>{
+  let dropdown = document.querySelector('#dropdown');
+
+  dropdown.setAttribute('style', 'position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 72px);')
+  dropdown.classList.toggle('hidden')
+})
 

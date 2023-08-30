@@ -1407,6 +1407,42 @@ export class Tamnora {
     }
   }
 
+  getParams(decode = true){
+    const queryString = window.location.search;
+		const urlParams = new URLSearchParams(queryString);
+    const params = [];
+    let name, value;
+		urlParams.forEach((val, nam) =>{
+      name = nam;
+      value = val;
+      if(decode){
+        name = atob(nam);
+        value = atob(val);
+      }
+      params.push({name, value});
+    })
+    return params;
+  }
+
+  goTo(url, params = [], code = true){
+    let values, value, name;
+    if(params.length > 0){
+      values = '?'
+      params.forEach(data => {
+        value = data.value;
+        name = data.name;
+        if(code){
+          value = btoa(value);
+          name = btoa(name);
+        }
+        values += `${name}=${value}`
+      })
+    }
+    globalThis.location.href = `${url}${values}`
+  }
+
+  
+
   formatDate(valor = null, separador = '-') {
     let fechaHora;
     let myDate;
