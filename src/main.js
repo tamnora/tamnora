@@ -182,7 +182,7 @@ listaFactura.setFunction('verfactura', (index, value)=>{
 tmn.select("#dropdown-button").click(()=>{
   let dropdown = document.querySelector('#dropdown');
 
-  dropdown.setAttribute('style', 'position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 72px);')
+  dropdown.setAttribute('style', 'position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 52px);')
   dropdown.classList.toggle('hidden')
 })
 
