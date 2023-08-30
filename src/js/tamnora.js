@@ -2273,6 +2273,7 @@ export class DataArray {
 		this.tableElement = '';
 		this.functions = {};
     this.structure = [];
+    this.defaultRow = {};
 		this.tableClass = {
       divPadre:"relative bg-white dark:bg-neutral-800 overflow-x-auto shadow-md sm:rounded-lg",
 			table: "w-full text-sm text-left text-neutral-500 dark:text-neutral-400",
@@ -2474,6 +2475,64 @@ export class DataArray {
 		this.dataArray.push(newObject);
 	}
 
+  getDefaultRow(){
+    return this.defaultRow;
+  }
+
+  setDefaultRow(dataObject) {
+		const newObject = {};
+    let groupType = {};
+    let primaryKey = {};
+
+    if(this.structure.length > 0){
+      this.structure.forEach(val => {
+        groupType[val.column_name] = this.typeToType(val.data_type);
+        primaryKey[val.column_name] = val.column_key;
+      })
+    }
+	
+		for (const fieldName in dataObject) {
+			if (dataObject.hasOwnProperty(fieldName)) {
+				let value = dataObject[fieldName];
+				let type = this.detectDataType(value);
+        let key = '';
+        
+          if(type == 'number'){
+            value = 0;
+          }else{
+            value = '';
+          }
+         
+
+        if(fieldName in groupType){
+          type = groupType[fieldName];
+        }
+
+        if(fieldName in primaryKey){
+          key = primaryKey[fieldName];
+        }
+
+				newObject[fieldName] = {
+					"type": type,
+          "name": fieldName,
+					"required": false,
+					"placeholder": "",
+					"value": value,
+					"column": 0,
+					"attribute": 0,
+          "hidden": false,
+          "pattern": '',
+					"defaultValue": "",
+					"key": key,
+					"setDate": 0,
+					"options": []
+				};
+			}
+		}
+	
+		this.defaultRow = newObject;
+	}
+
 	// Método para detectar el tipo de dato basado en el valor
 	detectDataType(value) {
 		if (!isNaN(parseFloat(value)) && isFinite(value)) {
@@ -2526,6 +2585,11 @@ export class DataArray {
 	removeAll() {
 			this.dataArray = [];
 	}
+
+  loadDefaultRow(){
+    this.dataArray = [];
+    this.dataArray.push(this.defaultRow);
+  }
 
   resetFrom(){
     this.from = 1

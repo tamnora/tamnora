@@ -111,12 +111,17 @@ let optionsSelect = '<option value="nombre_cliente" selected>cliente</option>';
 })
 
 
-if(facturas.length > 0){
+if(!facturas[0].Ninguno){
   listaFactura.removeAll();
+  listaFactura.setDefaultRow(facturas[0]);
   facturas.forEach(fc => {
     listaFactura.addObject(fc, listaFactura.getStructure())
   })
-} 
+} else {
+  listaFactura.loadDefaultRow();
+  console.log(listaFactura.getDefaultRow());
+}
+
 listaFactura.setDataKeys('attribute',{id_factura: 'hidden', id_vendedor: 'hidden', estado_factura: 'hidden'})
 listaFactura.setDataKeys('name', {numero_factura: 'factura', total_venta: 'importe'})
 
@@ -148,9 +153,11 @@ const options = {
     id_cliente:{
       class: 'text-white',
       change:(items, valor)=>{
-        let result;
+        let result = 'No encontrado';
         const tipos = tmn.getData('listaClientes').filter(cliente => cliente.id_cliente == valor);
-        result = tipos[0].nombre_cliente;
+        if(tipos.length > 0){
+          result = tipos[0].nombre_cliente;
+        }
         return result;
       }
     },
@@ -169,9 +176,6 @@ const options = {
 
 listaFactura.createTable('#listaFacturas', options);
 tmn.select('#listaFacturas').bindModel()
-
-
-
 
 
 }
