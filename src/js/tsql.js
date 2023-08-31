@@ -1,4 +1,4 @@
-const SERVER = import.meta.env.VITE_SERVER_DEV;
+const SERVER = import.meta.env.VITE_SERVER_PROD;
 
 let informe = {};
 
