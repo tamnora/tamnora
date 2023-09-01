@@ -1,4 +1,4 @@
-const SERVER = import.meta.env.VITE_SERVER_PROD;
+const SERVER = import.meta.env.VITE_SERVER_CAN;
 
 let informe = {};
 
@@ -190,7 +190,7 @@ export function prepararSQL(tabla, json) {
 					tipoSQL = json[key].value == 0 ? 'insert' : 'update';
 				} else {
 					typeInput = json[key].type;
-					// console.log(typeInput, json[key].value)
+					//console.log(typeInput, json[key].value)
 					if (typeInput == 'integer' || typeInput == 'number') {
 						if (json[key].value > 0) {
 							if(json[key].value > 0){
@@ -281,6 +281,7 @@ export async function dbSelect(type, sql) {
 	} catch (error) {
 		console.log(error)
 		console.log(informe)
+		console.log(datos)
 		const err = [{ resp: 'error', msgError: 'Error 222 al consultar datos!' }];
 		return err;
 	}

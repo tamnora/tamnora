@@ -1762,9 +1762,10 @@ export class DataObject {
     if(inType == 'date') outType = 'date';
     if(inType == 'time') outType = 'time';
     if(inType == 'decimal') outType = 'currency';
+    if(inType == 'text') outType = 'text';
 
     if(!outType){
-      console.error('inType no definido!')
+      console.error(`inType ${inType} no definido!`)
       outType = 'text'
     }
 
@@ -2431,9 +2432,10 @@ export class DataArray {
     if(inType == 'date') outType = 'date';
     if(inType == 'time') outType = 'time';
     if(inType == 'decimal') outType = 'currency';
+    if(inType == 'text') outType = 'text';
 
     if(!outType){
-      console.error('inType no definido!')
+      console.error(`inType ${inType} no definido!`)
       outType = 'text'
     }
 

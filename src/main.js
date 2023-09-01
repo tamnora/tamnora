@@ -1,188 +1,92 @@
 import {DataArray, DataObject, Tamnora} from './js/tamnora'
 import {structure, runcode} from './js/tsql'
 
-//facturas y detalle_factura
+//canales y detalle_factura
 const tmn = new Tamnora();
-const listaFactura = new DataArray
-const factura = new DataObject;
+const listaCanales = new DataArray
+const frmCanal = new DataObject;
 
-tmn.setData('textoBuscado');
-tmn.setData('textSearch', 'Cliente')
+tmn.setData('idBuscado');
 
-
-tmn.setFunction('buscar', ()=>{
-  let buscarEn = tmn.select('#textSelect').value();
-  let valorABuscar = tmn.select('#searchValue').value();
-  valorABuscar = valorABuscar.toLowerCase();
-  
-})
-
-
-
-
-async function listarFacturas(param = ''){
-  
-  if(!listaFactura.getStructure().length > 0){
-    await structure('t','facturas').then(struct => {
-       listaFactura.setStructure(struct)
-     });
-  }
-
-let facturas = '';
-if(param != ''){
-  facturas = await runcode(`-st facturas -wr ${param} -ob numero_factura -ds`);
-} else {
-  facturas = await runcode('-st facturas -ob numero_factura -ds -lt 100');
-}
-if(!tmn.getData('listaClientes')){
-  let listaClientes = await runcode('-sl id_cliente, nombre_cliente -fr clientes -ob nombre_cliente');
-  tmn.setData('listaClientes', listaClientes);
-}
-
-let optionsSelect = '<option value="nombre_cliente" selected>cliente</option>';
-[{name:'factura', value: 'numero_factura'}, {name:'fecha', value: 'fecha_factura'}, {name:'importe', value: 'total_venta'}].forEach(val => {
-  optionsSelect += `<option value="${val.value}">${val.name}</option>`;
-})
-
-
-if(!facturas[0].Ninguno){
-  listaFactura.removeAll();
-  listaFactura.setDefaultRow(facturas[0]);
-  facturas.forEach(fc => {
-    listaFactura.addObject(fc, listaFactura.getStructure())
-  })
-} else {
-  listaFactura.loadDefaultRow();
-}
-
-listaFactura.setDataKeys('attribute',{id_factura: 'hidden', id_vendedor: 'hidden', estado_factura: 'hidden'})
-listaFactura.setDataKeys('name', {numero_factura: 'factura', total_venta: 'importe'})
-
-
-
-let buttons = `
-<div class="inline-flex rounded-md shadow-sm" role="group">
-  <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-l-lg hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
-    Nueva Factura
-  </button>
-  <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border-t border-b border-neutral-200 hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
-    Ver Cuenta
-  </button>
-  <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-r-md hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
-    Informe
-  </button>
-</div>
-`;
-
-
-const options = {
-  title: 'Lista de Facturas',
-  subtitle: 'babababab',
-  buttons: buttons,
-  header:{
-    id_cliente: {class: 'text-left', title: 'cliente'}
-  },
-  field: {
-    id_cliente:{
-      class: 'text-white',
-      change:(items, valor)=>{
-        let result = 'No encontrado';
-        const tipos = tmn.getData('listaClientes').filter(cliente => cliente.id_cliente == valor);
-        if(tipos.length > 0){
-          result = tipos[0].nombre_cliente;
-        }
-        return result;
-      }
-    },
-  },
-  row:{
-    class:{
-      normal: 'bg-neutral-50 dark:bg-neutral-700',
-      alternative: 'bg-neutral-100 dark:bg-neutral-800'
-    },
-    click:{
-      function: 'verfactura',
-      field: 'id_factura'
-    }
-  }
-}
-
-listaFactura.createTable('#listaFacturas', options);
-tmn.select('#listaFacturas').bindModel()
-
-
-}
-
-listarFacturas();
-tmn.getParams();
-
-tmn.setFunction('searchSelect', (param)=>{
-  let inputSearch = document.querySelector('#search-dropdown');
-  tmn.setData('textSearch', param[0])
-  document.querySelector('#dropdown-button').click();
-  if(param[0] == 'Fecha'){
-    inputSearch.setAttribute('type', 'date');
-  } else if(param[0] == 'Factura'){
-    inputSearch.setAttribute('type', 'number');
-  } else if(param[0] == 'Importe'){
-    inputSearch.setAttribute('type', 'number');
-  } else {
-    inputSearch.setAttribute('type', 'search');
-  }
-})
-
-tmn.select('#search-dropdown').change(e => {
-  let type = e.target.getAttribute('type');
-  let value = e.target.value;
-  let buscarEn = tmn.getData('textSearch');
-  let param = '';
-  let cliente;
-  
-  
- 
-
-  if(buscarEn == 'Cliente'){
-    if(value != ''){
-      value = value.toLowerCase();
-      cliente = tmn.getData('listaClientes').filter(cliente => cliente.nombre_cliente.toLowerCase().includes(value));
-      if(cliente.length > 0){
-        cliente.forEach(v =>{
-          param +=` id_cliente = ${v.id_cliente} OR`;
-        })
-        param +='-';
-        param = param.replace('OR-', ' ');
-        
-      } else {
-        param +=`id_cliente = 0`;
-      }
-    } else {
-      param +=``;
-    }
+tmn.select('#searchInput').change(()=>{
+    let valor = tmn.getData('valorBuscado');
+    let param = '';
     
-  } else if(buscarEn == 'Factura'){
-    param = `numero_factura like '%${value}%' `;
-  } else if(buscarEn == 'Fecha'){
-    param = `fecha_factura like '%${value}%' `;
-  } else if(buscarEn == 'Importe'){
-    value = value.replace(',', '.');
-    param = `total_venta like '%${value}%' `;
+    if (!isNaN(parseInt(valor)) && Number.isInteger(parseFloat(valor))) {
+        param = `posicion = ${valor} `;
+    } else {
+        param = `nombre like '%${valor}%'`;
+    }
+
+    
+    listarCanales(param)
+})
+
+async function listarCanales(param = ''){
+  
+    if(!listaCanales.getStructure().length > 0){
+      await structure('t','canales').then(struct => {
+         listaCanales.setStructure(struct)
+       });
+    }
+
+  
+  let canales = '';
+  if(param != ''){
+    canales = await runcode(`-sl id, posicion, nombre -fr canales -wr ${param} -ob posicion `);
+  } else {
+    canales = await runcode('-sl id, posicion, nombre -fr canales -ob posicion  -lt 100');
+  }
+  
+  
+  if(!canales[0].Ninguno){
+    listaCanales.removeAll();
+    listaCanales.setDefaultRow(canales[0]);
+    canales.forEach(fc => {
+      listaCanales.addObject(fc, listaCanales.getStructure())
+    })
+  } else {
+    listaCanales.loadDefaultRow();
+  }
+  
+  listaCanales.setDataKeys('attribute',{id: 'hidden'})
+  
+  
+  const options = {
+    title: 'Lista de canales',
+    subtitle: 'Puedes seleccionar el canal',
+    row:{
+      class:{
+        normal: 'bg-neutral-50 dark:bg-neutral-700',
+        alternative: 'bg-neutral-100 dark:bg-neutral-800'
+      },
+      click:{
+        function: 'verCanal',
+        field: 'id'
+      }
+    }
+  }
+  
+  listaCanales.createTable('#listaCanales', options);
+  tmn.select('#listaCanales').bindModel()
+  
+  
   }
 
+  
+  listaCanales.setFunction('verCanal', async(ref)=>{
+    let sq = `-sl posicion, nombre -fr canales -wr id = '${ref[1]}'`;
+    let canal = await runcode(sq);
 
+    frmCanal.addObject(canal[0], listaCanales.getStructure())
+
+    const options = {
+        title:'Editar Canal',
+        submit:'Guardalo!'
+    }
+    frmCanal.createFormModal('#modalForm', options)
+
+})
+    
+    listarCanales();
  
-  listarFacturas(param)
-
-})
-
-listaFactura.setFunction('verfactura', (index, value)=>{
-  const params = [{name: 'factura', value: value}]
-  tmn.goTo('./index2.html', params)  
-})
-
-tmn.select("#dropdown-button").click(()=>{
-  let dropdown = document.querySelector('#dropdown');
-
-  dropdown.setAttribute('style', 'position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate(0px, 52px);')
-  dropdown.classList.toggle('hidden')
-})
-
