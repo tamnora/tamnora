@@ -1781,11 +1781,12 @@ export class DataObject {
 
     if(structure.length > 0){
       structure.forEach(val => {
-        groupType[val.column_name] = this.typeToType(val.data_type);
-        primaryKey[val.column_name] = val.column_key;
+        groupType[val.COLUMN_NAME] = this.typeToType(val.DATA_TYPE);
+        primaryKey[val.COLUMN_NAME] = val.COLUMN_KEY;
       })
     }
 	
+
 		for (const fieldName in dataObject) {
 			if (dataObject.hasOwnProperty(fieldName)) {
 				let value = dataObject[fieldName];
@@ -1826,6 +1827,7 @@ export class DataObject {
 		}
 	
 		this.camposRegistro = newObject;
+  
 	}
 
 	// Método para detectar el tipo de dato basado en el valor
@@ -2320,7 +2322,7 @@ export class DataArray {
 			thead: "bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600",
       tfoot: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
       pagination: "bg-white dark:bg-neutral-800 text-neutral-700 py-3 dark:text-neutral-400",
-			th: "px-6 py-3 select-none text-xs text-neutral-600 uppercase dark:text-neutral-400 whitespace-nowrap",
+			th: "px-6 py-2 select-none text-xs text-neutral-600 uppercase dark:text-neutral-400 whitespace-nowrap",
 			tr: "border-b border-neutral-200 dark:border-neutral-700",
 			td: "px-6 py-3 select-none whitespace-nowrap",
 			tdclick: "px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400",
@@ -2466,8 +2468,8 @@ export class DataArray {
 
     if(structure.length > 0){
       structure.forEach(val => {
-        groupType[val.column_name] = this.typeToType(val.data_type);
-        primaryKey[val.column_name] = val.column_key;
+        groupType[val.COLUMN_NAME] = this.typeToType(val.DATA_TYPE);
+        primaryKey[val.COLUMN_NAME] = val.COLUMN_KEY;
       })
     }
 	
@@ -2667,7 +2669,7 @@ export class DataArray {
 
     table +=`<div class="${this.tableClass.divPadre}">`;
     table += `<table class="${this.tableClass.table}">`;
-    table += `<div class="flex flex-col md:flex-row justify-between items-start w-full p-5 ${this.tableClass.header}">`;
+    table += `<div class="flex flex-col md:flex-row justify-between items-start w-full py-3 px-5 ${this.tableClass.header}">`;
     
     if ("title" in options || "subtitle" in options || "btnNew" in options || "buttons" in options) {
       table += `<div class="flex flex-col flex-grow mb-2">`;
@@ -2689,8 +2691,7 @@ export class DataArray {
 
     table += `<thead class="${this.tableClass.thead}">`;
 
-    table+=`<thead class="${this.tableClass.thead}">`;
-		tableHeader += `<tr class="${this.tableClass.trtitle}">`;
+		tableHeader += `<tr class="pp ${this.tableClass.trtitle}">`;
 
 		if ("row" in options) {
 			xRow = options.row;
@@ -2768,25 +2769,24 @@ export class DataArray {
 
 		tableHeader += `</tr>`
 
-		table += `<tr>`;
-
-		table+=`<tr class="${this.tableClass.trh}">`
-		header.forEach(ref => {
-			let valor = this.formatValueByDataType(ref.value);
-			let tipo = this.detectDataType(ref.value);
-			let xcss = ref.class ? ref.class : '';
-			let xattribute = ref.attribute? ref.attribute : '';
-      let xhidden = ref.hidden ? 'hidden': '';
+		
+		// table+=`<tr class="${this.tableClass.trh}">`
+		// header.forEach(ref => {
+		// 	let valor = this.formatValueByDataType(ref.value);
+		// 	let tipo = this.detectDataType(ref.value);
+		// 	let xcss = ref.class ? ref.class : '';
+		// 	let xattribute = ref.attribute? ref.attribute : '';
+    //   let xhidden = ref.hidden ? 'hidden': '';
        
-			if(tipo == 'number'){
-				table += `<th ${xattribute} ${xhidden} class="${this.tableClass.tdh} ${xcss ? xcss : 'text-right'}" >${valor}</th>`;
-			} else if(tipo == 'date' || tipo == 'datetime-local') {
-				table += `<th ${xattribute} ${xhidden} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
-			} else {
-				table += `<th ${xattribute} ${xhidden} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
-			}
-		})
-		table+=`</tr>`;
+		// 	if(tipo == 'number'){
+		// 		table += `<th ${xattribute} ${xhidden} class="${this.tableClass.tdh} ${xcss ? xcss : 'text-right'}" >${valor}</th>`;
+		// 	} else if(tipo == 'date' || tipo == 'datetime-local') {
+		// 		table += `<th ${xattribute} ${xhidden} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
+		// 	} else {
+		// 		table += `<th ${xattribute} ${xhidden} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
+		// 	}
+		// })
+		// table+=`</tr>`;
 		table+= tableHeader;
 
 		table +=`</thead><tbody>`;

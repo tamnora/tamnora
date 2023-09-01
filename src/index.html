@@ -7,19 +7,29 @@
     <title>Brutv Edición</title>
     <link rel="stylesheet" href="./css/style.css">
     <link rel="stylesheet" href="./css/animate.min.css">
-   
+    <link
+			href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+			rel="stylesheet"
+		/>
+
+    <style>
+      body{
+        font-family: Poppins, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      }
+    </style>
     
   </head>
-  <body class="h-screen bg-neutral-100 dark:bg-neutral-900 transition-bg duration-500 antialiased">
+  <body class="h-screen bg-neutral-200 dark:bg-neutral-900 transition-bg duration-500 antialiased">
   <div class="container mx-auto animated fadeIn p-5 transition-bg duration-500 ">
       
 
     <div id="inputSearch">
       <div class="relative flex mb-3 w-full  md:w-96">
         <label for="search-dropdown" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-neutral-900 bg-neutral-100 border border-neutral-300 rounded-l-lg hover:bg-neutral-200 focus:ring-4 focus:outline-none focus:ring-neutral-100 dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:focus:ring-neutral-700 dark:text-white dark:border-neutral-600">Buscar</label>
-        <div class="relative w-full">
+        <div class="relative w-full mr-2">
             <input type="search" id="searchInput"  data-value="valorBuscado" class="block p-2.5 w-full z-20 text-sm text-neutral-900 bg-neutral-50 focus:outline-none rounded-r-lg border-l-neutral-50 border-l-2 border border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500" placeholder="Por ID o NOMBRE ..." >
         </div>
+        <button data-tail="btn dark" data-theme></button>
     </div>
     </div>
     <div id="modalForm"></div>

@@ -1,25 +1,42 @@
 import {DataArray, DataObject, Tamnora} from './js/tamnora'
-import {structure, runcode} from './js/tsql'
+import {structure, runcode, prepararSQL, dbSelect} from './js/tsql'
 
 //canales y detalle_factura
 const tmn = new Tamnora();
 const listaCanales = new DataArray
-const frmCanal = new DataObject;
+const frmCanalModal = new DataObject;
 
-tmn.setData('idBuscado');
+tmn.setData('idBuscado', '');
+tmn.setData('dataCanal', {});
+tmn.setData('param', '')
 
 tmn.select('#searchInput').change(()=>{
     let valor = tmn.getData('valorBuscado');
     let param = '';
     
     if (!isNaN(parseInt(valor)) && Number.isInteger(parseFloat(valor))) {
-        param = `posicion = ${valor} `;
+        param = `posicion = ${valor} OR id = ${valor}`;
     } else {
         param = `nombre like '%${valor}%'`;
     }
 
-    
+    tmn.setData('param', param)
     listarCanales(param)
+})
+
+frmCanalModal.setFunction('submit', async()=>{
+  const datos = tmn.getData('dataCanal');
+  frmCanalModal.setDataFromModel(datos);
+
+  const paraSQL = frmCanalModal.getDataAll();
+  const send = prepararSQL('canales', paraSQL);
+  
+  if(send.status == 1){
+    await dbSelect(send.tipo, send.sql).then(val => {
+      console.log(val),
+      listarCanales(tmn.getData('param'));
+    })
+  }
 })
 
 async function listarCanales(param = ''){
@@ -49,7 +66,7 @@ async function listarCanales(param = ''){
     listaCanales.loadDefaultRow();
   }
   
-  listaCanales.setDataKeys('attribute',{id: 'hidden'})
+  
   
   
   const options = {
@@ -75,18 +92,30 @@ async function listarCanales(param = ''){
 
   
   listaCanales.setFunction('verCanal', async(ref)=>{
-    let sq = `-sl posicion, nombre -fr canales -wr id = '${ref[1]}'`;
+    let sq = `-sl id, posicion, nombre -fr canales -wr id = '${ref[1]}'`;
     let canal = await runcode(sq);
 
-    frmCanal.addObject(canal[0], listaCanales.getStructure())
+    canal.forEach(value => {
+      frmCanalModal.addObject(value, listaCanales.getStructure())
+    })
+    
+    frmCanalModal.forEachField((campo, dato)=>{
+      tmn.setDataRoute(`dataCanal!${campo}`, dato.value);
+    })
+
+    frmCanalModal.setData('id', 'hidden', true);
+    frmCanalModal.setDataKeys('column', {'nombre': 12})
 
     const options = {
         title:'Editar Canal',
-        submit:'Guardalo!'
+        submit:'Guardalo!',
+        bind: 'dataCanal'
     }
-    frmCanal.createFormModal('#modalForm', options)
 
-})
+    frmCanalModal.createFormModal('#modalForm', options);
+    tmn.select("#modalForm").bindModel();
+
+  })
     
     listarCanales();
  
