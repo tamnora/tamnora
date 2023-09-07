@@ -20,8 +20,8 @@ tmn.select('#searchInput').change(()=>{
         param = `nombre like '%${valor}%'`;
     }
 
-    tmn.setData('param', param)
-    listarCanales(param)
+    tmn.setData('param', param);
+    listarCanales();
 })
 
 frmCanalModal.setFunction('submit', async()=>{
@@ -34,13 +34,16 @@ frmCanalModal.setFunction('submit', async()=>{
   if(send.status == 1){
     await dbSelect(send.tipo, send.sql).then(val => {
       console.log(val),
-      listarCanales(tmn.getData('param'));
+      listarCanales();
     })
   }
 })
 
-async function listarCanales(param = ''){
+async function listarCanales(){
+  let canales = '';
+  let param = tmn.getData('param');
   
+  //Guardamos la estructura de los datos con setStructure
     if(!listaCanales.getStructure().length > 0){
       await structure('t','canales').then(struct => {
          listaCanales.setStructure(struct)
@@ -48,7 +51,6 @@ async function listarCanales(param = ''){
     }
 
   
-  let canales = '';
   if(param != ''){
     canales = await runcode(`-sl id, posicion, nombre -fr canales -wr ${param} -ob posicion `);
   } else {
@@ -66,9 +68,7 @@ async function listarCanales(param = ''){
     listaCanales.loadDefaultRow();
   }
   
-  
-  
-  
+    
   const options = {
     title: 'Lista de canales',
     subtitle: 'Puedes seleccionar el canal',
