@@ -3,119 +3,149 @@ import {structure, runcode, prepararSQL, dbSelect} from './js/tsql'
 
 //canales y detalle_factura
 const tmn = new Tamnora();
-const listaCanales = new DataArray
-const frmCanalModal = new DataObject;
+const dataTabla = new DataArray;
+
+
+tmn.themeColorLight = '#db5945';
+tmn.themeColorDark = '#713228';
 
 tmn.setData('idBuscado', '');
-tmn.setData('dataCanal', {});
-tmn.setData('param', '')
+tmn.setData('dataClientes', []);
+tmn.setData('param', '16');
+tmn.setData('cant', 10);
+
+
+
 
 tmn.select('#searchInput').change(()=>{
-    let valor = tmn.getData('valorBuscado');
-    let param = '';
-    
-    if (!isNaN(parseInt(valor)) && Number.isInteger(parseFloat(valor))) {
-        param = `posicion = ${valor} OR id = ${valor}`;
+    verSaldosAcumulados();
+})
+
+tmn.select('#cant').change(()=>{
+    verSaldosAcumulados();
+})
+
+tmn.select('#searchCliente').input((e, element)=>{
+  e.preventDefault();
+  let value = e.target.innerText.toLowerCase();
+  value = value.replace(/\s+/g, '_');
+  const selectionStart = element.selectionStart;
+  let result = '';
+  
+  
+  if(value.length > 0){
+    const matchingClient = tmn.getData('dataClientes').find((v) =>{
+      let compara = v.nombre_cliente.replace(/\s+/g, '_');
+      return (compara.toLowerCase().startsWith(value))
+    }
+    );
+
+        
+    if (matchingClient) {
+      result = matchingClient.nombre_cliente.substring(value.length);
+      result = result.replace(/\s+/g, '&nbsp;');
+      tmn.select('#sugerencia').html(`${result}`)
     } else {
-        param = `nombre like '%${valor}%'`;
+      tmn.select('#sugerencia').html(`${result}`)
     }
-
-    tmn.setData('param', param)
-    listarCanales(param)
-})
-
-frmCanalModal.setFunction('submit', async()=>{
-  const datos = tmn.getData('dataCanal');
-  frmCanalModal.setDataFromModel(datos);
-
-  const paraSQL = frmCanalModal.getDataAll();
-  const send = prepararSQL('canales', paraSQL);
-  
-  if(send.status == 1){
-    await dbSelect(send.tipo, send.sql).then(val => {
-      console.log(val),
-      listarCanales(tmn.getData('param'));
-    })
+  } else {
+    tmn.select('#sugerencia').html(`${result}`)
   }
 })
 
-async function listarCanales(param = ''){
+tmn.select('#searchCliente').keyCodePress((e, element)=>{
+  e.preventDefault();
+  let value = e.target.innerText.toLowerCase();
+  value = value.replace(/\s+/g, '');
+  let result;
+  let codClie;
   
-    if(!listaCanales.getStructure().length > 0){
-      await structure('t','canales').then(struct => {
-         listaCanales.setStructure(struct)
-       });
-    }
+  if(value.length > 0){
+    result = tmn.getData('dataClientes').filter(v => {
+      let compara = v.nombre_cliente.replace(/\s+/g, '');
+      return (compara.toLowerCase().startsWith(value))
+    });
+    if (result.length > 0) {
+      let cant = result[0].nombre_cliente.length
+      codClie = result[0].id_cliente
+      element.innerText = result[0].nombre_cliente;
+      tmn.select('#sugerencia').html('')
+      element.focus()
+      tmn.setCaretToEnd(element)
+      tmn.setData('param', codClie);
+      verSaldosAcumulados();
+    } 
+  } else {
+    tmn.select('#sugerencia').html('');
+  }
+}, [13, 39])
 
+async function cargarClientes(){
+  const strClientes = await runcode('-sl id_cliente, nombre_cliente -fr clientes -wr tipo = 0');
+  tmn.setData('dataClientes', strClientes)
+}
+
+async function verSaldosAcumulados(){
+  let rstData;
+  let param = tmn.getData('param');
+  let cant = tmn.getData('cant');
   
-  let canales = '';
-  if(param != ''){
-    canales = await runcode(`-sl id, posicion, nombre -fr canales -wr ${param} -ob posicion `);
-  } else {
-    canales = await runcode('-sl id, posicion, nombre -fr canales -ob posicion  -lt 100');
-  }
-  
-  
-  if(!canales[0].Ninguno){
-    listaCanales.removeAll();
-    listaCanales.setDefaultRow(canales[0]);
-    canales.forEach(fc => {
-      listaCanales.addObject(fc, listaCanales.getStructure())
-    })
-  } else {
-    listaCanales.loadDefaultRow();
-  }
-  
-  
-  
-  
+  rstData = await dbSelect('s', `CALL saldos_acumulados(${param}, ${cant})`)
+
+  dataTabla.removeAll();
+
+  rstData.forEach(reg => {
+    dataTabla.addObject(reg)
+  });
+
+  dataTabla.setDataKeys('hidden',{acumulado: true});
+
   const options = {
     title: 'Lista de canales',
     subtitle: 'Puedes seleccionar el canal',
+    field: {
+        saldo:{
+          class: 'text-end',
+          change:(items, valor, index)=>{
+            let result = valor;
+            if(index == 0){
+                result = `<span class="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-100">${valor}</span>`;
+            }
+            return result;
+          }
+        },
+      },
     row:{
       class:{
         normal: 'bg-neutral-50 dark:bg-neutral-700',
         alternative: 'bg-neutral-100 dark:bg-neutral-800'
-      },
-      click:{
-        function: 'verCanal',
-        field: 'id'
       }
     }
   }
-  
-  listaCanales.createTable('#listaCanales', options);
-  tmn.select('#listaCanales').bindModel()
-  
+
+  dataTabla.createTable('#tabla', options);
   
   }
 
+  cargarClientes();
   
-  listaCanales.setFunction('verCanal', async(ref)=>{
-    let sq = `-sl id, posicion, nombre -fr canales -wr id = '${ref[1]}'`;
-    let canal = await runcode(sq);
-
-    canal.forEach(value => {
-      frmCanalModal.addObject(value, listaCanales.getStructure())
-    })
     
-    frmCanalModal.forEachField((campo, dato)=>{
-      tmn.setDataRoute(`dataCanal!${campo}`, dato.value);
-    })
+    verSaldosAcumulados();
 
-    frmCanalModal.setData('id', 'hidden', true);
-    frmCanalModal.setDataKeys('column', {'nombre': 12})
 
-    const options = {
-        title:'Editar Canal',
-        submit:'Guardalo!',
-        bind: 'dataCanal'
-    }
 
-    frmCanalModal.createFormModal('#modalForm', options);
-    tmn.select("#modalForm").bindModel();
-
+  tmn.onMount(()=>{
+    tmn.changeThemeColor();
   })
-    
-    listarCanales();
  
+
+
+
+
+
+let monm = `
+SET @saldoTotal := (SELECT SUM(CASE WHEN tipo_oper = 1 THEN -importe ELSE importe END) FROM movimientos WHERE id_cliente = 16);
+
+SELECT fechahora,  tipo_oper,  importe,  @saldoTotal := CASE WHEN tipo_oper = 1 THEN @saldoTotal - importe ELSE @saldoTotal + importe END AS saldoTotal 
+FROM movimientos WHERE id_cliente = 16 ORDER BY fechahora DESC;
+`

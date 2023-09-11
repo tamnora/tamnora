@@ -33,6 +33,8 @@ export class Tamnora {
     this.functions = {};
     this.templates = {};
     this.theme = '';
+    this.themeColorDark = '#262626';
+    this.themeColorLight = '#f5f5f5';
     this.componentDirectory = config.componentDirectory ||'../components';
     this.state = this.loadStateFromLocalStorage();
     this.onMountCallback = null;
@@ -597,6 +599,7 @@ export class Tamnora {
           localStorage.setItem('color-theme', 'dark');
       }
   }
+    this.changeThemeColor();
     })
     } else {
       
@@ -1148,6 +1151,16 @@ export class Tamnora {
     });
   }
 
+  setCaretToEnd(el) {
+    var range = document.createRange();
+    var sel = window.getSelection();
+    range.selectNodeContents(el);
+    range.collapse(false);
+    sel.removeAllRanges();
+    sel.addRange(range);
+    el.focus();
+  }
+
   // Acceder a elementos vinculados por selector y agregar eventos
   select(selector) {
     const element = document.querySelector(selector);
@@ -1166,18 +1179,34 @@ export class Tamnora {
           element.addEventListener('blur', callback);
         },
         change: (callback) => {
-          element.addEventListener('change', callback);
+          element.addEventListener('change', (event)=>{
+            callback(event, element);
+          });
         },
         select: (callback) => {
-          element.addEventListener('select', callback);
+          element.addEventListener('select', (event)=>{
+            callback(event, element);
+          });
         },
         input: (callback) => {
-          element.addEventListener('input', callback);
+          element.addEventListener('input', (event)=>{
+            callback(event, element);
+          });
         },
         enter: (callback) => {
           element.addEventListener('keypress', (event) => {
             if (event.key === 'Enter') {
-              callback();
+              event.preventDefault();
+              callback(event, element);
+            }
+          });
+        },
+        keyCodePress: (callback, allowedKeys) => {
+          element.addEventListener('keypress', (event) => {
+            if (allowedKeys.includes(event.keyCode)) {
+              event.preventDefault();
+              console.log(event.keyCode)
+              callback(event, element);
             }
           });
         },
@@ -1334,7 +1363,26 @@ export class Tamnora {
         this.theme='light';
       }
     }
+    this.changeThemeColor();
   }
+
+  changeThemeColor() {
+    let darkModeOn = document.documentElement.classList.contains('dark');
+    const themeColorMeta = document.querySelector('head meta[name="theme-color"]');
+
+  if (themeColorMeta) {
+      const themeColorContent = themeColorMeta.getAttribute("content");
+      if(darkModeOn){
+        if(themeColorContent != this.themeColorDark){
+          themeColorMeta.setAttribute('content', this.themeColorDark)
+        }
+      } else {
+        if(themeColorContent != this.themeColorLight){
+          themeColorMeta.setAttribute('content', this.themeColorLight)
+        }
+      }
+  } 
+}
 
   currency(value, element){
     let newValue = this.formatNumber(value, 2, 'en');
@@ -2766,27 +2814,8 @@ export class DataArray {
 		})
 
 		
-
 		tableHeader += `</tr>`
 
-		
-		// table+=`<tr class="${this.tableClass.trh}">`
-		// header.forEach(ref => {
-		// 	let valor = this.formatValueByDataType(ref.value);
-		// 	let tipo = this.detectDataType(ref.value);
-		// 	let xcss = ref.class ? ref.class : '';
-		// 	let xattribute = ref.attribute? ref.attribute : '';
-    //   let xhidden = ref.hidden ? 'hidden': '';
-       
-		// 	if(tipo == 'number'){
-		// 		table += `<th ${xattribute} ${xhidden} class="${this.tableClass.tdh} ${xcss ? xcss : 'text-right'}" >${valor}</th>`;
-		// 	} else if(tipo == 'date' || tipo == 'datetime-local') {
-		// 		table += `<th ${xattribute} ${xhidden} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
-		// 	} else {
-		// 		table += `<th ${xattribute} ${xhidden} class=" ${this.tableClass.tdh} ${xcss}" >${valor}</th>`;
-		// 	}
-		// })
-		// table+=`</tr>`;
 		table+= tableHeader;
 
 		table +=`</thead><tbody>`;
@@ -2834,7 +2863,7 @@ export class DataArray {
 
 						
 						if(field[item].change){
-							valor = field[item].change(items, valor);
+							valor = field[item].change(items, valor, index);
 						}
 
 						if(field[item].click){
@@ -2901,9 +2930,10 @@ export class DataArray {
 					let dataClick = '';
 					let newClass = '';
 
+          
 					
 					if(field[item].change){
-						valor = field[item].change(items, valor);
+						valor = field[item].change(items, valor, index);
 					}
 
 					if(field[item].click){
@@ -3078,4 +3108,3 @@ export class DataArray {
 	
 
 }
-
