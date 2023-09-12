@@ -5,7 +5,6 @@ import {structure, runcode, prepararSQL, dbSelect} from './js/tsql'
 const tmn = new Tamnora();
 const dataTabla = new DataArray;
 
-
 tmn.themeColorLight = '#db5945';
 tmn.themeColorDark = '#713228';
 
@@ -13,8 +12,7 @@ tmn.setData('idBuscado', '');
 tmn.setData('dataClientes', []);
 tmn.setData('param', '16');
 tmn.setData('cant', 10);
-
-
+tmn.setData('itab', 0)
 
 
 tmn.select('#searchInput').change(()=>{
@@ -53,32 +51,48 @@ tmn.select('#searchCliente').input((e, element)=>{
   }
 })
 
-tmn.select('#searchCliente').keyCodePress((e, element)=>{
-  e.preventDefault();
-  let value = e.target.innerText.toLowerCase();
-  value = value.replace(/\s+/g, '');
+tmn.select('#searchCliente').keyCodeDown((event, element)=>{
+  event.preventDefault();
+  let value = event.target.innerText.toLowerCase();
+  value = value.replace(/\s+/g, '_');
   let result;
   let codClie;
-  
+  let index = tmn.getData('itab');
+
+
   if(value.length > 0){
-    result = tmn.getData('dataClientes').filter(v => {
-      let compara = v.nombre_cliente.replace(/\s+/g, '');
+    const matchingClient = tmn.getData('dataClientes').filter(v => {
+      let compara = v.nombre_cliente.replace(/\s+/g, '_');
       return (compara.toLowerCase().startsWith(value))
     });
-    if (result.length > 0) {
-      let cant = result[0].nombre_cliente.length
-      codClie = result[0].id_cliente
-      element.innerText = result[0].nombre_cliente;
-      tmn.select('#sugerencia').html('')
-      element.focus()
-      tmn.setCaretToEnd(element)
-      tmn.setData('param', codClie);
-      verSaldosAcumulados();
+
+    if (matchingClient) {
+      if(event.keyCode == 9){
+        if(index < matchingClient.length - 1 ){
+          index++
+          tmn.setData('itab', index);
+        } else {
+          index = 0;
+          tmn.setData('itab', index);
+        }
+        console.log(matchingClient.length)
+        result = matchingClient[index].nombre_cliente.substring(value.length);
+        result = result.replace(/\s+/g, '&nbsp;');
+        tmn.select('#sugerencia').html(`${result}`)
+      } else {
+        codClie = matchingClient[index].id_cliente
+        element.innerText = matchingClient[index].nombre_cliente;
+        tmn.select('#sugerencia').html('')
+        element.focus()
+        tmn.setCaretToEnd(element)
+        tmn.setData('param', codClie);
+        verSaldosAcumulados();
+      }
     } 
   } else {
     tmn.select('#sugerencia').html('');
   }
-}, [13, 39])
+}, [13, 39, 9])
 
 async function cargarClientes(){
   const strClientes = await runcode('-sl id_cliente, nombre_cliente -fr clientes -wr tipo = 0');
@@ -128,11 +142,7 @@ async function verSaldosAcumulados(){
   }
 
   cargarClientes();
-  
-    
-    verSaldosAcumulados();
-
-
+  verSaldosAcumulados();
 
   tmn.onMount(()=>{
     tmn.changeThemeColor();

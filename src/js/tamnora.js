@@ -1201,8 +1201,8 @@ export class Tamnora {
             }
           });
         },
-        keyCodePress: (callback, allowedKeys) => {
-          element.addEventListener('keypress', (event) => {
+        keyCodeDown: (callback, allowedKeys) => {
+          element.addEventListener('keydown', (event) => {
             if (allowedKeys.includes(event.keyCode)) {
               event.preventDefault();
               console.log(event.keyCode)
