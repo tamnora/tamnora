@@ -1,5 +1,4 @@
-import {DataArray, DataObject, Tamnora} from './js/tamnora'
-import {structure, runcode, prepararSQL, dbSelect} from './js/tsql'
+import {DataArray, DataObject, Tamnora, structure, runCode, dbSelect} from './js/tamnora'
 
 //canales y detalle_factura
 const tmn = new Tamnora();
@@ -95,7 +94,7 @@ tmn.select('#searchCliente').keyCodeDown((event, element)=>{
 }, [13, 39, 9])
 
 async function cargarClientes(){
-  const strClientes = await runcode('-sl id_cliente, nombre_cliente -fr clientes -wr tipo = 0');
+  const strClientes = await runCode('-sl id_cliente, nombre_cliente -fr clientes -wr tipo = 0');
   tmn.setData('dataClientes', strClientes)
 }
 
@@ -105,6 +104,10 @@ async function verSaldosAcumulados(){
   let cant = tmn.getData('cant');
   
   rstData = await dbSelect('s', `CALL saldos_acumulados(${param}, ${cant})`)
+
+  
+  dataTabla.addStructure('clientes');
+  dataTabla.addStructure('movimientos');
 
   dataTabla.removeAll();
 
@@ -117,17 +120,27 @@ async function verSaldosAcumulados(){
   const options = {
     title: 'Lista de canales',
     subtitle: 'Puedes seleccionar el canal',
+    header:{
+      tipo_oper: {class: 'text-left', title: 'Operación'}
+    },
     field: {
         saldo:{
           class: 'text-end',
-          change:(items, valor, index)=>{
-            let result = valor;
-            if(index == 0){
-                result = `<span class="bg-red-100 text-red-800 text-sm font-medium px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-100">${valor}</span>`;
+          change:(data)=>{
+            let result = data.valor;
+            if(data.index == 0){
+                result = `<span class="bg-red-100 text-red-700 text-normal font-semibold px-3 py-1 rounded dark:bg-red-700 dark:text-red-100">${data.valor}</span>`;
             }
             return result;
           }
         },
+        tipo_oper: {
+          class: 'text-semibold',
+          change:(data)=>{
+            let tipos = ['Venta', 'Cobro', 'Compra', 'Pago'];
+            return tipos[data.valor];
+          }
+        }
       },
     row:{
       class:{
