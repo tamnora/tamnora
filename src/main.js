@@ -1,8 +1,9 @@
 import {DataArray, DataObject, Tamnora, structure, runCode, dbSelect} from './js/tamnora'
 
 //canales y detalle_factura
-const tmn = new Tamnora();
+const tmn = new Tamnora;
 const dataTabla = new DataArray;
+const dataObjecto = new DataObject
 
 tmn.themeColorLight = '#db5945';
 tmn.themeColorDark = '#713228';
@@ -105,17 +106,17 @@ async function verSaldosAcumulados(){
   
   rstData = await dbSelect('s', `CALL saldos_acumulados(${param}, ${cant})`)
 
-  
-  dataTabla.addStructure('clientes');
-  dataTabla.addStructure('movimientos');
+
+  dataTabla.setStructure('movimientos');
 
   dataTabla.removeAll();
 
   rstData.forEach(reg => {
-    dataTabla.addObject(reg)
+    dataTabla.addObject(reg,dataTabla.getStructure())
   });
 
   dataTabla.setDataKeys('hidden',{acumulado: true});
+  dataTabla.setDataKeys('name', {id_factura: 'Remito'})
 
   const options = {
     title: 'Lista de canales',
@@ -146,6 +147,10 @@ async function verSaldosAcumulados(){
       class:{
         normal: 'bg-neutral-50 dark:bg-neutral-700',
         alternative: 'bg-neutral-100 dark:bg-neutral-800'
+      },
+      click:{
+        function: 'verRemito',
+        field: 'id'
       }
     }
   }
@@ -161,6 +166,32 @@ async function verSaldosAcumulados(){
     tmn.changeThemeColor();
   })
  
+
+  dataTabla.setFunction('verRemito', async(ref)=>{
+    let sq = `-st movimientos -wr id = '${ref[1]}'`;
+    let movimiento = await runCode(sq);
+
+    await dataObjecto.setStructure('movimientos');
+
+    movimiento.forEach(value => {
+      dataObjecto.addObject(value)
+    })
+    
+    dataObjecto.forEachField((campo, dato)=>{
+     tmn.setDataRoute(`dataMov!${campo}`, dato.value);
+    })
+
+    
+
+    const options = {
+        title:'Editar Movimiento',
+        submit:'Guardalo!',
+        bind: 'dataMov'
+    }
+
+    dataObjecto.createFormModal('#modalForm', options);
+    // tmn.select("#modalForm").bindModel();
+  })
 
 
 

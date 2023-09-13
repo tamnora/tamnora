@@ -2098,16 +2098,23 @@ export class DataObject {
     return this.structure
   }
 
-  async setStructure(table){
-    let struc = await structure('t', table);
-    const newStruc = []
-    struc.forEach(data =>{
-      data.table = table;
-      newStruc.push(data);
-    })
+  async setStructure(table, reset = false){
+    let ejecute = false;
+    if(this.structure.length == 0 || reset == true){
+      ejecute = true;
+    } 
     
-    this.structure = newStruc;
-    console.log('setStructure', this.structure)
+    if(ejecute){
+      let struc = await structure('t', table);
+      const newStruc = []
+      struc.forEach(data =>{
+        data.table = table;
+        newStruc.push(data);
+      })
+
+      this.structure = newStruc;
+      console.log('setStructure 1', this.structure)
+    }
   }
 
   async addStructure(table){
@@ -2252,6 +2259,13 @@ export class DataObject {
         groupType[val.COLUMN_NAME] = this.typeToType(val.DATA_TYPE);
         primaryKey[val.COLUMN_NAME] = val.COLUMN_KEY;
       })
+    } else {
+      if(this.structure.length > 0){
+       this.structure.forEach(val => {
+          groupType[val.COLUMN_NAME] = this.typeToType(val.DATA_TYPE);
+          primaryKey[val.COLUMN_NAME] = val.COLUMN_KEY;
+        })
+      }
     }
 	
 
@@ -2839,16 +2853,23 @@ export class DataArray {
     return this.structure;
   }
 
-  async setStructure(table){
-    let struc = await structure('t', table);
-    const newStruc = []
-    struc.forEach(data =>{
-      data.table = table;
-      newStruc.push(data);
-    })
+  async setStructure(table, reset = false){
+    let ejecute = false;
+    if(this.structure.length == 0 || reset == true){
+      ejecute = true;
+    } 
     
-    this.structure = newStruc;
-    console.log('setStructure', this.structure)
+    if(ejecute){
+      let struc = await structure('t', table);
+      const newStruc = []
+      struc.forEach(data =>{
+        data.table = table;
+        newStruc.push(data);
+      })
+
+      this.structure = newStruc;
+      console.log('setStructure', this.structure)
+    }
   }
 
   async addStructure(table){
@@ -2960,6 +2981,13 @@ export class DataArray {
         groupType[val.COLUMN_NAME] = this.typeToType(val.DATA_TYPE);
         primaryKey[val.COLUMN_NAME] = val.COLUMN_KEY;
       })
+    } else {
+      if(this.structure.length > 0){
+       this.structure.forEach(val => {
+          groupType[val.COLUMN_NAME] = this.typeToType(val.DATA_TYPE);
+          primaryKey[val.COLUMN_NAME] = val.COLUMN_KEY;
+        })
+      }
     }
 	
 		for (const fieldName in dataObject) {
