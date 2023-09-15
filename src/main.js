@@ -165,41 +165,29 @@ async function verSaldosAcumulados(){
   tmn.onMount(()=>{
     tmn.changeThemeColor();
   })
+
+  dataObjecto.setFunction('submit', (() => {
+    setTimeout(() => {
+      console.log(dataObjecto.getValue('form'))
+    }, 3000);
+    
+  }))
  
 
   dataTabla.setFunction('verRemito', async(ref)=>{
-    let sq = `-st movimientos -wr id = '${ref[1]}'`;
-    let movimiento = await runCode(sq);
-
     await dataObjecto.setStructure('movimientos');
+    await dataObjecto.addObjectFromRunCode(`-st movimientos -wr id = '${ref[1]}'`);
 
-    movimiento.forEach(value => {
-      dataObjecto.addObject(value)
-    })
-    
-    dataObjecto.forEachField((campo, dato)=>{
-     tmn.setDataRoute(`dataMov!${campo}`, dato.value);
-    })
-
-    
-
+    dataObjecto.setData('tipo_oper', 'type', 'select');
+    dataObjecto.setData('tipo_oper', 'options', [{value: 0, label: 'Venta'}, {value:1, label:'Cobro'}]);
+  
     const options = {
         title:'Editar Movimiento',
-        submit:'Guardalo!',
-        bind: 'dataMov'
+        submit:'Guardalo!'
     }
 
     dataObjecto.createFormModal('#modalForm', options);
-    // tmn.select("#modalForm").bindModel();
+    
   })
 
 
-
-
-
-let monm = `
-SET @saldoTotal := (SELECT SUM(CASE WHEN tipo_oper = 1 THEN -importe ELSE importe END) FROM movimientos WHERE id_cliente = 16);
-
-SELECT fechahora,  tipo_oper,  importe,  @saldoTotal := CASE WHEN tipo_oper = 1 THEN @saldoTotal - importe ELSE @saldoTotal + importe END AS saldoTotal 
-FROM movimientos WHERE id_cliente = 16 ORDER BY fechahora DESC;
-`

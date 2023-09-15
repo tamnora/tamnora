@@ -2027,6 +2027,7 @@ export class DataObject {
   constructor(fields = {}) {
     this.camposRegistro = {};
     this.formOptions = {};
+    this.data = this.createReactiveProxy(fields.data);
     this.structure = [];
 		this.formElement = '';
 		this.functions = {
@@ -2089,6 +2090,7 @@ export class DataObject {
   setFunction(name, fn){
     if(typeof fn === 'function'){
       this.functions[name] = fn;
+      console.log(this.functions)
     } else {
       console.error('La función no es válida!')
     }
@@ -2280,7 +2282,11 @@ export class DataObject {
           }else{
             value = '';
           }
-        } 
+        } else {
+          if(value == null){
+            value='';
+          }
+        }
 
         if(fieldName in groupType){
           type = groupType[fieldName];
@@ -2311,6 +2317,474 @@ export class DataObject {
 		this.camposRegistro = newObject;
   
 	}
+
+  async addObjectFromRunCode(sq){
+    let movimiento = await runCode(sq);
+    this.setValue('form',{});
+
+    movimiento.forEach(value => {
+      this.addObject(value)
+    })
+
+    this.forEachField((campo, dato)=>{
+      this.setValueRoute(`form!${campo}`, dato.value);
+    })
+
+    
+
+  }
+
+  createReactiveProxy(data) {
+    const recursiveHandler = {
+      get: (target, prop) => {
+        const value = target[prop];
+        if (typeof value === 'object' && value !== null) {
+          return new Proxy(value, recursiveHandler); // Crear un nuevo Proxy para los objetos anidados
+        }
+        return value;
+      },
+      set: (target, prop, value) => {
+        target[prop] = value;
+        this.updateElementsWithDataValue(prop, value); // Actualizar elementos del DOM al cambiar el valor
+        return true;
+      },
+    };
+
+    if (!data) {
+      data = {};
+    }
+
+    return new Proxy(data, recursiveHandler);
+  }
+
+  getValue(camino) {
+    const propiedades = camino.split('!');
+    let valorActual = this.data;
+  
+    for (let propiedad of propiedades) {
+      if (valorActual.hasOwnProperty(propiedad)) {
+        valorActual = valorActual[propiedad];
+      } else {
+        return undefined; // Si la propiedad no existe, retornamos undefined
+      }
+    }
+    return valorActual;
+  }
+
+  getValueFormat(camino, format){
+    const propiedades = camino.split('!');
+    let valorActual = this.data;
+  
+    for (let propiedad of propiedades) {
+      if (valorActual.hasOwnProperty(propiedad)) {
+        valorActual = valorActual[propiedad];
+        if(format == 'pesos'){
+          valorActual = this.pesos(valorActual, 2, '$')
+        }
+      } else {
+        return undefined; // Si la propiedad no existe, retornamos undefined
+      }
+    }
+    return valorActual;
+  }
+
+  existValue(camino){
+    const propiedades = camino.split('!');
+    let valorActual = this.data;
+    let existe = false;
+  
+    for (let propiedad of propiedades) {
+      if (valorActual.hasOwnProperty(propiedad)) {
+        existe = true;
+      } 
+    }
+    return existe;
+  }
+
+  getDef(camino) {
+    const propiedades = camino.split('!');
+    let valorActual = this.def;
+  
+    for (let propiedad of propiedades) {
+      if (valorActual.hasOwnProperty(propiedad)) {
+        valorActual = valorActual[propiedad];
+      } else {
+        return undefined; // Si la propiedad no existe, retornamos undefined
+      }
+    }
+  
+    return valorActual;
+  }
+
+  setValue(name, datos, menos){
+    if(typeof datos == 'object'){
+      if(menos){
+        Object.keys(datos).forEach((key) => {
+          const value = datos[key];
+          if(key != menos){
+            this.data[name][key] = value;
+          }
+        });
+      } else {
+        this.data[name] = datos;
+      }
+
+      Object.keys(this.data[name]).forEach((key) => {
+        const value = datos[key];
+        this.updateElementsWithDataValue(`${name}!${key}`, value);
+      });
+    } else {
+      this.data[name] = datos;
+      this.updateElementsWithDataValue(`${name}`, datos);
+    }
+  }
+
+  setValueRoute(camino, nuevoValor) {
+    const propiedades = camino.split('!');
+    let valorActual = this.data;
+   
+    for (let i = 0; i < propiedades.length - 1; i++) {
+      const propiedad = propiedades[i];
+      if (valorActual.hasOwnProperty(propiedad)) {
+        valorActual = valorActual[propiedad];
+      } else {
+        return; // No podemos acceder al camino completo, salimos sin hacer cambios
+      }
+    }
+   
+
+    const propiedadFinal = propiedades[propiedades.length - 1];
+    valorActual[propiedadFinal] = nuevoValor;
+    this.updateElementsWithDataValue(camino, nuevoValor);
+  }
+
+  setDefRoute(camino, nuevoValor) {
+    const propiedades = camino.split('!');
+    let valorActual = this.def;
+    
+    for (let i = 0; i < propiedades.length - 1; i++) {
+      const propiedad = propiedades[i];
+      
+      if (valorActual.hasOwnProperty(propiedad)) {
+        valorActual = valorActual[propiedad];
+      } else {
+        return; // No podemos acceder al camino completo, salimos sin hacer cambios
+      }
+    }
+
+    const propiedadFinal = propiedades[propiedades.length - 1];
+    valorActual[propiedadFinal] = nuevoValor;
+  }
+
+
+  pushValue(name, obj, format = false){
+    const newdata = this.data[obj];
+    this.data[name].push(newdata);
+    if(this.def[obj] && format){
+      setTimeout(()=>{
+        if(typeof this.data[obj] == 'object'){
+          Object.keys(this.data[obj]).forEach((key) => {
+            const value = this.def[obj][key] ?? '';
+            this.data[obj][key] = value;
+            this.updateElementsWithDataValue(`${obj}!${key}`, value);
+          });
+        }
+      }, 500)
+      
+    }
+  }
+
+  cleanValue(obj, format = false){
+    if(this.def[obj] && format){
+      setTimeout(()=>{
+        if(typeof this.data[obj] == 'object'){
+          Object.keys(this.data[obj]).forEach((key) => {
+            const value = this.def[obj][key] ?? '';
+            this.data[obj][key] = value;
+            this.updateElementsWithDataValue(`${obj}!${key}`, value);
+          });
+        }
+      }, 500)
+      
+    }else{
+      setTimeout(()=>{
+        if(typeof this.data[obj] == 'object'){
+          Object.keys(this.data[obj]).forEach((key) => {
+            this.data[obj][key] = "";
+            this.updateElementsWithDataValue(`${obj}!${key}`, value);
+          });
+        }
+      }, 500)
+    }
+  }
+
+   // Actualiza los elementos vinculados a un atributo data-value cuando el dato cambia
+   updateElementsWithDataValue(dataKey, value) {
+    const elementsWithDataValue = document.querySelectorAll(`[data-form="${dataKey}"]`);
+    elementsWithDataValue.forEach((element) => {
+      if (dataKey.includes('!')) {
+        const [dataObj, dataProp] = dataKey.split('!');
+        if (!this.data[dataObj]) {
+          this.data[dataObj] = {};
+        }
+        if(!this.data[dataObj][dataProp]){
+          this.data[dataObj][dataProp] = value;
+        }
+
+        if (element.type === 'checkbox') {
+          element.checked = value ?? false;
+        } else if (element.tagName === 'SELECT') {
+          element.value = value ?? '';
+        } else if (element.tagName === 'INPUT') {
+          element.value = value ?? '';
+        } else {
+          element.textContent = value ?? '';
+        }
+      } else {
+        if (element.tagName === 'INPUT' && element.type !== 'checkbox') {
+          element.value = value ?? '';
+        } else if (element.tagName === 'SELECT') {
+          element.value = value ?? '';
+        } else if (element.type === 'checkbox') {
+          element.checked = value ?? false;
+        } else {
+          element.textContent = value;
+        }
+      }
+    });
+  }
+
+  bindElementsWithDataValues(componentDiv) {
+    let elementsWithDataValue;
+    let toggleThemeButton;
+    if(componentDiv){
+      elementsWithDataValue = componentDiv.querySelectorAll('[data-form]');
+    } else {
+      elementsWithDataValue = document.querySelectorAll('[data-form]');
+    }
+
+    elementsWithDataValue.forEach((element) => {
+      const dataKey = element.getAttribute('data-form');
+      const dataDefaul = element.getAttribute('data-default');
+      const isUpperCase = element.getAttribute('data-UpperCase');
+      let valorDefaul = '';
+     
+
+      if (dataKey.includes('!')) {
+        const [dataObj, dataProp] = dataKey.split('!');
+        if (!this.data[dataObj]) {
+          this.data[dataObj] = {};
+        }
+        
+        if (!this.data[dataObj][dataProp]) {
+          this.data[dataObj][dataProp]="";
+        }
+
+        if(dataDefaul){
+          if(dataDefaul.startsWith('#')){
+            const subcadena = dataDefaul.slice(1);
+            valorDefaul = this.data[subcadena];
+          } else {
+            valorDefaul = dataDefaul
+          }
+
+          if (!this.def[dataObj]) {
+            this.def[dataObj] = {};
+          }
+          
+          if (!this.def[dataObj][dataProp]) {
+            this.def[dataObj][dataProp]="";
+          }
+          this.def[dataObj][dataProp] = valorDefaul;
+          this.data[dataObj][dataProp]= valorDefaul;
+        }
+
+       
+        if (element.tagName === 'SELECT') {
+          
+          const dataObj = dataKey.split('!')[0];
+          this.data[dataObj][dataProp] = element.value;
+    
+          element.addEventListener('change', (event) => {
+            this.data[dataObj][dataProp] = event.target.value;
+          });
+        } else if (element.type === 'checkbox') {
+         
+          if(!this.data[dataObj][dataProp]){
+            this.data[dataObj][dataProp] = false;
+          }
+          element.checked = this.data[dataObj][dataProp] ?? false;
+          
+          element.addEventListener('change', (event) => {
+            this.data[dataObj][dataProp] = event.target.checked;
+          });
+        }else if (element.tagName === 'INPUT') {
+          element.value = this.data[dataObj][dataProp] ?? '';
+         
+          if (isUpperCase) {
+            element.addEventListener('input', (event) => {
+              const newValue = event.target.value.toUpperCase();
+              this.data[dataObj][dataProp] = newValue;
+              event.target.value = newValue;
+            });
+          } else {
+            element.addEventListener('input', (event) => {
+              this.data[dataObj][dataProp] = event.target.value;
+            });
+          }
+        } else {
+          element.textContent = this.data[dataObj][dataProp] ?? '';
+        }
+  
+      } else {
+
+        if(dataDefaul){
+
+          if(dataDefaul.startsWith('#')){
+            const subcadena = dataDefaul.slice(1);
+            valorDefaul = this.data[subcadena];
+          } else {
+            valorDefaul = dataDefaul
+          }
+
+          if (!this.def[dataKey]) {
+            this.def[dataKey] = '';
+          }
+
+          
+          this.def[dataKey] = valorDefaul;
+          this.data[dataKey] = valorDefaul;
+        }
+
+        if (element.tagName === 'SELECT') {
+          this.data[dataKey] = element.value;
+    
+          element.addEventListener('change', (event) => {
+            this.data[dataKey] = event.target.value;
+          });
+        } else if (element.type === 'checkbox') {
+          if(!this.data[dataKey]){
+            this.data[dataKey] = false;
+          }
+          element.checked = this.data[dataKey] || false;
+          
+          element.addEventListener('change', (event) => {
+            this.data[dataKey] = event.target.checked;
+          });
+        } else if (element.tagName === 'INPUT') {
+          element.value = this.data[dataKey] || '';
+          if (isUpperCase) {
+            element.addEventListener('input', (event) => {
+              const newValue = event.target.value.toUpperCase();
+              this.data[dataKey] = newValue;
+              event.target.value = newValue;
+            });
+          } else {
+            element.addEventListener('input', (event) => {
+              this.data[dataKey] = event.target.value;
+            });
+          }
+        } else {
+          element.textContent = this.data[dataKey] ?? '';
+        }
+      }
+
+    });
+  }
+
+  currency(value, element){
+    let newValue = this.formatNumber(value, 2, 'en');
+    if(newValue == 'NaN'){
+      newValue = 0;
+    }
+      element.target.value = newValue;
+    
+    this.setValueRoute(element.target.dataset.form, newValue);
+  }
+
+  formatNumber(str, dec = 2, leng = 'es', mixto = false) {
+    if (!str) {
+      str = '0.00t';
+    } else {
+      str = str + 't';
+    }
+  
+    let numero = str.replace(/[^0-9.,]/g, '');
+    let signo = numero.replace(/[^.,]/g, '');
+    let count = numero.split(/[.,]/).length - 1;
+    let xNumero = numero.replace(/[.,]/g, ',').split(',');
+    let ultimoValor = xNumero.length - 1;
+    let xDecimal = xNumero[ultimoValor];
+  
+    let numeroFinal = '';
+    let resultado = '';
+  
+    xNumero.forEach((parte, index) => {
+      if (index == ultimoValor) {
+        numeroFinal += `${parte}`;
+      } else if (index == ultimoValor - 1) {
+        numeroFinal += `${parte}.`;
+      } else {
+        numeroFinal += `${parte}`;
+      }
+    });
+  
+    if (dec > 0) {
+      numeroFinal = parseFloat(numeroFinal).toFixed(dec);
+    } else {
+      numeroFinal = `${Math.round(parseFloat(numeroFinal))}`;
+    }
+  
+    if (leng == 'en') {
+      resultado = numeroFinal;
+    } else {
+      resultado = new Intl.NumberFormat('de-DE', { minimumFractionDigits: dec }).format(
+        parseFloat(numeroFinal)
+      );
+    }
+  
+    if (mixto) {
+      let sep = leng == 'en' ? '.' : ',';
+      let umo = resultado.split(sep);
+      if (parseInt(umo[1]) == 0) {
+        resultado = umo[0];
+      }
+    }
+  
+    return resultado;
+  }
+
+  pesos(numero, decimales, signo = '') {
+    let numeroString = this.formatNumber(numero, decimales);
+    if (signo) {
+      return `${signo} ${numeroString}`;
+    } else {
+      return `${numeroString}`;
+    }
+  }
+
+  bindChangeEvents(componentDiv) {
+    let elementsWithClick;
+    if(componentDiv){
+      elementsWithClick = componentDiv.querySelectorAll('[data-change]');
+    } else {
+      elementsWithClick = document.querySelectorAll('[data-change]');
+    }
+
+    elementsWithClick.forEach((element) => {
+      const clickData = element.getAttribute('data-change');
+      const [functionName, ...params] = clickData.split(',');
+      if(functionName == 'currency'){
+        element.addEventListener('change', (e)=>{this.currency(e.target.value, e)});
+      } else {
+        if(params){
+          element.addEventListener('change', () => this.executeFunctionByName(functionName, params));
+        } else {
+          element.addEventListener('change', () => this.executeFunctionByName(functionName));
+        }
+      }
+    });
+  }
 
 	// Método para detectar el tipo de dato basado en el valor
 	detectDataType(value) {
@@ -2385,6 +2859,8 @@ export class DataObject {
 
       if (data.bind) {
         dataValue = `data-value="${data.bind}!${campo}"`;
+      } else {
+        dataValue = `data-form="form!${campo}"`;
       }
 
       if(dato.required == true){
@@ -2496,6 +2972,8 @@ export class DataObject {
 
     element.innerHTML = form;
 		this.bindSubmitEvents(element);
+    this.bindElementsWithDataValues(element);
+    this.bindChangeEvents(element);
     return form;
 
   }
@@ -2561,6 +3039,8 @@ export class DataObject {
 
       if (data.bind) {
         dataValue = `data-value="${data.bind}!${campo}"`;
+      } else {
+        dataValue = `data-form="form!${campo}"`;
       }
 
       if(dato.required == true){
@@ -2668,6 +3148,8 @@ export class DataObject {
     element.innerHTML = form;
 		this.bindSubmitEvents(element);
     this.bindClickModal(element);
+    this.bindElementsWithDataValues(element);
+    this.bindChangeEvents(element);
     return form;
 
   }
@@ -2689,15 +3171,48 @@ export class DataObject {
         modalName = form.getAttribute('data-inmodal');
       }
 
-      form.addEventListener('submit', (event) => {
-        event.preventDefault(); // Prevenir el comportamiento por defecto del formulario        
-        this.executeFunctionByName(functionName);
-        if(modalName){
-          this.closeModal(modalName);
-        }
+      form.addEventListener('submit',async (event) => {
+        event.preventDefault(); // Prevenir el comportamiento por defecto del formulario  
+        console.log(event.submitter)
+        let defaultTitle = event.submitter.innerHTML;
+        event.submitter.disabled = true;
+        event.submitter.innerHTML = `
+        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+    </svg>
+    Procesando...
+        `
+
+        // Define una promesa dentro del evento submit
+        const promesa = new Promise((resolve, reject) => {
+          // Realiza una solicitud AJAX (por ejemplo, usando fetch o XMLHttpRequest)
+          // Simula una solicitud exitosa aquí para el ejemplo
+          setTimeout(() => {
+            this.executeFunctionByName(functionName);
+            const respuestaDelServidor = { mensaje: "Formulario enviado con éxito" };
+            resolve(respuestaDelServidor); // Resuelve la promesa con la respuesta
+          }, 2000); // Simulación de tiempo de espera
+        });
+
+        // Maneja la promesa
+        promesa
+          .then((respuesta) => {
+            console.log(respuesta); // Maneja la respuesta del servidor
+            event.submitter.innerHTML = defaultTitle;
+            if(modalName){
+              //this.closeModal(modalName);
+            }
+          })
+          .catch((error) => {
+            console.error("Error al enviar el formulario:", error); // Maneja errores
+          });
+
+      
+        
       });
 
-      form.addEventListener('keypress', function (event) {
+      form.addEventListener('keypress', function (event,element) {
         // Verificamos si la tecla presionada es "Enter" (código 13)
         if (event.keyCode === 13) {
           // Prevenimos la acción predeterminada (envío del formulario)
@@ -2706,7 +3221,7 @@ export class DataObject {
           // Obtenemos el elemento activo (el que tiene el foco)
           const elementoActivo = document.activeElement;
           if(elementoActivo.type == 'submit'){
-            console.log(form);
+           elementoActivo.click();
           }
 
           // Obtenemos la lista de elementos del formulario
@@ -2773,9 +3288,10 @@ export class DataObject {
   executeFunctionByName(functionName, ...args) {
     if (this.functions && typeof this.functions[functionName] === 'function') {
       const func = this.functions[functionName];
-      func(...args);
+       func(...args);
     } else {
       console.error(`La función '${functionName}' no está definida en el Objeto Form.`);
+    
     }
   }
 
