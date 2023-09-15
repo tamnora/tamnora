@@ -2028,6 +2028,7 @@ export class DataObject {
     this.camposRegistro = {};
     this.formOptions = {};
     this.data = this.createReactiveProxy(fields.data);
+    this.table = '';
     this.structure = [];
 		this.formElement = '';
 		this.functions = {
@@ -2040,7 +2041,66 @@ export class DataObject {
         const modal = document.querySelector(e);
         modal.classList.remove('hidden');
         modal.classList.add('flex');
-      }
+      },
+      submit:async(event, modalName)=>{
+        let defaultTitle = event.submitter.innerHTML;
+        event.submitter.disabled = true;
+        event.submitter.innerHTML = `
+        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+    </svg>
+    Procesando...
+        `
+
+        // Define una promesa dentro del evento submit
+        const promesa = new Promise((resolve, reject) => {
+          setTimeout(() => {
+            this.setDataFromModel(this.data.form);
+            const paraSQL = this.getDataAll();
+            const send = prepararSQL(this.table, paraSQL);
+            
+            if(send.status == 1){
+                dbSelect(send.tipo, send.sql).then(val => {
+                resolve(val);
+              })
+            } else {
+              reject('Algo falta por aquí!')
+            }
+
+          },2000)
+            
+         
+        });
+
+        // Maneja la promesa
+        promesa
+          .then((respuesta) => {
+            console.log(respuesta); // Maneja la respuesta del servidor
+            event.submitter.innerHTML = defaultTitle;
+            event.submitter.disabled = false;
+            if(modalName){
+              this.closeModal(modalName);
+              this.functions['reload']();
+            }
+          })
+          .catch((error) => {
+            console.error("Error al enviar el formulario:", error); 
+          });
+
+      },
+      delete:async(e)=>{
+        this.setDataFromModel(this.data.form)
+        const paraSQL = this.getDataAll();
+        const send = prepararSQL('clientes', paraSQL);
+        
+        if(send.status == 1){
+          console.log(send)
+          // await dbSelect(send.tipo, send.sql).then(val => console.log(val))
+        }
+        
+      },
+      reload:()=>{}
     };
 		this.formClass = {
       divPadre:'relative overflow-x-auto shadow-md sm:rounded-lg mb-5',
@@ -2048,11 +2108,12 @@ export class DataObject {
       title: "text-lg font-semibold text-left text-neutral-900 dark:text-white",
       subtitle: "mt-1 text-sm font-normal text-gray-500 dark:text-gray-400",
       label: 'block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400',
-      input: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-900 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
-      select: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-900 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
+      input: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
+      select: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
       btn: "h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500",
       btnSmall: "text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500",
-      submit: "text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 transition-bg duration-500",
+      submit: "py-2.5 px-5 mr-2 text-sm font-medium text-neutral-900 bg-white rounded-lg border border-neutral-200 hover:bg-neutral-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:outline-none focus:ring-blue-700 focus:text-blue-700 dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-600 dark:hover:text-white dark:hover:bg-neutral-700 inline-flex items-center",
+      delete: "py-2.5 px-5 mr-2 text-sm font-medium text-red-900 bg-red-100 rounded-lg border border-red-200 hover:bg-red-200 hover:text-red-800 focus:z-10 focus:ring-4 focus:outline-none focus:ring-red-700 focus:text-red-700 dark:bg-red-800 dark:text-red-100 dark:border-red-600 dark:hover:text-white dark:hover:bg-red-700 inline-flex items-center",
       darkBlue: "bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700",
       darkRed: "bg-red-700 text-white hover:bg-red-800 focus:ring-red-700",
       darkGreen: "bg-green-700 text-white hover:bg-green-800 focus:ring-green-700",
@@ -2107,6 +2168,7 @@ export class DataObject {
     } 
     
     if(ejecute){
+      this.table = table;
       let struc = await structure('t', table);
       const newStruc = []
       struc.forEach(data =>{
@@ -2991,9 +3053,9 @@ export class DataObject {
     let nameModal =  elem.slice(1) + '_modal';
 
 
-    let form = `<div id="${nameModal}" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-800/50 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center">
+    let form = `<div id="${nameModal}" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/80 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center ">
     <div class="relative w-full max-w-3xl max-h-full ">
-        <div class="relative bg-white rounded-lg shadow dark:bg-neutral-700">`;
+        <div class="relative bg-white rounded-lg shadow dark:bg-neutral-800  dark:shadow-neutral-300/50">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3';
 
     form+= `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-neutral-600">`
@@ -3138,16 +3200,25 @@ export class DataObject {
   
     form += `</div></div>`;
   
-    if (data.submit) {
-      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">
-        <button type="submit" class="${this.formClass.submit}">${data.submit}</button>
-      </div>`;
+    if (data.submit || data.delete) {
+      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">`;
+
+      if(data.submit){
+        form += ` <button type="submit" class="${this.formClass.submit}">${data.submit}</button>`;
+      }
+
+      if(data.delete){
+        form += ` <button type="button" data-formclick="delete" class="${this.formClass.delete}">${data.delete}</button>`;
+      }
+
+      form += `</div>`;
     }
     form += `</form></div></div></div>`
     
     element.innerHTML = form;
 		this.bindSubmitEvents(element);
     this.bindClickModal(element);
+    this.bindClickEvent(element)
     this.bindElementsWithDataValues(element);
     this.bindChangeEvents(element);
     return form;
@@ -3173,42 +3244,7 @@ export class DataObject {
 
       form.addEventListener('submit',async (event) => {
         event.preventDefault(); // Prevenir el comportamiento por defecto del formulario  
-        console.log(event.submitter)
-        let defaultTitle = event.submitter.innerHTML;
-        event.submitter.disabled = true;
-        event.submitter.innerHTML = `
-        <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
-    <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
-    </svg>
-    Procesando...
-        `
-
-        // Define una promesa dentro del evento submit
-        const promesa = new Promise((resolve, reject) => {
-          // Realiza una solicitud AJAX (por ejemplo, usando fetch o XMLHttpRequest)
-          // Simula una solicitud exitosa aquí para el ejemplo
-          setTimeout(() => {
-            this.executeFunctionByName(functionName);
-            const respuestaDelServidor = { mensaje: "Formulario enviado con éxito" };
-            resolve(respuestaDelServidor); // Resuelve la promesa con la respuesta
-          }, 2000); // Simulación de tiempo de espera
-        });
-
-        // Maneja la promesa
-        promesa
-          .then((respuesta) => {
-            console.log(respuesta); // Maneja la respuesta del servidor
-            event.submitter.innerHTML = defaultTitle;
-            if(modalName){
-              //this.closeModal(modalName);
-            }
-          })
-          .catch((error) => {
-            console.error("Error al enviar el formulario:", error); // Maneja errores
-          });
-
-      
+        this.executeFunctionByName(functionName, event, modalName)
         
       });
 
@@ -3220,21 +3256,24 @@ export class DataObject {
 
           // Obtenemos el elemento activo (el que tiene el foco)
           const elementoActivo = document.activeElement;
+
           if(elementoActivo.type == 'submit'){
            elementoActivo.click();
+          } else {
+            // Obtenemos la lista de elementos del formulario
+            const elementosFormulario = form.elements;
+  
+            // Buscamos el índice del elemento activo en la lista
+            const indiceElementoActivo = Array.prototype.indexOf.call(elementosFormulario, elementoActivo);
+  
+            // Movemos el foco al siguiente elemento del formulario
+            const siguienteElemento = elementosFormulario[indiceElementoActivo + 1];
+            if (siguienteElemento) {
+              siguienteElemento.focus();
+            }
+
           }
 
-          // Obtenemos la lista de elementos del formulario
-          const elementosFormulario = form.elements;
-
-          // Buscamos el índice del elemento activo en la lista
-          const indiceElementoActivo = Array.prototype.indexOf.call(elementosFormulario, elementoActivo);
-
-          // Movemos el foco al siguiente elemento del formulario
-          const siguienteElemento = elementosFormulario[indiceElementoActivo + 1];
-          if (siguienteElemento) {
-            siguienteElemento.focus();
-          }
         }
       });
     });
@@ -3268,18 +3307,55 @@ export class DataObject {
   bindClickEvent(componentDiv) {
     let elementsWithClick;
     if(componentDiv){
-      elementsWithClick = componentDiv.querySelectorAll('[data-click]');
+      elementsWithClick = componentDiv.querySelectorAll('[data-formclick]');
     } else {
-      elementsWithClick = document.querySelectorAll('[data-click]');
+      elementsWithClick = document.querySelectorAll('[data-formclick]');
     }
 
     elementsWithClick.forEach((element) => {
-      const clickData = element.getAttribute('data-click');
+      const clickData = element.getAttribute('data-formclick');
       const [functionName, ...params] = clickData.split(',');
       if(params){
         element.addEventListener('click', () => this.executeFunctionByName(functionName, params));
       } else {
-        element.addEventListener('click', () => this.executeFunctionByName(functionName));
+        element.addEventListener('click', (event) => {
+          let defaultTitle = event.submitter.innerHTML;
+          event.submitter.disabled = true;
+          event.submitter.innerHTML = `
+          <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+      <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+      </svg>
+      Procesando...
+          `
+  
+          // Define una promesa dentro del evento submit
+          const promesa = new Promise((resolve, reject) => {
+            // Realiza una solicitud AJAX (por ejemplo, usando fetch o XMLHttpRequest)
+            // Simula una solicitud exitosa aquí para el ejemplo
+            setTimeout(() => {
+              this.executeFunctionByName(functionName);
+              const respuestaDelServidor = { mensaje: "Formulario enviado con éxito" };
+              resolve(respuestaDelServidor); // Resuelve la promesa con la respuesta
+            }, 2000); // Simulación de tiempo de espera
+          });
+  
+          // Maneja la promesa
+          promesa
+            .then((respuesta) => {
+              console.log(respuesta); // Maneja la respuesta del servidor
+              event.submitter.innerHTML = defaultTitle;
+              event.submitter.disabled = false;
+              if(modalName){
+                this.closeModal(modalName);
+              }
+            })
+            .catch((error) => {
+              console.error("Error al enviar el formulario:", error); // Maneja errores
+            });
+  
+          
+        });
       }
     });
   }

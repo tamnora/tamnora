@@ -166,13 +166,7 @@ async function verSaldosAcumulados(){
     tmn.changeThemeColor();
   })
 
-  dataObjecto.setFunction('submit', (() => {
-    setTimeout(() => {
-      console.log(dataObjecto.getValue('form'))
-    }, 3000);
-    
-  }))
- 
+   
 
   dataTabla.setFunction('verRemito', async(ref)=>{
     await dataObjecto.setStructure('movimientos');
@@ -180,10 +174,13 @@ async function verSaldosAcumulados(){
 
     dataObjecto.setData('tipo_oper', 'type', 'select');
     dataObjecto.setData('tipo_oper', 'options', [{value: 0, label: 'Venta'}, {value:1, label:'Cobro'}]);
+    dataObjecto.setFunction('reload', verSaldosAcumulados);
   
+    
     const options = {
         title:'Editar Movimiento',
-        submit:'Guardalo!'
+        submit:'Guardalo!',
+        delete:'Eliminalo!'
     }
 
     dataObjecto.createFormModal('#modalForm', options);
