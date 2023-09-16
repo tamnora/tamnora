@@ -91,7 +91,7 @@ tmn.select('#searchCliente').keyCodeDown((event, element) => {
 }, [13, 39, 9])
 
 async function cargarClientes() {
-  const strClientes = await runCode('-sl id_cliente, nombre_cliente -fr clientes -wr tipo = 0');
+  const strClientes = await runCode('-sl id_cliente, nombre_cliente -fr clientes -wr tipo = 0 -ob nombre_cliente');
   tmn.setData('dataClientes', strClientes)
 }
 
@@ -172,14 +172,24 @@ dataTabla.setFunction('verRemito', async (ref) => {
   await dataObjecto.setStructure('movimientos', 'id');
   await dataObjecto.addObjectFromRunCode(`-st movimientos -wr id = '${ref[1]}'`);
 
+  const optionsClientes = [];
+  tmn.getData('dataClientes').forEach(cliente => {
+    optionsClientes.push({ value: cliente.id_cliente, label: cliente.nombre_cliente })
+  })
+
   dataObjecto.setData('tipo_oper', 'type', 'select');
   dataObjecto.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
+  dataObjecto.setData('id_cliente', 'name', 'cliente' );
+  dataObjecto.setData('id_cliente', 'type', 'select');
+  dataObjecto.setData('id_cliente', 'options', optionsClientes);
+
   dataObjecto.setFunction('reload', verSaldosAcumulados);
 
   const options = {
     title: 'Editar Movimiento',
     submit: 'Guardar!',
-    delete: 'Eliminar!'
+    delete: 'Eliminar!',
+    columns:{md:6, lg:6}
   }
 
   dataObjecto.createFormModal('#modalForm', options);
