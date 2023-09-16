@@ -1,6 +1,5 @@
-import {DataArray, DataObject, Tamnora, structure, runCode, dbSelect} from './js/tamnora'
+import { DataArray, DataObject, Tamnora, structure, runCode, dbSelect } from './js/tamnora'
 
-//canales y detalle_factura
 const tmn = new Tamnora;
 const dataTabla = new DataArray;
 const dataObjecto = new DataObject
@@ -14,31 +13,28 @@ tmn.setData('param', '16');
 tmn.setData('cant', 10);
 tmn.setData('itab', 0)
 
-
-tmn.select('#searchInput').change(()=>{
-    verSaldosAcumulados();
+tmn.select('#searchInput').change(() => {
+  verSaldosAcumulados();
 })
 
-tmn.select('#cant').change(()=>{
-    verSaldosAcumulados();
+tmn.select('#cant').change(() => {
+  verSaldosAcumulados();
 })
 
-tmn.select('#searchCliente').input((e, element)=>{
+tmn.select('#searchCliente').input((e, element) => {
   e.preventDefault();
   let value = e.target.innerText.toLowerCase();
   value = value.replace(/\s+/g, '_');
   const selectionStart = element.selectionStart;
   let result = '';
-  
-  
-  if(value.length > 0){
-    const matchingClient = tmn.getData('dataClientes').find((v) =>{
+
+  if (value.length > 0) {
+    const matchingClient = tmn.getData('dataClientes').find((v) => {
       let compara = v.nombre_cliente.replace(/\s+/g, '_');
       return (compara.toLowerCase().startsWith(value))
     }
     );
 
-        
     if (matchingClient) {
       result = matchingClient.nombre_cliente.substring(value.length);
       result = result.replace(/\s+/g, '&nbsp;');
@@ -51,7 +47,7 @@ tmn.select('#searchCliente').input((e, element)=>{
   }
 })
 
-tmn.select('#searchCliente').keyCodeDown((event, element)=>{
+tmn.select('#searchCliente').keyCodeDown((event, element) => {
   event.preventDefault();
   let value = event.target.innerText.toLowerCase();
   value = value.replace(/\s+/g, '_');
@@ -59,16 +55,16 @@ tmn.select('#searchCliente').keyCodeDown((event, element)=>{
   let codClie;
   let index = tmn.getData('itab');
 
+  if (value.length > 0) {
 
-  if(value.length > 0){
     const matchingClient = tmn.getData('dataClientes').filter(v => {
       let compara = v.nombre_cliente.replace(/\s+/g, '_');
       return (compara.toLowerCase().startsWith(value))
     });
 
     if (matchingClient) {
-      if(event.keyCode == 9){
-        if(index < matchingClient.length - 1 ){
+      if (event.keyCode == 9) {
+        if (index < matchingClient.length - 1) {
           index++
           tmn.setData('itab', index);
         } else {
@@ -88,103 +84,103 @@ tmn.select('#searchCliente').keyCodeDown((event, element)=>{
         tmn.setData('param', codClie);
         verSaldosAcumulados();
       }
-    } 
+    }
   } else {
     tmn.select('#sugerencia').html('');
   }
 }, [13, 39, 9])
 
-async function cargarClientes(){
+async function cargarClientes() {
   const strClientes = await runCode('-sl id_cliente, nombre_cliente -fr clientes -wr tipo = 0');
   tmn.setData('dataClientes', strClientes)
 }
 
-async function verSaldosAcumulados(){
+async function verSaldosAcumulados() {
   let rstData;
   let param = tmn.getData('param');
   let cant = tmn.getData('cant');
-  
+
   rstData = await dbSelect('s', `CALL saldos_acumulados(${param}, ${cant})`)
 
-
   dataTabla.setStructure('movimientos');
-
   dataTabla.removeAll();
 
   rstData.forEach(reg => {
-    dataTabla.addObject(reg,dataTabla.getStructure())
+    dataTabla.addObject(reg, dataTabla.getStructure())
   });
 
-  dataTabla.setDataKeys('hidden',{acumulado: true});
-  dataTabla.setDataKeys('name', {id_factura: 'Remito'})
+ 
+  dataTabla.setDataKeys('hidden', { acumulado: true });
+  //dataTabla.setDataKeys('attribute', { importe: 'currency', saldo: 'pesos' })
+  dataTabla.setDataKeys('name', { id_factura: 'Remito' })
 
   const options = {
-    title: 'Lista de canales',
-    subtitle: 'Puedes seleccionar el canal',
-    header:{
-      tipo_oper: {class: 'text-left', title: 'Operación'}
+    title: 'Movimientos del cliente',
+    subtitle: 'Selecciona para editar',
+    header: {
+      tipo_oper: { class: 'text-left', title: 'Operación' }
     },
     field: {
-        saldo:{
-          class: 'text-end',
-          change:(data)=>{
-            let result = data.valor;
-            if(data.index == 0){
-                result = `<span class="bg-red-100 text-red-700 text-normal font-semibold px-3 py-1 rounded dark:bg-red-700 dark:text-red-100">${data.valor}</span>`;
+      saldo: {
+        class: 'text-end',
+        change: (data) => {
+          let result = data.valor;
+          if (data.index == 0) {
+            let saldo = data.items.saldo.value;
+
+            if(saldo > 0){
+              result = `<span class="bg-red-200 text-red-600 text-normal font-semibold px-3 py-1 rounded dark:bg-red-600/60 dark:text-red-100">${data.valor}</span>`;
+            } else if(saldo < 0) {
+              result = `<span class="bg-green-200 text-green-600 text-normal font-semibold px-3 py-1 rounded dark:bg-green-600/60 dark:text-green-100">${data.valor}</span>`;
+            } else {
+              result = `<span class="bg-sky-200 text-sky-600 text-normal font-semibold px-3 py-1 rounded dark:bg-sky-600/60 dark:text-sky-100">${data.valor}</span>`;
             }
-            return result;
           }
-        },
-        tipo_oper: {
-          class: 'text-semibold',
-          change:(data)=>{
-            let tipos = ['Venta', 'Cobro', 'Compra', 'Pago'];
-            return tipos[data.valor];
-          }
+          return result;
         }
       },
-    row:{
-      class:{
+      tipo_oper: {
+        class: 'text-semibold',
+        change: (data) => {
+          let tipos = ['Venta', 'Cobro', 'Compra', 'Pago'];
+          return tipos[data.valor];
+        }
+      }
+    },
+    row: {
+      class: {
         normal: 'bg-neutral-50 dark:bg-neutral-700',
         alternative: 'bg-neutral-100 dark:bg-neutral-800'
       },
-      click:{
+      click: {
         function: 'verRemito',
         field: 'id'
       }
     }
   }
-
   dataTabla.createTable('#tabla', options);
-  
+}
+
+cargarClientes();
+verSaldosAcumulados();
+
+tmn.onMount(() => {
+  tmn.changeThemeColor();
+})
+
+dataTabla.setFunction('verRemito', async (ref) => {
+  await dataObjecto.setStructure('movimientos', 'id');
+  await dataObjecto.addObjectFromRunCode(`-st movimientos -wr id = '${ref[1]}'`);
+
+  dataObjecto.setData('tipo_oper', 'type', 'select');
+  dataObjecto.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
+  dataObjecto.setFunction('reload', verSaldosAcumulados);
+
+  const options = {
+    title: 'Editar Movimiento',
+    submit: 'Guardar!',
+    delete: 'Eliminar!'
   }
 
-  cargarClientes();
-  verSaldosAcumulados();
-
-  tmn.onMount(()=>{
-    tmn.changeThemeColor();
-  })
-
-   
-
-  dataTabla.setFunction('verRemito', async(ref)=>{
-    await dataObjecto.setStructure('movimientos');
-    await dataObjecto.addObjectFromRunCode(`-st movimientos -wr id = '${ref[1]}'`);
-
-    dataObjecto.setData('tipo_oper', 'type', 'select');
-    dataObjecto.setData('tipo_oper', 'options', [{value: 0, label: 'Venta'}, {value:1, label:'Cobro'}]);
-    dataObjecto.setFunction('reload', verSaldosAcumulados);
-  
-    
-    const options = {
-        title:'Editar Movimiento',
-        submit:'Guardalo!',
-        delete:'Eliminalo!'
-    }
-
-    dataObjecto.createFormModal('#modalForm', options);
-    
-  })
-
-
+  dataObjecto.createFormModal('#modalForm', options);
+})
