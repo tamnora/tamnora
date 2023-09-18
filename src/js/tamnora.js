@@ -4472,11 +4472,11 @@ export class DataArray {
         if (action == 'next') {
           pos = pos + cant;
           this.from = pos;
-          this.createTable(this.tableElement, this.tableOptions);
+          this.createTable(this.tableOptions);
         } else {
           pos = pos - cant;
           this.from = pos;
-          this.createTable(this.tableElement, this.tableOptions);
+          this.createTable(this.tableOptions);
         }
       });
 
