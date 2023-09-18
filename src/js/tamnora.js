@@ -3650,25 +3650,29 @@ export class DataObject {
 }
 
 export class DataArray {
-  constructor(fields, initialData = []) {
+  constructor(name, initial={fields: [], initialData : []}) {
     this.from = 1;
     this.recordsPerView = 10;
     this.paginations = true;
-    this.nameArray = '';
+    this.name = name || 'newTable';
     this.tableOptions = {};
     this.tableElement = '';
     this.functions = {};
     this.structure = [];
+    this.orderColumns = [];
+    this.widthColumns = [];
+    this.arrayOrder = [];
     this.defaultRow = {};
     this.tableClass = {
-      divPadre: "relative bg-white dark:bg-neutral-800 overflow-x-auto shadow-md sm:rounded-lg",
+      divPadre: "relative bg-white dark:bg-neutral-800 sm:rounded-lg",
+      tableContainer: "overflow-x-auto shadow-md",
       table: "w-full text-sm text-left text-neutral-500 dark:text-neutral-400",
       header: "bg-white dark:bg-neutral-800",
       title: "text-lg font-semibold text-left text-neutral-900 dark:text-white",
       btnSmall: "text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500",
       thead: "bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600",
       tfoot: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
-      pagination: "bg-white dark:bg-neutral-800 text-neutral-700 py-3 dark:text-neutral-400",
+      pagination: "mt-1 text-neutral-700 py-3 dark:text-neutral-400",
       th: "px-6 py-2 select-none text-xs text-neutral-600 uppercase dark:text-neutral-400 whitespace-nowrap",
       tr: "border-b border-neutral-200 dark:border-neutral-700",
       td: "px-6 py-3 select-none whitespace-nowrap",
@@ -3678,9 +3682,9 @@ export class DataArray {
       tdh: "px-6 py-2 select-none whitespace-nowrap",
       tdnumber: "px-6 py-4 text-right",
     };
-    this.dataArray = initialData.map(item => {
+    this.dataArray = initial.initialData.map(item => {
       const newItem = {};
-      fields.forEach(field => {
+      initial.fields.forEach(field => {
         newItem[field] = {
           "type": "text",
           "name": field,
@@ -3748,6 +3752,16 @@ export class DataArray {
     const conjuntoUnico = new Set(arrayCombinado.map(objeto => JSON.stringify(objeto)));
     this.structure = Array.from(conjuntoUnico).map(JSON.parse);
     console.log('addStructure', this.structure)
+  }
+
+  reordenarClaves(objeto, orden) {
+    const resultado = {};
+    orden.forEach((clave) => {
+      if (objeto.hasOwnProperty(clave)) {
+        resultado[clave] = objeto[clave];
+      }
+    });
+    return resultado;
   }
 
   getData(index, fieldName, key) {
@@ -4031,11 +4045,13 @@ export class DataArray {
     return [];
   }
 
-  createTable(elem, options = {}) {
+  createTable(options = {}) {
+    const name = this.name;
     let element;
 
+
     if (!this.tableElement) {
-      element = document.querySelector(elem);
+      element = document.querySelector(`#${name}`);
       this.tableElement = element;
     } else {
       element = this.tableElement;
@@ -4053,12 +4069,22 @@ export class DataArray {
     let xRow = {};
     let hayMas = false;
     let hayMenos = false;
+    let arrayTable = 'dataArray'
+
+    if(this.orderColumns.length > 0){
+      this.arrayOrder = this.dataArray.map((objeto) =>
+          this.reordenarClaves(objeto, this.orderColumns)
+        );
+        arrayTable = 'arrayOrder';
+
+    }
+
 
     table += `<div class="${this.tableClass.divPadre}">`;
-    table += `<table class="${this.tableClass.table}">`;
-    table += `<div class="flex flex-col md:flex-row justify-between items-start w-full py-3 px-5 ${this.tableClass.header}">`;
 
+    
     if ("title" in options || "subtitle" in options || "btnNew" in options || "buttons" in options) {
+      table += `<div class="flex flex-col md:flex-row justify-between items-start w-full py-3 px-5 ${this.tableClass.header}">`;
       table += `<div class="flex flex-col flex-grow mb-2">`;
       if ("title" in options) {
         table += `<h3 class="${this.tableClass.title}">${options.title}</h3>`;
@@ -4075,7 +4101,9 @@ export class DataArray {
       }
       table += '</div>';
     }
-
+    
+    table += `<div class="${this.tableClass.tableContainer}">`;
+    table += `<table class="${this.tableClass.table}">`;
     table += `<thead class="${this.tableClass.thead}">`;
 
     tableHeader += `<tr class="pp ${this.tableClass.trtitle}">`;
@@ -4089,18 +4117,18 @@ export class DataArray {
     hasta = desde + this.recordsPerView - 1;
 
 
-    Object.keys(this.dataArray[0]).forEach(item => {
-      let tipo = this.detectDataType(this.dataArray[0][item].value);
+    Object.keys(this[arrayTable][0]).forEach(item => {
+      let tipo = this.detectDataType(this[arrayTable][0][item].value);
       let xheader = {};
       let xfooter = {};
       let classTitleColumn = '';
       let xfield, xname, xattribute, xhidden;
 
-      xattribute = this.dataArray[0][item].attribute ? this.dataArray[0][item].attribute : '';
-      xhidden = this.dataArray[0][item].hidden ? 'hidden' : '';
+      xattribute = this[arrayTable][0][item].attribute ? this[arrayTable][0][item].attribute : '';
+      xhidden = this[arrayTable][0][item].hidden ? 'hidden' : '';
 
 
-      xname = this.dataArray[0][item].name;
+      xname = this[arrayTable][0][item].name;
 
       if ("header" in options) {
         xheader = options.header[item] ? options.header[item] : {};
@@ -4159,7 +4187,7 @@ export class DataArray {
 
     table += `</thead><tbody>`;
 
-    this.dataArray.forEach((items, index) => {
+    this[arrayTable].forEach((items, index) => {
       count++;
       if (this.paginations) {
         if ((index + 1) < desde) {
@@ -4191,14 +4219,19 @@ export class DataArray {
             table += `<tr ${actionClick} class="${this.tableClass.tr} ${actionClass}">`;
           }
 
-          Object.keys(items).forEach((item) => {
-            let xattribute = this.dataArray[index][item].attribute ? this.dataArray[index][item].attribute : '';
-            let xhidden = this.dataArray[index][item].hidden ? 'hidden' : '';
+          Object.keys(items).forEach((item,iri) => {
+            let xattribute = this[arrayTable][index][item].attribute ? this[arrayTable][index][item].attribute : '';
+            let xhidden = this[arrayTable][index][item].hidden ? 'hidden' : '';
             let value = items[item].value;
             let tipo = this.detectDataType(value);
             let valor = this.formatValueByDataType(value);
             let dataClick = '';
             let newClass = '';
+            let mywidth = ''
+
+            if(this.widthColumns.length > 0){
+              mywidth = this.widthColumns[iri];
+            }
 
 
            
@@ -4223,12 +4256,12 @@ export class DataArray {
             }
 
             if (field[item].class) {
-              newClass = field[item].class;
+              newClass = mywidth + ' ' + field[item].class;
             } else {
               if (tipo == 'number') {
-                newClass = 'text-right'
+                newClass = mywidth + ' text-right'
               } else {
-                newClass = '';
+                newClass = mywidth;
               }
             }
 
@@ -4273,7 +4306,7 @@ export class DataArray {
         }
 
         Object.keys(items).forEach((item) => {
-          let xattribute = this.dataArray[index][item].attribute ? this.dataArray[index][item].attribute : '';
+          let xattribute = this[arrayTable][index][item].attribute ? this[arrayTable][index][item].attribute : '';
           let value = items[item].value;
           let tipo = this.detectDataType(value);
           let valor = this.formatValueByDataType(value);
@@ -4334,7 +4367,8 @@ export class DataArray {
     // if(hayMas){
     // 	table += `<tr><td colspan="${footer.length}" data-tail="td">Hay mas registros</td><tr>`;
     // }
-    table += `</tfoot></table>`;
+    table += `</tfoot></table></div>`;
+    table += '</div>';
 
     if (hayMas || hayMenos) {
       if (count < hasta) {
@@ -4383,7 +4417,7 @@ export class DataArray {
 		</div>`
     }
 
-    table += '</div>'
+    
 
 
     element.innerHTML = table;

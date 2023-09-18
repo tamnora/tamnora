@@ -1,7 +1,7 @@
 import { DataArray, DataObject, Tamnora, structure, runCode, dbSelect } from './js/tamnora'
 
 const tmn = new Tamnora;
-const dataTabla = new DataArray;
+const dataTabla = new DataArray('tabla');
 const formModal = new DataObject('modalForm')
 const simpleForm = new DataObject('simpleform')
 
@@ -159,8 +159,8 @@ async function verSaldosAcumulados() {
     dataTabla.loadDefaultRow();
   }
 
- 
-  dataTabla.setDataKeys('hidden', { acumulado: true });
+  dataTabla.orderColumns = ['tipo_oper', 'id', 'fechahora', 'importe', 'saldo'];
+  dataTabla.widthColumns = ['w-5', 'w-5', 'w-10', 'w-15', 'w-35']
   dataTabla.setDataKeys('attribute', { importe: 'currency', saldo: 'pesos' })
   dataTabla.setDataKeys('name', { id_factura: 'Remito' })
 
@@ -223,8 +223,8 @@ async function verSaldosAcumulados() {
       }
     }
   }
-  dataTabla.createTable('#tabla', options);
-  console.log(simpleForm, formModal)
+  dataTabla.createTable(options);
+ 
 }
 
 cargarClientes();
