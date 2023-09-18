@@ -2,23 +2,26 @@ import { DataArray, DataObject, Tamnora, structure, runCode, dbSelect } from './
 
 const tmn = new Tamnora;
 const dataTabla = new DataArray;
-const dataObjecto = new DataObject
+const formModal = new DataObject
+const simpleForm = new DataObject
 
 tmn.themeColorLight = '#db5945';
 tmn.themeColorDark = '#713228';
 
 tmn.setData('idBuscado', '');
 tmn.setData('dataClientes', []);
-tmn.setData('param', '16');
+tmn.setData('param', 16);
 tmn.setData('cant', 10);
 tmn.setData('itab', 0)
 
 tmn.select('#searchInput').change(() => {
   verSaldosAcumulados();
+  verSimpleForm();
 })
 
 tmn.select('#cant').change(() => {
   verSaldosAcumulados();
+  verSimpleForm();
 })
 
 tmn.select('#searchCliente').input((e, element) => {
@@ -46,6 +49,8 @@ tmn.select('#searchCliente').input((e, element) => {
     tmn.select('#sugerencia').html(`${result}`)
   }
 })
+
+
 
 tmn.select('#searchCliente').keyCodeDown((event, element) => {
   event.preventDefault();
@@ -83,6 +88,7 @@ tmn.select('#searchCliente').keyCodeDown((event, element) => {
         tmn.setCaretToEnd(element)
         tmn.setData('param', codClie);
         verSaldosAcumulados();
+        verSimpleForm();
       }
     }
   } else {
@@ -95,28 +101,87 @@ async function cargarClientes() {
   tmn.setData('dataClientes', strClientes)
 }
 
+async function verSimpleForm(){
+  let param = tmn.getData('param');
+  await simpleForm.setStructure('movimientos', 'id');
+  await simpleForm.addObjectFromRunCode(`-st movimientos -wr id = '${param}'`, true);
+
+  const optionsClientes = [];
+  tmn.getData('dataClientes').forEach(cliente => {
+    optionsClientes.push({ value: cliente.id_cliente, label: cliente.nombre_cliente })
+  })
+
+  simpleForm.setData('tipo_oper', 'type', 'select');
+  simpleForm.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
+
+  simpleForm.setData('id_cliente', 'name', 'cliente' );
+  simpleForm.setData('id_cliente', 'type', 'select');
+  simpleForm.setData('id_cliente', 'value', param);
+  simpleForm.setData('id_cliente', 'options', optionsClientes);
+  simpleForm.setData('fechahora', 'setDate', 1)
+  simpleForm.setDataKeys('required', {id_cliente: true, importe: true, fechahora: true})
+  simpleForm.setFunction('reload', verSaldosAcumulados);
+  simpleForm.resetOnSubmit = true;
+
+  
+  const options = {
+    title: 'Nuevo Movimiento',
+    submit: 'Crear',
+    delete: 'Borrar'
+  }
+ 
+ 
+
+  simpleForm.createForm('#simpleform', options);
+}
+
 async function verSaldosAcumulados() {
   let rstData;
   let param = tmn.getData('param');
   let cant = tmn.getData('cant');
 
-  rstData = await dbSelect('s', `CALL saldos_acumulados(${param}, ${cant})`)
+  if(param){
+    rstData = await dbSelect('s', `CALL saldos_acumulados(${param}, ${cant})`)
+  } else {
+    rstData = await dbSelect('s', `CALL saldos_acumulados(0, 5)`)
+  }
 
   dataTabla.setStructure('movimientos');
-  dataTabla.removeAll();
+  
 
-  rstData.forEach(reg => {
-    dataTabla.addObject(reg, dataTabla.getStructure())
-  });
+  if(!rstData[0].Ninguno){
+    dataTabla.removeAll();
+    dataTabla.setDefaultRow(rstData[0]);
+    rstData.forEach(reg => {
+      dataTabla.addObject(reg, dataTabla.getStructure())
+    });
+  } else {
+    dataTabla.loadDefaultRow();
+  }
 
  
   dataTabla.setDataKeys('hidden', { acumulado: true });
-  //dataTabla.setDataKeys('attribute', { importe: 'currency', saldo: 'pesos' })
+  dataTabla.setDataKeys('attribute', { importe: 'currency', saldo: 'pesos' })
   dataTabla.setDataKeys('name', { id_factura: 'Remito' })
+
+  let buttons = `
+<div class="inline-flex rounded-md shadow-sm" role="group">
+  <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-l-lg hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
+    Nueva Factura
+  </button>
+  <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border-t border-b border-neutral-200 hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
+    Ver Cuenta
+  </button>
+  <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-r-md hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
+    Informe
+  </button>
+</div>
+`;
 
   const options = {
     title: 'Movimientos del cliente',
     subtitle: 'Selecciona para editar',
+    buttons: buttons,
     header: {
       tipo_oper: { class: 'text-left', title: 'Operación' }
     },
@@ -163,27 +228,28 @@ async function verSaldosAcumulados() {
 
 cargarClientes();
 verSaldosAcumulados();
+verSimpleForm();
 
 tmn.onMount(() => {
   tmn.changeThemeColor();
 })
 
 dataTabla.setFunction('verRemito', async (ref) => {
-  await dataObjecto.setStructure('movimientos', 'id');
-  await dataObjecto.addObjectFromRunCode(`-st movimientos -wr id = '${ref[1]}'`);
+  await formModal.setStructure('movimientos', 'id');
+  await formModal.addObjectFromRunCode(`-st movimientos -wr id = '${ref[1]}'`);
 
   const optionsClientes = [];
   tmn.getData('dataClientes').forEach(cliente => {
     optionsClientes.push({ value: cliente.id_cliente, label: cliente.nombre_cliente })
   })
 
-  dataObjecto.setData('tipo_oper', 'type', 'select');
-  dataObjecto.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
-  dataObjecto.setData('id_cliente', 'name', 'cliente' );
-  dataObjecto.setData('id_cliente', 'type', 'select');
-  dataObjecto.setData('id_cliente', 'options', optionsClientes);
+  formModal.setData('tipo_oper', 'type', 'select');
+  formModal.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
+  formModal.setData('id_cliente', 'name', 'cliente' );
+  formModal.setData('id_cliente', 'type', 'select');
+  formModal.setData('id_cliente', 'options', optionsClientes);
 
-  dataObjecto.setFunction('reload', verSaldosAcumulados);
+  formModal.setFunction('reload', verSaldosAcumulados);
 
   const options = {
     title: 'Editar Movimiento',
@@ -192,5 +258,5 @@ dataTabla.setFunction('verRemito', async (ref) => {
     columns:{md:6, lg:6}
   }
 
-  dataObjecto.createFormModal('#modalForm', options);
+  formModal.createFormModal('#modalForm', options);
 })

@@ -1894,7 +1894,8 @@ export class Tamnora {
     let myDate;
     let sep = separador || '-';
     if (valor == null) {
-      myDate = new Date();
+      valor = new Date();
+      myDate = valor;
     }
 
     let exp = /^\d{2,4}\-\d{1,2}\-\d{1,2}\s\d{1,2}\:\d{1,2}\:\d{1,2}$/gm;
@@ -2030,9 +2031,11 @@ export class DataObject {
     this.table = '';
     this.key = '';
     this.numberAlert = 0;
+    this.resetOnSubmit = false;
     this.structure = [];
     this.formElement = '';
     this.modalName = '';
+    this.defaultObjeto = {};
     this.functions = {
       closeModal: (e) => {
         const modal = document.querySelector(e);
@@ -2084,8 +2087,12 @@ export class DataObject {
             event.submitter.disabled = false;
             if (modalName) {
               this.closeModal(modalName);
-              this.functions['reload']();
+            } 
+            this.functions['reload']();
+            if(this.resetOnSubmit){
+              this.resetValues();
             }
+            
           })
           .catch((error) => {
             console.error("Error al enviar el formulario:", error);
@@ -2093,18 +2100,20 @@ export class DataObject {
 
       },
       delete: async (e) => {
-        let sql, reference;
+        let sql, reference, val, key;
         const btnDelete = this.formElement.querySelector('[data-formclick="delete"]');
         
 
         if (this.key != '') {
-          let val = this.getValue(`form!${this.key}`);
+          key = this.key;
+          val = this.getValue(`form!${this.key}`);
           sql = `DELETE FROM ${this.table} WHERE ${this.key} = ${val}`;
           reference = `<span class="font-bold ml-2">${this.key}  ${val}</span>`;
         } else {
           this.structure.forEach(value => {
             if (value.COLUMN_KEY == 'PRI') {
-              let val = this.getValue(`form!${value.COLUMN_NAME}`);
+              key = value.COLUMN_NAME;
+              val = this.getValue(`form!${value.COLUMN_NAME}`);
               sql = `DELETE FROM ${this.table} WHERE ${value.COLUMN_NAME} = ${val}`;
               reference = `<span class="font-bold ml-2">${value.COLUMN_NAME}  ${val}</span>`;
             }
@@ -2112,7 +2121,8 @@ export class DataObject {
 
         }
 
-        if (sql) {
+        console.log(key, val)
+        if (sql && val) {
           if (this.numberAlert > 0) {
             let defaultTitle = btnDelete.innerHTML;
             btnDelete.disabled = true;
@@ -2144,7 +2154,10 @@ export class DataObject {
                 btnDelete.disabled = false;
                 if (this.modalName) {
                   this.closeModal(this.modalName);
-                  this.functions['reload']();
+                }
+                this.functions['reload']();
+                if(this.resetOnSubmit){
+                  this.resetValues();
                 }
               })
               .catch((error) => {
@@ -2163,6 +2176,8 @@ export class DataObject {
 
 
 
+        } else {
+          console.error(`NO se puede ELIMINAR ${key} con valor ${val} NULL`)
         }
 
       },
@@ -2264,12 +2279,30 @@ export class DataObject {
     if (this.camposRegistro[fieldName]) {
       if (!isNaN(parseFloat(value)) && isFinite(value)) {
         this.camposRegistro[fieldName][key] = parseFloat(value)
+        this.defaultObjeto[fieldName][key] = parseFloat(value);
       } else {
         this.camposRegistro[fieldName][key] = value;
+        this.defaultObjeto[fieldName][key] = value;
         if (value == 'currency') {
           this.camposRegistro[fieldName].pattern = "[0-9.,]*";
+          this.defaultObjeto[fieldName].pattern = "[0-9.,]*";
         }
-
+      }
+      if(key == 'setDate'){
+        let fecha = new Date();
+        if(value > 0){
+          fecha.setDate(fecha.getDate() + value);
+        }
+        this.camposRegistro[fieldName].value = this.formatDate(fecha).fechaHora;
+        this.defaultObjeto[fieldName].value = this.formatDate(fecha).fechaHora;
+        this.data.form[fieldName] = this.formatDate(fecha).fechaHora;
+      }
+      if(key == 'value'){
+        if (!isNaN(parseFloat(value)) && isFinite(value)) {
+          this.data.form[fieldName] = parseFloat(value);
+        } else {
+          this.data.form[fieldName] = value; 
+        }
       }
     }
   }
@@ -2356,6 +2389,35 @@ export class DataObject {
     }
   }
 
+  resetValues() {
+    for (const fieldName in this.defaultObjeto) {
+      const setDate = this.defaultObjeto[fieldName].setDate;
+      const type = this.defaultObjeto[fieldName].type;
+      let value = this.defaultObjeto[fieldName].value;
+      
+       
+
+        if(type == 'datetime-local'){
+          let fecha = new Date();
+          if(setDate > 0){
+            fecha.setDate(fecha.getDate() + setDate);
+          }
+          this.camposRegistro[fieldName].value = this.formatDate(fecha).fechaHora;
+          this.data.form[fieldName] = this.formatDate(fecha).fechaHora;
+        } else {
+            if (!isNaN(parseFloat(value)) && isFinite(value)) {
+              this.data.form[fieldName] = parseFloat(value);
+              this.camposRegistro[fieldName].value = parseFloat(value);
+            } else {
+              this.data.form[fieldName] = value;
+              this.camposRegistro[fieldName].value = value;
+            }
+        }
+        console.log(this.getDataAll())
+        console.log(this.getValue('form'))
+    }
+  }
+
   typeToType(inType = 'text') {
     let outType;
     if (inType == 'int') outType = 'number';
@@ -2380,6 +2442,7 @@ export class DataObject {
   // Nuevo método para agregar objetos al array y completar campos
   addObject(dataObject, structure = [], clean = false) {
     const newObject = {};
+    const newObjectDefault={};
     let groupType = {};
     let primaryKey = {};
 
@@ -2438,26 +2501,55 @@ export class DataObject {
           "setDate": 0,
           "options": []
         };
+
+        newObjectDefault[fieldName] = {
+          "type": type,
+          "name": fieldName,
+          "required": false,
+          "placeholder": "",
+          "value": value,
+          "column": 0,
+          "attribute": 0,
+          "hidden": false,
+          "pattern": '',
+          "defaultValue": "",
+          "key": key,
+          "setDate": 0,
+          "options": []
+        };
       }
     }
 
     this.camposRegistro = newObject;
+    this.defaultObjeto = newObjectDefault;
+    console.log(this.camposRegistro)
+    console.log(this.defaultObjeto)
 
   }
 
-  async addObjectFromRunCode(sq) {
+  getDefaultObject() {
+    return this.defaultObjeto;
+  }
+
+  setDefaultObject(objeto) {
+    console.log(objeto)
+    console.log(this.defaultObjeto)
+  }
+
+  
+
+
+  async addObjectFromRunCode(sq, clean = false) {
     let movimiento = await runCode(sq);
     this.setValue('form', {});
 
     movimiento.forEach(value => {
-      this.addObject(value)
+      this.addObject(value,[], clean)
     })
 
     this.forEachField((campo, dato) => {
       this.setValueRoute(`form!${campo}`, dato.value);
     })
-
-
 
   }
 
@@ -2487,6 +2579,7 @@ export class DataObject {
   getValue(camino) {
     const propiedades = camino.split('!');
     let valorActual = this.data;
+    console.log(this.data.form)
 
     for (let propiedad of propiedades) {
       if (valorActual.hasOwnProperty(propiedad)) {
@@ -2890,6 +2983,138 @@ export class DataObject {
     }
   }
 
+  formatDate(valor = null, separador = '-') {
+    let fechaHora;
+    let myDate;
+    let sep = separador || '-';
+    if (valor == null) {
+      valor = new Date();
+      myDate = valor;
+    }
+
+    let exp = /^\d{2,4}\-\d{1,2}\-\d{1,2}\s\d{1,2}\:\d{1,2}\:\d{1,2}$/gm;
+    const arrayDias = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    const arrayDia = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    const arrayMeses = [
+      'Enero',
+      'Febrero',
+      'Marzo',
+      'Abril',
+      'Mayo',
+      'junio',
+      'Julio',
+      'Agosto',
+      'Septiembre',
+      'Octubre',
+      'Noviembre',
+      'Diciembre'
+    ];
+    const arrayMes = [
+      'Ene',
+      'Feb',
+      'Mar',
+      'Abr',
+      'May',
+      'jun',
+      'Jul',
+      'Ago',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dic'
+    ];
+
+    if (typeof valor == 'string') {
+      if (valor.match(exp)) {
+        fechaHora = valor;
+        myDate = new Date(valor);
+      } else {
+        return '';
+      }
+    }
+
+    if (typeof valor == 'object') {
+      myDate = valor;
+    }
+
+    if (typeof valor !== 'string' && typeof valor !== 'object') {
+      return 'parametro incorrecto';
+    }
+
+    let anio = myDate.getFullYear();
+    let mes = myDate.getMonth() + 1;
+    let dia = myDate.getDate();
+    let dsem = myDate.getDay();
+    let hora = myDate.getHours();
+    let minutos = myDate.getMinutes();
+    let segundos = myDate.getSeconds();
+
+    mes = mes < 10 ? '0' + mes : mes;
+    dia = dia < 10 ? '0' + dia : dia;
+    hora = hora < 10 ? '0' + hora : hora;
+    minutos = minutos < 10 ? '0' + minutos : minutos;
+    segundos = segundos < 10 ? '0' + segundos : segundos;
+
+    let myObject = {
+      fecha: '' + myDate.getFullYear() + '-' + mes + '-' + dia,
+      fechaEs: '' + dia + sep + mes + sep + myDate.getFullYear(),
+      anio: myDate.getFullYear(),
+      mes: mes,
+      mesCorto: arrayMes[myDate.getMonth()],
+      mesLargo: arrayMeses[myDate.getMonth()],
+      dia: dia,
+      diaSem: dsem,
+      anioMes: anio + sep + mes,
+      mesDia: mes + sep + dia,
+      diaCorto: arrayDia[dsem],
+      diaLargo: arrayDias[dsem],
+      fechaCarta:
+        arrayDias[dsem] +
+        ' ' +
+        myDate.getDate() +
+        ' de ' +
+        arrayMeses[myDate.getMonth()] +
+        ' de ' +
+        myDate.getFullYear(),
+      fechaTonic:
+        '' + myDate.getDate() + sep + arrayMes[myDate.getMonth()] + sep + myDate.getFullYear(),
+      fechaHoraEs:
+        '' +
+        dia +
+        sep +
+        mes +
+        sep +
+        myDate.getFullYear() +
+        ' ' +
+        hora +
+        ':' +
+        minutos +
+        ':' +
+        segundos,
+      fechaHora:
+        '' +
+        myDate.getFullYear() +
+        '-' +
+        mes +
+        '-' +
+        dia +
+        ' ' +
+        hora +
+        ':' +
+        minutos +
+        ':' +
+        segundos,
+      fechaHoraT: '' + myDate.getFullYear() + '-' + mes + '-' + dia + 'T' + hora + ':' + minutos,
+      horaLarga: hora + ':' + minutos + ':' + segundos,
+      horaCorta: hora + ':' + minutos,
+      hora: hora,
+      minutos: minutos,
+      segundos: segundos
+    };
+
+    return myObject;
+  }
+
   bindChangeEvents(componentDiv) {
     let elementsWithClick;
     if (componentDiv) {
@@ -2998,6 +3223,8 @@ export class DataObject {
         pattern = `pattern="${dato.pattern}"`;
       }
 
+      
+      
 
 
       if ('column' in dato) {
@@ -3020,7 +3247,7 @@ export class DataObject {
       }
 
 
-
+      
 
       if (dato.hidden == true) {
         colspan += ' hidden';
@@ -3090,15 +3317,24 @@ export class DataObject {
 
     form += `</div></div>`;
 
-    if (data.submit) {
-      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">
-        <button type="submit" class="${this.formClass.submit}">${data.submit}</button>
-      </div>`;
+    if (data.submit || data.delete) {
+      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">`;
+
+      if (data.submit) {
+        form += ` <button type="submit" class="${this.formClass.submit}">${data.submit}</button>`;
+      }
+
+      if (data.delete) {
+        form += ` <button type="button" data-formclick="delete" class="${this.formClass.delete}">${data.delete}</button>`;
+      }
+
+      form += `</div>`;
     }
     form += '</form></div>'
 
     element.innerHTML = form;
     this.bindSubmitEvents(element);
+    this.bindClickEvent(element)
     this.bindElementsWithDataValues(element);
     this.bindChangeEvents(element);
     return form;
@@ -3959,15 +4195,11 @@ export class DataArray {
 
            
             if (xattribute == 'currency') {
-              console.log(value)
               valor = this.formatNumber(value, 2);
-              console.log(valor)
             }
 
             if (xattribute == 'pesos') {
-              console.log(value)
               valor = this.pesos(value, 2, '$');
-              console.log(valor)
             }
 
 
