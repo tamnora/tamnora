@@ -1,6 +1,6 @@
 const SERVER = import.meta.env.VITE_SERVER_DEV;
 
-let informe = {};
+let informe = {primero: 'nada', segundo:'nada'};
 
 function createQuerySQL(type, params) {
   if (typeof type !== 'string') {
@@ -2024,7 +2024,7 @@ export class Tamnora {
 }
 
 export class DataObject {
-  constructor(fields = {}) {
+  constructor(name = 'newform', fields = {}) {
     this.camposRegistro = {};
     this.formOptions = {};
     this.data = this.createReactiveProxy(fields.data);
@@ -2035,6 +2035,7 @@ export class DataObject {
     this.structure = [];
     this.formElement = '';
     this.modalName = '';
+    this.name = name;
     this.defaultObjeto = {};
     this.functions = {
       closeModal: (e) => {
@@ -2062,7 +2063,8 @@ export class DataObject {
 
         // Define una promesa dentro del evento submit
         const promesa = new Promise((resolve, reject) => {
-            this.setDataFromModel(this.data.form);
+            const datt = this.name;
+            this.setDataFromModel(this.data[datt]);
             const paraSQL = this.getDataAll();
             const send = prepararSQL(this.table, paraSQL);
 
@@ -2101,19 +2103,20 @@ export class DataObject {
       },
       delete: async (e) => {
         let sql, reference, val, key;
+        const datt = this.name;
         const btnDelete = this.formElement.querySelector('[data-formclick="delete"]');
         
 
         if (this.key != '') {
           key = this.key;
-          val = this.getValue(`form!${this.key}`);
+          val = this.getValue(`${datt}!${this.key}`);
           sql = `DELETE FROM ${this.table} WHERE ${this.key} = ${val}`;
           reference = `<span class="font-bold ml-2">${this.key}  ${val}</span>`;
         } else {
           this.structure.forEach(value => {
             if (value.COLUMN_KEY == 'PRI') {
               key = value.COLUMN_NAME;
-              val = this.getValue(`form!${value.COLUMN_NAME}`);
+              val = this.getValue(`${datt}!${value.COLUMN_NAME}`);
               sql = `DELETE FROM ${this.table} WHERE ${value.COLUMN_NAME} = ${val}`;
               reference = `<span class="font-bold ml-2">${value.COLUMN_NAME}  ${val}</span>`;
             }
@@ -2276,6 +2279,8 @@ export class DataObject {
 
 
   setData(fieldName, key, value) {
+    const name = this.name;
+    
     if (this.camposRegistro[fieldName]) {
       if (!isNaN(parseFloat(value)) && isFinite(value)) {
         this.camposRegistro[fieldName][key] = parseFloat(value)
@@ -2295,13 +2300,13 @@ export class DataObject {
         }
         this.camposRegistro[fieldName].value = this.formatDate(fecha).fechaHora;
         this.defaultObjeto[fieldName].value = this.formatDate(fecha).fechaHora;
-        this.data.form[fieldName] = this.formatDate(fecha).fechaHora;
+        this.data[name][fieldName] = this.formatDate(fecha).fechaHora;
       }
       if(key == 'value'){
         if (!isNaN(parseFloat(value)) && isFinite(value)) {
-          this.data.form[fieldName] = parseFloat(value);
+          this.data[name][fieldName] = parseFloat(value);
         } else {
-          this.data.form[fieldName] = value; 
+          this.data[name][fieldName] = value; 
         }
       }
     }
@@ -2390,6 +2395,7 @@ export class DataObject {
   }
 
   resetValues() {
+    const name = this.name;
     for (const fieldName in this.defaultObjeto) {
       const setDate = this.defaultObjeto[fieldName].setDate;
       const type = this.defaultObjeto[fieldName].type;
@@ -2403,19 +2409,20 @@ export class DataObject {
             fecha.setDate(fecha.getDate() + setDate);
           }
           this.camposRegistro[fieldName].value = this.formatDate(fecha).fechaHora;
-          this.data.form[fieldName] = this.formatDate(fecha).fechaHora;
+          this.data[name][fieldName] = this.formatDate(fecha).fechaHora;
         } else {
             if (!isNaN(parseFloat(value)) && isFinite(value)) {
-              this.data.form[fieldName] = parseFloat(value);
+              this.data[name][fieldName] = parseFloat(value);
               this.camposRegistro[fieldName].value = parseFloat(value);
             } else {
-              this.data.form[fieldName] = value;
+              this.data[name][fieldName] = value;
               this.camposRegistro[fieldName].value = value;
             }
         }
-        console.log(this.getDataAll())
-        console.log(this.getValue('form'))
-    }
+      }
+      console.log(this.getDataAll())
+      console.log(this.getValue(name))
+      this.bindElementsWithDataValues(this.formElement);
   }
 
   typeToType(inType = 'text') {
@@ -2522,9 +2529,6 @@ export class DataObject {
 
     this.camposRegistro = newObject;
     this.defaultObjeto = newObjectDefault;
-    console.log(this.camposRegistro)
-    console.log(this.defaultObjeto)
-
   }
 
   getDefaultObject() {
@@ -2541,14 +2545,14 @@ export class DataObject {
 
   async addObjectFromRunCode(sq, clean = false) {
     let movimiento = await runCode(sq);
-    this.setValue('form', {});
+    this.setValue(this.name, {});
 
     movimiento.forEach(value => {
       this.addObject(value,[], clean)
     })
 
     this.forEachField((campo, dato) => {
-      this.setValueRoute(`form!${campo}`, dato.value);
+      this.setValueRoute(`${this.name}!${campo}`, dato.value);
     })
 
   }
@@ -2579,7 +2583,7 @@ export class DataObject {
   getValue(camino) {
     const propiedades = camino.split('!');
     let valorActual = this.data;
-    console.log(this.data.form)
+    
 
     for (let propiedad of propiedades) {
       if (valorActual.hasOwnProperty(propiedad)) {
@@ -2776,7 +2780,6 @@ export class DataObject {
 
   bindElementsWithDataValues(componentDiv) {
     let elementsWithDataValue;
-    let toggleThemeButton;
     if (componentDiv) {
       elementsWithDataValue = componentDiv.querySelectorAll('[data-form]');
     } else {
@@ -3154,17 +3157,19 @@ export class DataObject {
     return "text";
   }
 
-  createForm(elem, data = {}) {
+  createForm(data = {}) {
     let element;
     let form = '';
+    const idElem = this.name;
 
     if (!this.formElement) {
-      element = document.querySelector(elem);
+      element = document.querySelector(`#${idElem}`);
       this.formElement = element;
     } else {
       element = this.formElement;
     }
     this.formOptions = data;
+    let nameForm = idElem;
 
     form += `<div class="${this.formClass.divPadre}">`;
     form += `<div class=" bg-white dark:bg-neutral-800">`;
@@ -3210,9 +3215,9 @@ export class DataObject {
       let pattern = '';
 
       if (data.bind) {
-        dataValue = `data-value="${data.bind}!${campo}"`;
+        dataValue = `data-form="${data.bind}!${campo}"`;
       } else {
-        dataValue = `data-form="form!${campo}"`;
+        dataValue = `data-form="${this.name}!${campo}"`;
       }
 
       if (dato.required == true) {
@@ -3266,8 +3271,8 @@ export class DataObject {
 
         fieldElement = `
         <div class="${colspan}">
-          <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
-          <select id="${campo}" ${dataValue} class="${this.formClass.select}" ${esrequired}>
+          <label for="${nameForm}_${campo}" class="${this.formClass.label}">${dato.name}</label>
+          <select id="${nameForm}_${campo}" ${dataValue} class="${this.formClass.select}" ${esrequired}>
             ${options}
           </select>
         </div>`;
@@ -3282,8 +3287,8 @@ export class DataObject {
 
         fieldElement = `
         <div class="${colspan}">
-        <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
-        <input type="text" autocomplete="off" list="lista-${campo}" data-change="currency" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
+        <label for="${nameForm}_${campo}" class="${this.formClass.label}">${dato.name}</label>
+        <input type="text" autocomplete="off" list="lista-${campo}" data-change="currency" id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
           <datalist id="lista-${campo}">
             ${options}
           </datalist>
@@ -3291,23 +3296,23 @@ export class DataObject {
       } else if (dato.type === 'checkbox') {
         fieldElement = `
           <div class="${colspan}">
-            <input type="checkbox" id="${campo}" ${dataValue}  ${esrequired} class="${this.formClass.checkbox}" ${dato.value ? 'checked' : ''}>
-            <label class="${this.formClass.labelCheckbox}" for="${campo}">${dato.name}</label>
+            <input type="checkbox" id="${nameForm}_${campo}" ${dataValue}  ${esrequired} class="${this.formClass.checkbox}" ${dato.value ? 'checked' : ''}>
+            <label class="${this.formClass.labelCheckbox}" for="${nameForm}_${campo}">${dato.name}</label>
           </div>
         `;
       } else if (dato.type === 'currency') {
         fieldElement = `
           <div class="${colspan}">
-            <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
-            <input type="text" autocomplete="off" data-change="currency" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
+            <label for="${nameForm}_${campo}" class="${this.formClass.label}">${dato.name}</label>
+            <input type="text" autocomplete="off" data-change="currency" id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
           </div>
         `;
       } else {
 
         fieldElement = `
           <div class="${colspan}">
-            <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
-            <input type="${dato.type}" autocomplete="off" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
+            <label for="${nameForm}_${campo}" class="${this.formClass.label}">${dato.name}</label>
+            <input type="${dato.type}" autocomplete="off" id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
           </div>
         `;
       }
@@ -3341,17 +3346,20 @@ export class DataObject {
 
   }
 
-  createFormModal(elem, data = {}) {
+  createFormModal(data = {}) {
     let element;
+    const idElem = this.name;
 
     if (!this.formElement) {
-      element = document.querySelector(elem);
+      element = document.querySelector(`#${idElem}`);
       this.formElement = element;
     } else {
       element = this.formElement;
     }
     this.formOptions = data;
-    let nameModal = elem.slice(1) + '_modal';
+    
+    let nameModal = idElem + '_modal';
+    
 
 
     let form = `<div id="${nameModal}" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center ">
@@ -3401,9 +3409,9 @@ export class DataObject {
       let pattern = '';
 
       if (data.bind) {
-        dataValue = `data-value="${data.bind}!${campo}"`;
+        dataValue = `data-form="${data.bind}!${campo}"`;
       } else {
-        dataValue = `data-form="form!${campo}"`;
+        dataValue = `data-form="${this.name}!${campo}"`;
       }
 
       if (dato.required == true) {
@@ -3451,8 +3459,8 @@ export class DataObject {
 
         fieldElement = `
         <div class="${colspan}">
-          <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
-          <select id="${campo}" ${dataValue} class="${this.formClass.select}" ${esrequired}>
+          <label for="${nameModal}_${campo}" class="${this.formClass.label}">${dato.name}</label>
+          <select id="${nameModal}_${campo}" ${dataValue} class="${this.formClass.select}" ${esrequired}>
             ${options}
           </select>
         </div>`;
@@ -3467,8 +3475,8 @@ export class DataObject {
 
         fieldElement = `
         <div class="${colspan}">
-        <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
-        <input type="text" autocomplete="off" list="lista-${campo}" data-change="currency" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
+        <label for="${nameModal}_${campo}" class="${this.formClass.label}">${dato.name}</label>
+        <input type="text" autocomplete="off" list="lista-${campo}" data-change="currency" id="${nameModal}_${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
           <datalist id="lista-${campo}">
             ${options}
           </datalist>
@@ -3476,22 +3484,22 @@ export class DataObject {
       } else if (dato.type === 'checkbox') {
         fieldElement = `
           <div class="${colspan}">
-            <input type="checkbox" id="${campo}" ${dataValue}  ${esrequired} class="${this.formClass.checkbox}" ${dato.value ? 'checked' : ''}>
-            <label class="${this.formClass.labelCheckbox}" for="${campo}">${dato.name}</label>
+            <input type="checkbox" id="${nameModal}_${campo}" ${dataValue}  ${esrequired} class="${this.formClass.checkbox}" ${dato.value ? 'checked' : ''}>
+            <label class="${this.formClass.labelCheckbox}" for="${nameModal}_${campo}">${dato.name}</label>
           </div>
         `;
       } else if (dato.type === 'currency') {
         fieldElement = `
           <div class="${colspan}">
-            <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
-            <input type="text" autocomplete="off" data-change="currency" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
+            <label for="${nameModal}_${campo}" class="${this.formClass.label}">${dato.name}</label>
+            <input type="text" autocomplete="off" data-change="currency" id="${nameModal}_${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
           </div>
         `;
       } else {
         fieldElement = `
           <div class="${colspan}">
-            <label for="${campo}" class="${this.formClass.label}">${dato.name}</label>
-            <input type="${dato.type}" autocomplete="off" id="${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
+            <label for="${nameModal}_${campo}" class="${this.formClass.label}">${dato.name}</label>
+            <input type="${dato.type}" autocomplete="off" id="${nameModal}_${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input}">
           </div>
         `;
       }

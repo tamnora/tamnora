@@ -87,9 +87,9 @@ function codeTSQL(frase) {
 		{ buscar: '>', cambiarPor: '-xam' },
 		{ buscar: '<>', cambiarPor: '-nimxam' },
 		{ buscar: 'group', cambiarPor: '-puorg' },
-    { buscar: 'having', cambiarPor: '-gnivah' },
-    { buscar: 'left', cambiarPor: '-tfel' },
-    { buscar: 'right', cambiarPor: '-thgir' },
+    	{ buscar: 'having', cambiarPor: '-gnivah' },
+    	{ buscar: 'left', cambiarPor: '-tfel' },
+    	{ buscar: 'right', cambiarPor: '-thgir' },
 		{ buscar: 'limit', cambiarPor: '-timil' }
 	];
 
@@ -134,9 +134,9 @@ function decodeTSQL(frase) {
 		{ cambiarPor: '>', buscar: '-xam' },
 		{ cambiarPor: '<>', buscar: '-nimxam' },
 		{ cambiarPor: 'group', buscar: '-puorg' },
-    { cambiarPor: 'having', buscar: '-gnivah' },
-    { cambiarPor: 'left', buscar: '-tfel' },
-    { cambiarPor: 'right', buscar: '-thgir' },
+    	{ cambiarPor: 'having', buscar: '-gnivah' },
+    	{ cambiarPor: 'left', buscar: '-tfel' },
+    	{ cambiarPor: 'right', buscar: '-thgir' },
 		{ cambiarPor: 'limit', buscar: '-timil' }
 	];
 

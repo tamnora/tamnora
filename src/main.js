@@ -2,8 +2,8 @@ import { DataArray, DataObject, Tamnora, structure, runCode, dbSelect } from './
 
 const tmn = new Tamnora;
 const dataTabla = new DataArray;
-const formModal = new DataObject
-const simpleForm = new DataObject
+const formModal = new DataObject('modalForm')
+const simpleForm = new DataObject('simpleform')
 
 tmn.themeColorLight = '#db5945';
 tmn.themeColorDark = '#713228';
@@ -132,7 +132,7 @@ async function verSimpleForm(){
  
  
 
-  simpleForm.createForm('#simpleform', options);
+  simpleForm.createForm(options);
 }
 
 async function verSaldosAcumulados() {
@@ -224,6 +224,7 @@ async function verSaldosAcumulados() {
     }
   }
   dataTabla.createTable('#tabla', options);
+  console.log(simpleForm, formModal)
 }
 
 cargarClientes();
@@ -258,5 +259,6 @@ dataTabla.setFunction('verRemito', async (ref) => {
     columns:{md:6, lg:6}
   }
 
-  formModal.createFormModal('#modalForm', options);
+  formModal.createFormModal(options);
+
 })
