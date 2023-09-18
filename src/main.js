@@ -137,28 +137,12 @@ async function verSimpleForm(){
 
 async function verSaldosAcumulados() {
   let rstData;
-  let param = tmn.getData('param');
-  let cant = tmn.getData('cant');
+  let param = tmn.getData('param') || 0;
+  let cant = tmn.getData('cant') || 5;
+  await dataTabla.setStructure('movimientos');
+  await dataTabla.addObjectFromDBSelect(`CALL saldos_acumulados(${param}, ${cant})`);
 
-  if(param){
-    rstData = await dbSelect('s', `CALL saldos_acumulados(${param}, ${cant})`)
-  } else {
-    rstData = await dbSelect('s', `CALL saldos_acumulados(0, 5)`)
-  }
-
-  dataTabla.setStructure('movimientos');
-  
-
-  if(!rstData[0].Ninguno){
-    dataTabla.removeAll();
-    dataTabla.setDefaultRow(rstData[0]);
-    rstData.forEach(reg => {
-      dataTabla.addObject(reg, dataTabla.getStructure())
-    });
-  } else {
-    dataTabla.loadDefaultRow();
-  }
-
+ 
   dataTabla.orderColumns = ['tipo_oper', 'id', 'fechahora', 'importe', 'saldo'];
   dataTabla.widthColumns = ['w-5', 'w-5', 'w-10', 'w-15', 'w-35']
   dataTabla.setDataKeys('attribute', { importe: 'currency', saldo: 'pesos' })

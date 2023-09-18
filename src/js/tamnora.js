@@ -2544,10 +2544,10 @@ export class DataObject {
 
 
   async addObjectFromRunCode(sq, clean = false) {
-    let movimiento = await runCode(sq);
+    let rstData = await runCode(sq);
     this.setValue(this.name, {});
 
-    movimiento.forEach(value => {
+    rstData.forEach(value => {
       this.addObject(value,[], clean)
     })
 
@@ -2555,6 +2555,20 @@ export class DataObject {
       this.setValueRoute(`${this.name}!${campo}`, dato.value);
     })
 
+  }
+
+  async addObjectFromDBSelect(sql){
+    let rstData = await dbSelect('s', sql)
+    this.setValue(this.name, {});
+
+    rstData.forEach(value => {
+      this.addObject(value,[], clean)
+    })
+
+    this.forEachField((campo, dato) => {
+      this.setValueRoute(`${this.name}!${campo}`, dato.value);
+    })
+ 
   }
 
   createReactiveProxy(data) {
@@ -3967,6 +3981,20 @@ export class DataArray {
     }
 
     this.defaultRow = newObject;
+  }
+
+  async addObjectFromDBSelect(sql){
+    let rstData = await dbSelect('s', sql)
+ 
+    if(!rstData[0].Ninguno){
+      this.removeAll();
+      this.setDefaultRow(rstData[0]);
+      rstData.forEach(reg => {
+        this.addObject(reg)
+      });
+    } else {
+      this.loadDefaultRow();
+    }
   }
 
   // Método para detectar el tipo de dato basado en el valor
