@@ -131,7 +131,6 @@ async function verSimpleForm(){
   }
  
  
-
   simpleForm.createForm(options);
 }
 
@@ -142,25 +141,25 @@ async function verSaldosAcumulados() {
   await dataTabla.setStructure('movimientos');
   await dataTabla.addObjectFromDBSelect(`CALL saldos_acumulados(${param}, ${cant})`);
 
- 
+ console.log(dataTabla.getDataAll())
   dataTabla.orderColumns = ['tipo_oper', 'id', 'fechahora', 'importe', 'saldo'];
   dataTabla.widthColumns = ['w-5', 'w-5', 'w-10', 'w-15', 'w-35']
   dataTabla.setDataKeys('attribute', { importe: 'currency', saldo: 'pesos' })
   dataTabla.setDataKeys('name', { id_factura: 'Remito' })
 
   let buttons = `
-<div class="inline-flex rounded-md shadow-sm" role="group">
-  <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-l-lg hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
-    Nueva Factura
-  </button>
-  <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border-t border-b border-neutral-200 hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
-    Ver Cuenta
-  </button>
-  <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-r-md hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
-    Informe
-  </button>
-</div>
-`;
+    <div class="inline-flex rounded-md shadow-sm" role="group">
+      <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-l-lg hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
+        Nueva Factura
+      </button>
+      <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border-t border-b border-neutral-200 hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
+        Ver Cuenta
+      </button>
+      <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-r-md hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
+        Informe
+      </button>
+    </div>
+    `;
 
   const options = {
     title: 'Movimientos del cliente',
@@ -208,20 +207,17 @@ async function verSaldosAcumulados() {
     }
   }
   dataTabla.createTable(options);
- 
+  dataTabla.setFunction('verRemito', async (ref) => {
+    formModal.cloneFrom(dataTabla.getDataObjectForIndex(ref[0]))
+    console.log(dataTabla.getDataObjectForIndex(ref[0]));
+    console.log(formModal.getValue('modalForm'))
+    formModal.functions.openModal();
+  })
 }
 
-cargarClientes();
-verSaldosAcumulados();
-verSimpleForm();
-
-tmn.onMount(() => {
-  tmn.changeThemeColor();
-})
-
-dataTabla.setFunction('verRemito', async (ref) => {
+async function crearModalForm(){
   await formModal.setStructure('movimientos', 'id');
-  await formModal.addObjectFromRunCode(`-st movimientos -wr id = '${ref[1]}'`);
+  await formModal.addObjectFromRunCode(`-st movimientos -lt 1`, true);
 
   const optionsClientes = [];
   tmn.getData('dataClientes').forEach(cliente => {
@@ -244,5 +240,15 @@ dataTabla.setFunction('verRemito', async (ref) => {
   }
 
   formModal.createFormModal(options);
+  
+}
 
+cargarClientes();
+verSaldosAcumulados();
+verSimpleForm();
+crearModalForm();
+
+tmn.onMount(() => {
+  tmn.changeThemeColor();
 })
+

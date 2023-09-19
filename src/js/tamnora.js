@@ -2038,14 +2038,14 @@ export class DataObject {
     this.name = name;
     this.defaultObjeto = {};
     this.functions = {
-      closeModal: (e) => {
-        const modal = document.querySelector(e);
+      closeModal: () => {
+        const modal = document.querySelector(`#${this.modalName}`);
         modal.classList.remove('flex');
         modal.classList.add('hidden');
         this.numberAlert = 0;
       },
-      openModal: (e) => {
-        const modal = document.querySelector(e);
+      openModal: () => {
+        const modal = document.querySelector(`#${this.modalName}`);
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         this.numberAlert = 0;
@@ -2087,8 +2087,8 @@ export class DataObject {
             console.log(respuesta); // Maneja la respuesta del servidor
             event.submitter.innerHTML = defaultTitle;
             event.submitter.disabled = false;
-            if (modalName) {
-              this.closeModal(modalName);
+            if (this.nameModal) {
+              this.closeModal();
             } 
             this.functions['reload']();
             if(this.resetOnSubmit){
@@ -2156,7 +2156,7 @@ export class DataObject {
                 btnDelete.innerHTML = defaultTitle;
                 btnDelete.disabled = false;
                 if (this.modalName) {
-                  this.closeModal(this.modalName);
+                  this.closeModal();
                 }
                 this.functions['reload']();
                 if(this.resetOnSubmit){
@@ -2378,7 +2378,9 @@ export class DataObject {
   }
 
   cloneFrom(newObject, clean = false) {
+    const name = this.name;
     this.camposRegistro = newObject;
+    console.log(newObject)
 
     for (const fieldName in this.camposRegistro) {
       const type = this.camposRegistro[fieldName].type;
@@ -2389,9 +2391,13 @@ export class DataObject {
         } else {
           value = '';
         }
-        this.camposRegistro[fieldName].value = value;
+        
+        this.data[name][fieldName] = value;
       }
     }
+
+    this.bindElementsWithDataValues(this.formElement);
+
   }
 
   resetValues() {
@@ -3372,7 +3378,13 @@ export class DataObject {
     }
     this.formOptions = data;
     
-    let nameModal = idElem + '_modal';
+    let nameModal = idElem;
+
+    if(data.show == true){
+      element.classList.add('flex');
+    } else {
+      element.classList.add('hidden');
+    }
     
 
 
