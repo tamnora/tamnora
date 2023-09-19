@@ -2039,13 +2039,17 @@ export class DataObject {
     this.defaultObjeto = {};
     this.functions = {
       closeModal: () => {
+        const btnDelete = this.formElement.querySelector('[data-formclick="delete"]');
         const modal = document.querySelector(`#${this.modalName}`);
+        if(btnDelete) btnDelete.innerHTML = this.formOptions.delete;
         modal.classList.remove('flex');
         modal.classList.add('hidden');
         this.numberAlert = 0;
       },
       openModal: () => {
+        const btnDelete = this.formElement.querySelector('[data-formclick="delete"]');
         const modal = document.querySelector(`#${this.modalName}`);
+        if(btnDelete) btnDelete.innerHTML = this.formOptions.delete;
         modal.classList.remove('hidden');
         modal.classList.add('flex');
         this.numberAlert = 0;
@@ -2088,7 +2092,7 @@ export class DataObject {
             event.submitter.innerHTML = defaultTitle;
             event.submitter.disabled = false;
             if (this.nameModal) {
-              this.closeModal();
+              this.functions.closeModal();
             } 
             this.functions['reload']();
             if(this.resetOnSubmit){
@@ -2153,10 +2157,10 @@ export class DataObject {
             promesa
               .then((respuesta) => {
                 console.log(respuesta); // Maneja la respuesta del servidor
-                btnDelete.innerHTML = defaultTitle;
+                btnDelete.innerHTML = this.formOptions.delete;
                 btnDelete.disabled = false;
                 if (this.modalName) {
-                  this.closeModal();
+                  this.functions.closeModal();
                 }
                 this.functions['reload']();
                 if(this.resetOnSubmit){
@@ -2408,7 +2412,6 @@ export class DataObject {
       let value = this.defaultObjeto[fieldName].value;
       
        
-
         if(type == 'datetime-local'){
           let fecha = new Date();
           if(setDate > 0){
@@ -2425,11 +2428,41 @@ export class DataObject {
               this.camposRegistro[fieldName].value = value;
             }
         }
+        this.updateElementsWithDataValue(`${name}!${fieldName}`, value)
       }
-      console.log(this.getDataAll())
-      console.log(this.getValue(name))
-      this.bindElementsWithDataValues(this.formElement);
+     
   }
+
+  updateDataInForm(newObjectData) {
+    const name = this.name;
+    for (const fieldName in this.camposRegistro) {
+      const setDate = this.camposRegistro[fieldName].setDate;
+      const type = this.camposRegistro[fieldName].type;
+      let value = newObjectData[fieldName];
+      if(type == 'datetime-local'){
+        // let fecha = new Date();
+        // if(setDate > 0){
+          //   fecha.setDate(fecha.getDate() + setDate);
+          // }
+          this.camposRegistro[fieldName].value = value;
+          this.data[name][fieldName] = value;
+        } else {
+          if (!isNaN(parseFloat(value)) && isFinite(value)) {
+              this.data[name][fieldName] = parseFloat(value);
+              this.camposRegistro[fieldName].value = parseFloat(value);
+            } else {
+              this.data[name][fieldName] = value;
+              this.camposRegistro[fieldName].value = value;
+            }
+        }
+        this.updateElementsWithDataValue(`${name}!${fieldName}`, value)
+      }
+      
+     
+      
+  }
+
+
 
   typeToType(inType = 'text') {
     let outType;
@@ -2764,7 +2797,8 @@ export class DataObject {
 
   // Actualiza los elementos vinculados a un atributo data-value cuando el dato cambia
   updateElementsWithDataValue(dataKey, value) {
-    const elementsWithDataValue = document.querySelectorAll(`[data-form="${dataKey}"]`);
+    const componentDiv = document.querySelector(`#${this.name}`);
+    const elementsWithDataValue = componentDiv.querySelectorAll(`[data-form="${dataKey}"]`);
     elementsWithDataValue.forEach((element) => {
       if (dataKey.includes('!')) {
         const [dataObj, dataProp] = dataKey.split('!');
@@ -3615,11 +3649,11 @@ export class DataObject {
     });
   }
 
-  closeModal(modalName) {
-    const modal = document.querySelector(`#${modalName}`);
-    modal.classList.remove('flex');
-    modal.classList.add('hidden');
-  }
+  // closeModal(modalName) {
+  //   const modal = document.querySelector(`#${modalName}`);
+  //   modal.classList.remove('flex');
+  //   modal.classList.add('hidden');
+  // }
 
   bindClickModal(componentDiv) {
     let elementsWithClick;

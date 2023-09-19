@@ -150,7 +150,7 @@ async function verSaldosAcumulados() {
   let buttons = `
     <div class="inline-flex rounded-md shadow-sm" role="group">
       <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-l-lg hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
-        Nueva Factura
+        Nuevo Movimiento
       </button>
       <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border-t border-b border-neutral-200 hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
         Ver Cuenta
@@ -207,17 +207,17 @@ async function verSaldosAcumulados() {
     }
   }
   dataTabla.createTable(options);
+
   dataTabla.setFunction('verRemito', async (ref) => {
-    formModal.cloneFrom(dataTabla.getDataObjectForIndex(ref[0]))
-    console.log(dataTabla.getDataObjectForIndex(ref[0]));
-    console.log(formModal.getValue('modalForm'))
+    formModal.updateDataInForm(dataTabla.getDataObjectForKey(ref[0],'value'))
     formModal.functions.openModal();
+    
   })
 }
 
 async function crearModalForm(){
   await formModal.setStructure('movimientos', 'id');
-  await formModal.addObjectFromRunCode(`-st movimientos -lt 1`, true);
+  await formModal.addObjectFromRunCode(`-st movimientos -lt 1`);
 
   const optionsClientes = [];
   tmn.getData('dataClientes').forEach(cliente => {
