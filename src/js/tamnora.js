@@ -2596,7 +2596,7 @@ export class DataObject {
 
   }
 
-  async addObjectFromDBSelect(sql){
+  async addObjectFromDBSelect(sql, clean = false){
     let rstData = await dbSelect('s', sql)
     this.setValue(this.name, {});
 
@@ -4043,6 +4043,21 @@ export class DataArray {
     } else {
       this.loadDefaultRow();
     }
+  }
+
+  async addObjectFromRunCode(sq) {
+    let rstData = await runCode(sq);
+    
+    if(!rstData[0].Ninguno){
+      this.removeAll();
+      this.setDefaultRow(rstData[0]);
+      rstData.forEach(reg => {
+        this.addObject(reg)
+      });
+    } else {
+      this.loadDefaultRow();
+    }
+
   }
 
   // Método para detectar el tipo de dato basado en el valor
