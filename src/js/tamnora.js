@@ -3733,6 +3733,8 @@ export class DataArray {
       thead: "bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600",
       tfoot: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
       pagination: "mt-1 text-neutral-700 py-3 dark:text-neutral-400",
+      paginationBtn: "bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white",
+      paginationBtnDisable: "bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600",
       th: "px-6 py-2 select-none text-xs text-neutral-600 uppercase dark:text-neutral-400 whitespace-nowrap",
       tr: "border-b border-neutral-200 dark:border-neutral-700",
       td: "px-6 py-3 select-none whitespace-nowrap",
@@ -4450,11 +4452,11 @@ export class DataArray {
       }
       let buttons = {
         prev: {
-          class: 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white',
+          class: this.tableClass.paginationBtn,
           click: `data-pagination="prev"`
         },
         next: {
-          class: 'bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white',
+          class: this.tableClass.paginationBtn,
           click: `data-pagination="next"`
         }
       }
@@ -4462,10 +4464,10 @@ export class DataArray {
 
       if (hayMas == true && hayMenos == false) {
         buttons.prev.click = '';
-        buttons.prev.class = 'bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600';
+        buttons.prev.class = this.tableClass.paginationBtnDisable;
       } else if (hayMas == false && hayMenos == true) {
         buttons.next.click = '';
-        buttons.next.class = 'bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600';
+        buttons.next.class = this.tableClass.paginationBtnDisable;
       }
 
       table += `<div class="flex flex-col items-center ${this.tableClass.pagination}">
