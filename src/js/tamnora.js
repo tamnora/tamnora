@@ -39,7 +39,15 @@ function createQuerySQL(type, params) {
       const tableInsert = params.t;
       const data = params.d || {};
       const keysInsert = Object.keys(data).join(', ');
-      const valuesInsert = Object.values(data).map(value => (typeof value === 'string' ? `'${value}'` : value)).join(', ');
+      const valuesInsert = Object.values(data).map(value => {
+        if(value == null){
+          return 'null';
+        } else if(typeof value === 'string'){
+          return `'${value}'`;
+        } else {
+          return value;
+        }
+      }).join(', ');
       query = `INSERT INTO ${tableInsert} (${keysInsert}) VALUES (${valuesInsert})`;
       break;
 
