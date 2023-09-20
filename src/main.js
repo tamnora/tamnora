@@ -118,7 +118,7 @@ async function verSimpleForm(){
   simpleForm.setData('id_cliente', 'type', 'select');
   simpleForm.setData('id_cliente', 'value', param);
   simpleForm.setData('id_cliente', 'options', optionsClientes);
-  simpleForm.setData('fechahora', 'setDate', 1)
+  simpleForm.setData('fechahora', 'introDate', true);
   simpleForm.setDataKeys('required', {id_cliente: true, importe: true, fechahora: true})
   simpleForm.setFunction('reload', verSaldosAcumulados);
   simpleForm.resetOnSubmit = true;

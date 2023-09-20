@@ -2233,6 +2233,7 @@ export class DataObject {
           "pattern": '',
           "defaultValue": "",
           "key": "",
+          "introDate": false,
           "setDate": 0,
           "options": []
         };
@@ -2305,14 +2306,29 @@ export class DataObject {
           this.defaultObjeto[fieldName].pattern = "[0-9.,]*";
         }
       }
-      if(key == 'setDate'){
-        let fecha = new Date();
-        if(value > 0){
-          fecha.setDate(fecha.getDate() + value);
+      if(key == 'introDate'){
+        let myDate = new Date();
+        let days = this.camposRegistro[fieldName]['setDate'];
+        let typeInput = this.camposRegistro[fieldName]['type'];
+        if(days > 0){
+          myDate.setDate(myDate.getDate() + days);
+        } else if(days < 0){
+          myDate.setDate(myDate.getDate() - days);
         }
-        this.camposRegistro[fieldName].value = this.formatDate(fecha).fechaHora;
-        this.defaultObjeto[fieldName].value = this.formatDate(fecha).fechaHora;
-        this.data[name][fieldName] = this.formatDate(fecha).fechaHora;
+        
+        if(typeInput == 'datetime-local'){
+          this.camposRegistro[fieldName].value = this.formatDate(myDate).fechaHora;
+          this.defaultObjeto[fieldName].value = this.formatDate(myDate).fechaHora;
+          this.data[name][fieldName] = this.formatDate(myDate).fechaHora;
+        } else if(typeInput == 'date'){
+          this.camposRegistro[fieldName].value = this.formatDate(myDate).fecha;
+          this.defaultObjeto[fieldName].value = this.formatDate(myDate).fecha;
+          this.data[name][fieldName] = this.formatDate(myDate).fecha;
+        } else if(typeInput == 'time'){
+          this.camposRegistro[fieldName].value = this.formatDate(myDate).horaLarga;
+          this.defaultObjeto[fieldName].value = this.formatDate(myDate).horaLarga;
+          this.data[name][fieldName] = this.formatDate(myDate).horaLarga;
+        }
       }
       if(key == 'value'){
         if (!isNaN(parseFloat(value)) && isFinite(value)) {
@@ -2552,6 +2568,7 @@ export class DataObject {
           "pattern": '',
           "defaultValue": "",
           "key": key,
+          "introDate": false,
           "setDate": 0,
           "options": []
         };
@@ -2568,6 +2585,7 @@ export class DataObject {
           "pattern": '',
           "defaultValue": "",
           "key": key,
+          "introDate": false,
           "setDate": 0,
           "options": []
         };
@@ -3766,6 +3784,7 @@ export class DataArray {
           "hidden": false,
           "defaultValue": "",
           "key": "",
+          "introDate": false,
           "setDate": 0,
           "data": []
         };
@@ -3972,6 +3991,7 @@ export class DataArray {
           "pattern": '',
           "defaultValue": "",
           "key": key,
+          "introDate": false,
           "setDate": 0,
           "options": []
         };
@@ -4030,6 +4050,7 @@ export class DataArray {
           "pattern": '',
           "defaultValue": "",
           "key": key,
+          "introDate": false,
           "setDate": 0,
           "options": []
         };
