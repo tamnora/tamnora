@@ -2047,8 +2047,9 @@ export class DataObject {
     this.defaultObjeto = {};
     this.functions = {
       closeModal: () => {
+        console.log('cierro')
         const btnDelete = this.formElement.querySelector('[data-formclick="delete"]');
-        const modal = document.querySelector(`#${this.modalName}`);
+        const modal = document.querySelector(`#${this.name}`);
         if(btnDelete) btnDelete.innerHTML = this.formOptions.delete;
         modal.classList.remove('flex');
         modal.classList.add('hidden');
@@ -2056,7 +2057,7 @@ export class DataObject {
       },
       openModal: () => {
         const btnDelete = this.formElement.querySelector('[data-formclick="delete"]');
-        const modal = document.querySelector(`#${this.modalName}`);
+        const modal = document.querySelector(`#${this.name}`);
         if(btnDelete) btnDelete.innerHTML = this.formOptions.delete;
         modal.classList.remove('hidden');
         modal.classList.add('flex');
@@ -2099,6 +2100,7 @@ export class DataObject {
             console.log(respuesta); // Maneja la respuesta del servidor
             event.submitter.innerHTML = defaultTitle;
             event.submitter.disabled = false;
+            console.log(this.nameModal)
             if (this.nameModal) {
               this.functions.closeModal();
             } 
@@ -2266,6 +2268,11 @@ export class DataObject {
     if (ejecute) {
       this.table = table;
       this.key = key;
+           
+      let defaultRow = {}
+      const newObject = {};
+      let groupType = {};
+      let primaryKey = {};
       let struc = await structure('t', table);
       const newStruc = []
       struc.forEach(data => {
@@ -2274,6 +2281,56 @@ export class DataObject {
       })
 
       this.structure = newStruc;
+
+      newStruc.forEach(val => {
+        let name = val.COLUMN_NAME;
+        groupType[val.COLUMN_NAME] = this.typeToType(val.DATA_TYPE);
+        primaryKey[val.COLUMN_NAME] = val.COLUMN_KEY;
+        defaultRow[name] = '0';
+      })
+
+    
+    for (const fieldName in defaultRow) {
+      if (defaultRow.hasOwnProperty(fieldName)) {
+        let value = defaultRow[fieldName];
+        let type = '';
+        let key = '';
+        
+        if (fieldName in groupType) {
+          type = groupType[fieldName];
+        }
+
+        if (fieldName in primaryKey) {
+          key = primaryKey[fieldName];
+        }
+
+        if (type == 'number') {
+          value = 0;
+        } else {
+          value = '';
+        }
+        
+
+        newObject[fieldName] = {
+          "type": type,
+          "name": fieldName,
+          "required": false,
+          "placeholder": "",
+          "value": value,
+          "column": 0,
+          "attribute": 0,
+          "hidden": false,
+          "pattern": '',
+          "defaultValue": "",
+          "key": key,
+          "introDate": false,
+          "setDate": 0,
+          "options": []
+        };
+      }
+    }
+
+    this.defaultObjeto = newObject;
     }
   }
 
@@ -2337,6 +2394,7 @@ export class DataObject {
           this.data[name][fieldName] = value; 
         }
       }
+      
     }
   }
 
@@ -2376,7 +2434,9 @@ export class DataObject {
 
   setDataKeys(key, objectNameValue) {
     Object.keys(objectNameValue).forEach((val) => {
-      this.camposRegistro[val][key] = objectNameValue[val];
+      if(this.camposRegistro[val]){
+        this.camposRegistro[val][key] = objectNameValue[val];
+      }
     })
   }
 
@@ -2463,23 +2523,19 @@ export class DataObject {
       const setDate = this.camposRegistro[fieldName].setDate;
       const type = this.camposRegistro[fieldName].type;
       let value = newObjectData[fieldName];
-      if(type == 'datetime-local'){
-        // let fecha = new Date();
-        // if(setDate > 0){
-          //   fecha.setDate(fecha.getDate() + setDate);
-          // }
-          this.camposRegistro[fieldName].value = value;
-          this.data[name][fieldName] = value;
-        } else {
-          if (!isNaN(parseFloat(value)) && isFinite(value)) {
-              this.data[name][fieldName] = parseFloat(value);
-              this.camposRegistro[fieldName].value = parseFloat(value);
-            } else {
-              this.data[name][fieldName] = value;
-              this.camposRegistro[fieldName].value = value;
-            }
-        }
-        this.updateElementsWithDataValue(`${name}!${fieldName}`, value)
+      
+       if (!isNaN(parseFloat(value)) && isFinite(value)) {
+           this.data[name][fieldName] = parseFloat(value);
+           this.camposRegistro[fieldName].value = parseFloat(value);
+         } else {
+           this.data[name][fieldName] = value;
+           this.camposRegistro[fieldName].value = value;
+         }
+        
+
+        // this.updateElementsWithDataValue(`${name}!${fieldName}`, value)
+        this.createFormModal(this.formOptions)
+        
       }
       
      
@@ -2605,6 +2661,11 @@ export class DataObject {
     console.log(this.defaultObjeto)
   }
 
+  loadDefaultObject() {
+    this.camposRegistro = this.defaultObjeto
+    
+  }
+
   
 
 
@@ -2612,13 +2673,19 @@ export class DataObject {
     let rstData = await runCode(sq);
     this.setValue(this.name, {});
 
-    rstData.forEach(value => {
-      this.addObject(value,[], clean)
-    })
+    if(!rstData[0].Ninguno){
+      rstData.forEach(value => {
+        this.addObject(value,[], clean)
+      })
+  
+      this.forEachField((campo, dato) => {
+        this.setValueRoute(`${this.name}!${campo}`, dato.value);
+      })
+    } else {
+        this.loadDefaultObject();
+    }
 
-    this.forEachField((campo, dato) => {
-      this.setValueRoute(`${this.name}!${campo}`, dato.value);
-    })
+   
 
   }
 
@@ -2626,13 +2693,17 @@ export class DataObject {
     let rstData = await dbSelect('s', sql)
     this.setValue(this.name, {});
 
-    rstData.forEach(value => {
-      this.addObject(value,[], clean)
-    })
+    if(!rstData[0].Ninguno){
+      rstData.forEach(value => {
+        this.addObject(value,[], clean)
+      })
 
-    this.forEachField((campo, dato) => {
-      this.setValueRoute(`${this.name}!${campo}`, dato.value);
-    })
+      this.forEachField((campo, dato) => {
+        this.setValueRoute(`${this.name}!${campo}`, dato.value);
+      })
+    } else {
+      this.loadDefaultObject()
+    }
  
   }
 
@@ -2825,6 +2896,8 @@ export class DataObject {
   updateElementsWithDataValue(dataKey, value) {
     const componentDiv = document.querySelector(`#${this.name}`);
     const elementsWithDataValue = componentDiv.querySelectorAll(`[data-form="${dataKey}"]`);
+    
+    let typeObject = '';
     elementsWithDataValue.forEach((element) => {
       if (dataKey.includes('!')) {
         const [dataObj, dataProp] = dataKey.split('!');
@@ -2835,6 +2908,12 @@ export class DataObject {
           this.data[dataObj][dataProp] = value;
         }
 
+        typeObject =  this.camposRegistro[dataProp].type;
+        
+        // if(typeObject == 'datetime-local'){
+        //   value = this.transformarFechaHora(value)
+        // }
+        
         if (element.type === 'checkbox') {
           element.checked = value ?? false;
         } else if (element.tagName === 'SELECT') {
@@ -2993,6 +3072,20 @@ export class DataObject {
       }
 
     });
+  }
+
+  transformarFechaHora(cadena) {
+    // Divide la cadena en fecha y hora usando el espacio como separador
+    const partes = cadena.split(' ');
+  
+    // Obtiene la fecha y la hora por separado
+    const fecha = partes[0];
+    const hora = partes[1];
+  
+    // Formatea la cadena en el nuevo formato deseado
+    const nuevaCadena = `${fecha}T${hora}`;
+  
+    return nuevaCadena;
   }
 
   currency(value, element) {
@@ -3437,7 +3530,7 @@ export class DataObject {
       element = this.formElement;
     }
     this.formOptions = data;
-    
+    this.nameModal = idElem;
     let nameModal = idElem;
 
     if(data.show == true){
@@ -3446,9 +3539,10 @@ export class DataObject {
       element.classList.add('hidden');
     }
     
+    
 
 
-    let form = `<div id="${nameModal}" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center ">
+    let form = `<div id="${nameModal}_mod" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center ">
     <div class="relative w-full max-w-3xl max-h-full ">
         <div class="relative bg-white rounded-lg shadow dark:bg-neutral-800  dark:shadow-neutral-300/50">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3';
@@ -3610,6 +3704,7 @@ export class DataObject {
     }
     form += `</form></div></div></div>`
 
+    element.innerHTML = '';
     element.innerHTML = form;
     this.bindSubmitEvents(element);
     this.bindClickModal(element);
@@ -3818,6 +3913,10 @@ export class DataArray {
     }
 
     if (ejecute) {
+      let defaultRow = {}
+      const newObject = {};
+      let groupType = {};
+      let primaryKey = {};
       let struc = await structure('t', table);
       const newStruc = []
       struc.forEach(data => {
@@ -3826,6 +3925,57 @@ export class DataArray {
       })
 
       this.structure = newStruc;
+
+      newStruc.forEach(val => {
+        let name = val.COLUMN_NAME;
+        groupType[val.COLUMN_NAME] = this.typeToType(val.DATA_TYPE);
+        primaryKey[val.COLUMN_NAME] = val.COLUMN_KEY;
+        defaultRow[name] = '0';
+      })
+
+    
+    for (const fieldName in defaultRow) {
+      if (defaultRow.hasOwnProperty(fieldName)) {
+        let value = defaultRow[fieldName];
+        let type = '';
+        let key = '';
+        
+        if (fieldName in groupType) {
+          type = groupType[fieldName];
+        }
+
+        if (fieldName in primaryKey) {
+          key = primaryKey[fieldName];
+        }
+
+        if (type == 'number') {
+          value = 0;
+        } else {
+          value = '';
+        }
+        
+
+        newObject[fieldName] = {
+          "type": type,
+          "name": fieldName,
+          "required": false,
+          "placeholder": "",
+          "value": value,
+          "column": 0,
+          "attribute": 0,
+          "hidden": false,
+          "pattern": '',
+          "defaultValue": "",
+          "key": key,
+          "introDate": false,
+          "setDate": 0,
+          "options": []
+        };
+      }
+    }
+
+    this.defaultRow = newObject;
+     
       
     }
   }
@@ -3841,6 +3991,7 @@ export class DataArray {
     const conjuntoUnico = new Set(arrayCombinado.map(objeto => JSON.stringify(objeto)));
     this.structure = Array.from(conjuntoUnico).map(JSON.parse);
     console.log('addStructure', this.structure)
+    
   }
 
   reordenarClaves(objeto, orden) {
@@ -3848,6 +3999,23 @@ export class DataArray {
     orden.forEach((clave) => {
       if (objeto.hasOwnProperty(clave)) {
         resultado[clave] = objeto[clave];
+      } else {
+        resultado[clave] = {
+          "type": 'text',
+          "name": clave,
+          "required": false,
+          "placeholder": "",
+          "value": 'No existe registro',
+          "column": 0,
+          "attribute": 0,
+          "hidden": false,
+          "pattern": '',
+          "defaultValue": "",
+          "key": "",
+          "introDate": false,
+          "setDate": 0,
+          "options": []
+        };
       }
     });
     return resultado;
@@ -3925,7 +4093,9 @@ export class DataArray {
   setDataKeys(key, objectNameValue) {
     this.dataArray.forEach((item, index) => {
       Object.keys(objectNameValue).forEach((val) => {
-        this.dataArray[index][val][key] = objectNameValue[val];
+        if(this.dataArray[index][val]){
+          this.dataArray[index][val][key] = objectNameValue[val];
+        }
       })
 
     });
@@ -4022,14 +4192,7 @@ export class DataArray {
         let value = dataObject[fieldName];
         let type = this.detectDataType(value);
         let key = '';
-
-        if (type == 'number') {
-          value = 0;
-        } else {
-          value = '';
-        }
-
-
+        
         if (fieldName in groupType) {
           type = groupType[fieldName];
         }
@@ -4037,6 +4200,13 @@ export class DataArray {
         if (fieldName in primaryKey) {
           key = primaryKey[fieldName];
         }
+
+        if (type == 'number') {
+          value = 0;
+        } else {
+          value = '';
+        }
+        
 
         newObject[fieldName] = {
           "type": type,
@@ -4070,7 +4240,7 @@ export class DataArray {
         this.addObject(reg)
       });
     } else {
-      this.loadDefaultRow();
+        this.loadDefaultRow();
     }
   }
 
@@ -4199,9 +4369,8 @@ export class DataArray {
 
     }
 
-
+    
     table += `<div class="${this.tableClass.divPadre}">`;
-
     
     if ("title" in options || "subtitle" in options || "btnNew" in options || "buttons" in options) {
       table += `<div class="flex flex-col md:flex-row justify-between items-start w-full py-3 px-5 ${this.tableClass.header}">`;
