@@ -113,11 +113,12 @@ async function verSimpleForm(){
 
   simpleForm.setData('tipo_oper', 'type', 'select');
   simpleForm.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
-
+  simpleForm.setData('tipo_oper', 'elegirOpcion', true);
   simpleForm.setData('id_cliente', 'name', 'cliente' );
   simpleForm.setData('id_cliente', 'type', 'select');
   simpleForm.setData('id_cliente', 'value', param);
   simpleForm.setData('id_cliente', 'options', optionsClientes);
+  
   simpleForm.setData('fechahora', 'introDate', true);
   simpleForm.setDataKeys('required', {id_cliente: true, importe: true, fechahora: true})
   simpleForm.setFunction('reload', verSaldosAcumulados);
@@ -126,8 +127,7 @@ async function verSimpleForm(){
   
   const options = {
     title: 'Nuevo Movimiento',
-    submit: 'Crear',
-    delete: 'Borrar'
+    submit: 'Crear'
   }
  
  
@@ -149,7 +149,7 @@ async function verSaldosAcumulados() {
   
   let buttons = `
     <div class="inline-flex rounded-md shadow-sm" role="group">
-      <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-l-lg hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
+      <button type="button" data-action="newMovi, 0" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-l-lg hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
         Nuevo Movimiento
       </button>
       <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border-t border-b border-neutral-200 hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
@@ -202,21 +202,30 @@ async function verSaldosAcumulados() {
         alternative: 'bg-neutral-100 dark:bg-neutral-800'
       },
       click: {
-        function: 'verRemito',
+        function: 'showMovi',
         field: 'id'
       }
     }
   }
   dataTabla.createTable(options);
 
-  dataTabla.setFunction('verRemito', async (ref) => {
+  dataTabla.setFunction('showMovi', async (ref) => {
     formModal.updateDataInForm(dataTabla.getDataObjectForKey(ref[0],'value'))
+    formModal.functions.openModal();
+    
+  })
+
+  dataTabla.setFunction('newMovi', async (ref) => {
+    formModal.setDataDefault('id_cliente', 'value', tmn.getData('param'));
+    formModal.setDataDefault('fechahora', 'introDate', true)
+    formModal.updateDataInFormForNew();
     formModal.functions.openModal();
     
   })
 }
 
 async function crearModalForm(){
+  let param = tmn.getData('param') || 0;
   await formModal.setStructure('movimientos', 'id');
   await formModal.addObjectFromRunCode(`-st movimientos -lt 1`, true);
 
@@ -227,9 +236,12 @@ async function crearModalForm(){
 
   formModal.setData('tipo_oper', 'type', 'select');
   formModal.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
+  formModal.setData('tipo_oper', 'elegirOpcion', true)
   formModal.setData('id_cliente', 'name', 'cliente' );
   formModal.setData('id_cliente', 'type', 'select');
+  formModal.setData('id_cliente', 'value', param);
   formModal.setData('id_cliente', 'options', optionsClientes);
+  formModal.setData('id_cliente', 'required', true);
 
   formModal.setFunction('reload', verSaldosAcumulados);
 

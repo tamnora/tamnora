@@ -2047,7 +2047,6 @@ export class DataObject {
     this.defaultObjeto = {};
     this.functions = {
       closeModal: () => {
-        console.log('cierro')
         const btnDelete = this.formElement.querySelector('[data-formclick="delete"]');
         const modal = document.querySelector(`#${this.name}`);
         if(btnDelete) btnDelete.innerHTML = this.formOptions.delete;
@@ -2100,7 +2099,6 @@ export class DataObject {
             console.log(respuesta); // Maneja la respuesta del servidor
             event.submitter.innerHTML = defaultTitle;
             event.submitter.disabled = false;
-            console.log(this.nameModal)
             if (this.nameModal) {
               this.functions.closeModal();
             } 
@@ -2233,7 +2231,8 @@ export class DataObject {
           "attribute": 0,
           "hidden": false,
           "pattern": '',
-          "defaultValue": "",
+          "defaultValue": "...",
+          "elegirOpcion": false,
           "key": "",
           "introDate": false,
           "setDate": 0,
@@ -2321,7 +2320,8 @@ export class DataObject {
           "attribute": 0,
           "hidden": false,
           "pattern": '',
-          "defaultValue": "",
+          "defaultValue": "...",
+          "elegirOpcion": false,
           "key": key,
           "introDate": false,
           "setDate": 0,
@@ -2397,6 +2397,32 @@ export class DataObject {
       
     }
   }
+
+  setDataDefault(fieldName, key, value) {
+    const name = this.name;
+    
+    if (this.defaultObjeto[fieldName]) {
+      if (!isNaN(parseFloat(value)) && isFinite(value)) {
+        this.defaultObjeto[fieldName][key] = parseFloat(value);
+      } else {
+        this.defaultObjeto[fieldName][key] = value;
+        if (value == 'currency') {
+          this.defaultObjeto[fieldName].pattern = "[0-9.,]*";
+        }
+      }
+
+     
+      if(key == 'value'){
+        if (!isNaN(parseFloat(value)) && isFinite(value)) {
+          this.data[name][fieldName] = parseFloat(value);
+        } else {
+          this.data[name][fieldName] = value; 
+        }
+      }
+      
+    }
+  }
+
 
 
   setDataFromModel(objectModel) {
@@ -2491,18 +2517,35 @@ export class DataObject {
   resetValues() {
     const name = this.name;
     for (const fieldName in this.defaultObjeto) {
-      const setDate = this.defaultObjeto[fieldName].setDate;
-      const type = this.defaultObjeto[fieldName].type;
+      const introDate = this.defaultObjeto[fieldName].introDate;
       let value = this.defaultObjeto[fieldName].value;
       
+     
        
-        if(type == 'datetime-local'){
-          let fecha = new Date();
-          if(setDate > 0){
-            fecha.setDate(fecha.getDate() + setDate);
+        if(introDate == true){
+          let myDate = new Date();
+          let days = this.camposRegistro[fieldName]['setDate'];
+          let typeInput = this.camposRegistro[fieldName]['type'];
+          if(days > 0){
+            myDate.setDate(myDate.getDate() + days);
+          } else if(days < 0){
+            myDate.setDate(myDate.getDate() - days);
           }
-          this.camposRegistro[fieldName].value = this.formatDate(fecha).fechaHora;
-          this.data[name][fieldName] = this.formatDate(fecha).fechaHora;
+          
+          if(typeInput == 'datetime-local'){
+            this.camposRegistro[fieldName].value = this.formatDate(myDate).fechaHora;
+            this.defaultObjeto[fieldName].value = this.formatDate(myDate).fechaHora;
+            this.data[name][fieldName] = this.formatDate(myDate).fechaHora;
+          } else if(typeInput == 'date'){
+            this.camposRegistro[fieldName].value = this.formatDate(myDate).fecha;
+            this.defaultObjeto[fieldName].value = this.formatDate(myDate).fecha;
+            this.data[name][fieldName] = this.formatDate(myDate).fecha;
+          } else if(typeInput == 'time'){
+            this.camposRegistro[fieldName].value = this.formatDate(myDate).horaLarga;
+            this.defaultObjeto[fieldName].value = this.formatDate(myDate).horaLarga;
+            this.data[name][fieldName] = this.formatDate(myDate).horaLarga;
+          }
+
         } else {
             if (!isNaN(parseFloat(value)) && isFinite(value)) {
               this.data[name][fieldName] = parseFloat(value);
@@ -2535,11 +2578,52 @@ export class DataObject {
 
         // this.updateElementsWithDataValue(`${name}!${fieldName}`, value)
         this.createFormModal(this.formOptions)
-        
       }
+  }
+
+  updateDataInFormForNew() {
+    const name = this.name;
+    for (const fieldName in this.defaultObjeto) {
+      const introDate = this.defaultObjeto[fieldName].introDate;
+      let value = this.defaultObjeto[fieldName].value;
       
+       
+        if(introDate == true){
+          let myDate = new Date();
+          let days = this.defaultObjeto[fieldName]['setDate'];
+          let typeInput = this.defaultObjeto[fieldName]['type'];
+          if(days > 0){
+            myDate.setDate(myDate.getDate() + days);
+          } else if(days < 0){
+            myDate.setDate(myDate.getDate() - days);
+          }
+          
+          if(typeInput == 'datetime-local'){
+            this.camposRegistro[fieldName].value = this.formatDate(myDate).fechaHora;
+            this.defaultObjeto[fieldName].value = this.formatDate(myDate).fechaHora;
+            this.data[name][fieldName] = this.formatDate(myDate).fechaHora;
+          } else if(typeInput == 'date'){
+            this.camposRegistro[fieldName].value = this.formatDate(myDate).fecha;
+            this.defaultObjeto[fieldName].value = this.formatDate(myDate).fecha;
+            this.data[name][fieldName] = this.formatDate(myDate).fecha;
+          } else if(typeInput == 'time'){
+            this.camposRegistro[fieldName].value = this.formatDate(myDate).horaLarga;
+            this.defaultObjeto[fieldName].value = this.formatDate(myDate).horaLarga;
+            this.data[name][fieldName] = this.formatDate(myDate).horaLarga;
+          }
+
+        } else {
+            if (!isNaN(parseFloat(value)) && isFinite(value)) {
+              this.data[name][fieldName] = parseFloat(value);
+              this.camposRegistro[fieldName].value = parseFloat(value);
+            } else {
+              this.data[name][fieldName] = value;
+              this.camposRegistro[fieldName].value = value;
+            }
+        }
+        this.createFormModal(this.formOptions)
+      }
      
-      
   }
 
 
@@ -2622,7 +2706,8 @@ export class DataObject {
           "attribute": 0,
           "hidden": false,
           "pattern": '',
-          "defaultValue": "",
+          "defaultValue": "...",
+          "elegirOpcion": false,
           "key": key,
           "introDate": false,
           "setDate": 0,
@@ -2639,7 +2724,8 @@ export class DataObject {
           "attribute": 0,
           "hidden": false,
           "pattern": '',
-          "defaultValue": "",
+          "defaultValue": "...",
+          "elegirOpcion": false,
           "key": key,
           "introDate": false,
           "setDate": 0,
@@ -3434,13 +3520,19 @@ export class DataObject {
 
 
       if (dato.type === 'select') {
-        const options = dato.options.map(option => {
-          if (option.value == dato.value) {
+        let haySelected = false;
+        let options = dato.options.map(option => {
+          if ((option.value == dato.value && dato.elegirOpcion == false) || option.value == dato.defaultValue) {
+            haySelected = true;
             return `<option value="${option.value}" selected>${option.label}</option>`
           } else {
             return `<option value="${option.value}">${option.label}</option>`
           }
         }).join('');
+
+        if(!haySelected){
+          options = `<option value="" disabled selected>Elegir...</option>${options}`
+        }
 
         fieldElement = `
         <div class="${colspan}">
@@ -3451,7 +3543,7 @@ export class DataObject {
         </div>`;
       } else if (dato.type === 'datalist') {
         const options = dato.options.map(option => {
-          if (option.value == dato.value) {
+          if ((option.value == dato.value && dato.elegirOpcion == false) || option.value == dato.defaultValue) {
             return `<option value="${option.value}" selected>${option.label}</option>`
           } else {
             return `<option value="${option.value}">${option.label}</option>`
@@ -3629,13 +3721,20 @@ export class DataObject {
       }
 
       if (dato.type === 'select') {
-        const options = dato.options.map(option => {
-          if (option.value == dato.value) {
+        let haySelected = false;
+        let options = dato.options.map(option => {
+          if ((option.value == dato.value && dato.elegirOpcion == false) || option.value === dato.defaultValue) {
+            haySelected = true;
+            console.log( option.value, dato.defaultValue, dato.value)
             return `<option value="${option.value}" selected>${option.label}</option>`
           } else {
             return `<option value="${option.value}">${option.label}</option>`
           }
         }).join('');
+
+        if(!haySelected){
+          options = `<option value="" disabled selected>Elegir...</option>${options}`
+        }
 
         fieldElement = `
         <div class="${colspan}">
@@ -3646,7 +3745,7 @@ export class DataObject {
         </div>`;
       } else if (dato.type === 'datalist') {
         const options = dato.options.map(option => {
-          if (option.value == dato.value) {
+          if ((option.value == dato.value && dato.elegirOpcion == false) || option.value === dato.defaultValue) {
             return `<option value="${option.value}" selected>${option.label}</option>`
           } else {
             return `<option value="${option.value}">${option.label}</option>`
@@ -3877,7 +3976,8 @@ export class DataArray {
           "column": 1,
           "attribute": 0,
           "hidden": false,
-          "defaultValue": "",
+          "defaultValue": "...",
+          "elegirOpcion": false,
           "key": "",
           "introDate": false,
           "setDate": 0,
@@ -3965,7 +4065,8 @@ export class DataArray {
           "attribute": 0,
           "hidden": false,
           "pattern": '',
-          "defaultValue": "",
+          "defaultValue": "...",
+          "elegirOpcion": false,
           "key": key,
           "introDate": false,
           "setDate": 0,
@@ -4010,7 +4111,8 @@ export class DataArray {
           "attribute": 0,
           "hidden": false,
           "pattern": '',
-          "defaultValue": "",
+          "defaultValue": "...",
+          "elegirOpcion": false,
           "key": "",
           "introDate": false,
           "setDate": 0,
@@ -4159,7 +4261,8 @@ export class DataArray {
           "attribute": 0,
           "hidden": false,
           "pattern": '',
-          "defaultValue": "",
+          "defaultValue": "...",
+          "elegirOpcion": false,
           "key": key,
           "introDate": false,
           "setDate": 0,
@@ -4218,7 +4321,8 @@ export class DataArray {
           "attribute": 0,
           "hidden": false,
           "pattern": '',
-          "defaultValue": "",
+          "defaultValue": "...",
+          "elegirOpcion": false,
           "key": key,
           "introDate": false,
           "setDate": 0,
