@@ -1672,6 +1672,9 @@ export class Tamnora {
         target: () => {
           return element.target
         },
+        inFocus: () => {
+          return element.focus()
+        },
 
         // Agregar más eventos aquí según sea necesario
       };

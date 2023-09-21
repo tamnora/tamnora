@@ -17,23 +17,22 @@
   <div class="container mx-auto animated fadeIn p-5 transition-bg duration-500 ">
       
 
-
-    <div id="inputSearch">
-      <div class="relative flex mb-3 w-full  md:w-full">
-        <label for="search-dropdown" class="flex-shrink-0 z-10 inline-flex items-center py-2.5 px-4 text-sm font-medium text-center text-neutral-900 bg-neutral-100 border border-neutral-300 rounded-l-lg hover:bg-neutral-200 focus:ring-4 focus:outline-none focus:ring-neutral-100 dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:focus:ring-neutral-700 dark:text-white dark:border-neutral-600">Id Cliente</label>
-        <div class="relative w-full mr-2">
-            <input type="search" id="searchInput"  data-value="param" class="block p-2.5 w-full z-20 text-sm text-neutral-900 bg-neutral-50 focus:outline-none rounded-r-lg border-l-neutral-50 border-l-2 border border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500" placeholder="Por ID o NOMBRE ..." >
+    <div class="flex gap-2">
+      <div id="inputSearch" class="w-full">
+        <div class="relative flex mb-3 w-full md:w-full">
+          <div for="searchCliente" data-click="focusSearch"  class="flex items-center p-2.5 w-full z-20 text-sm text-neutral-900 bg-neutral-50 focus:outline-none ml-2 rounded-l-lg border-l-neutral-50 border-l-2 border border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500">
+            <span class="text-neutral-700 bg-neutral-50  dark:bg-neutral-700 dark:text-neutral-400 border-none outline-none mr-2">Buscar Cliente:</span>
+            <span id="searchCliente"  class="text-neutral-900 bg-neutral-50  dark:bg-neutral-700 dark:text-white border-none outline-none" contenteditable="true"></span>
+            <span id="sugerencia" class=" text-blue-400 bg-neutral-50  dark:bg-neutral-700 dark:text-blue-600 "></span>
+          </div>
+          <input type="search" id="searchInput" data-value="param" class="block p-2.5 w-20 z-20 text-sm text-neutral-900 bg-neutral-100 focus:outline-none rounded-r-lg border-l-neutral-50 border-l-2 border border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500" placeholder="Por ID o NOMBRE ..." >
         </div>
-        <button data-tail="btn dark" data-theme></button>
-        <input type="number" id="cant"  data-value="cant" class="block p-2.5 w-16 z-20 text-sm text-neutral-900 bg-neutral-50 focus:outline-none ml-2 rounded-lg border-l-neutral-50 border-l-2 border border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500" placeholder=" ..." >
-        
-        <div for="searchCliente"  class="flex items-center p-2.5 w-full z-20 text-sm text-neutral-900 bg-neutral-50 focus:outline-none ml-2 rounded-lg border-l-neutral-50 border-l-2 border border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500">
-          <span id="searchCliente"  class="text-neutral-900 bg-neutral-50  dark:bg-neutral-700 dark:text-white border-none outline-none" contenteditable="true"></span>
-          <span id="sugerencia" class=" text-blue-400 bg-neutral-50  dark:bg-neutral-700 dark:text-blue-600 "></span>
-        </div>
-
       </div>
+  
+      <button data-tail="btn dark" data-theme></button>
+
     </div>
+   
 
     <div id="simpleform"></div>
     <div id="modalForm"></div>

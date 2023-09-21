@@ -19,9 +19,8 @@ tmn.select('#searchInput').change(() => {
   verSimpleForm();
 })
 
-tmn.select('#cant').change(() => {
-  verSaldosAcumulados();
-  verSimpleForm();
+tmn.setFunction('focusSearch', ()=>{
+  tmn.select('#searchCliente').inFocus();
 })
 
 tmn.select('#searchCliente').input((e, element) => {
