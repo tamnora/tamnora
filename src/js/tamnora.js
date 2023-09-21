@@ -3525,9 +3525,13 @@ export class DataObject {
       if (dato.type === 'select') {
         let haySelected = false;
         let options = dato.options.map(option => {
-          if ((option.value == dato.value && dato.elegirOpcion == false) || option.value == dato.defaultValue) {
-            haySelected = true;
-            return `<option value="${option.value}" selected>${option.label}</option>`
+          if (option.value == dato.value  || option.value == dato.defaultValue) {
+            if(dato.elegirOpcion == true){
+              return `<option value="${option.value}">${option.label}</option>`
+            } else {
+              haySelected = true;
+              return `<option value="${option.value}" selected>${option.label}</option>`
+            }
           } else {
             return `<option value="${option.value}">${option.label}</option>`
           }
@@ -3726,10 +3730,13 @@ export class DataObject {
       if (dato.type === 'select') {
         let haySelected = false;
         let options = dato.options.map(option => {
-          if ((option.value == dato.value && dato.elegirOpcion == false) || option.value === dato.defaultValue) {
-            haySelected = true;
-            console.log( option.value, dato.defaultValue, dato.value)
-            return `<option value="${option.value}" selected>${option.label}</option>`
+          if (option.value == dato.value  || option.value === dato.defaultValue) {
+            if(dato.elegirOpcion == true){
+              return `<option value="${option.value}">${option.label}</option>`
+            } else {
+              haySelected = true;
+              return `<option value="${option.value}" selected>${option.label}</option>`
+            }
           } else {
             return `<option value="${option.value}">${option.label}</option>`
           }

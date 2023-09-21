@@ -209,6 +209,8 @@ async function verSaldosAcumulados() {
   dataTabla.createTable(options);
 
   dataTabla.setFunction('showMovi', async (ref) => {
+    formModal.setData('id_cliente', 'elegirOpcion', false);
+    formModal.setData('tipo_oper', 'elegirOpcion', false)
     formModal.updateDataInForm(dataTabla.getDataObjectForKey(ref[0],'value'))
     formModal.functions.openModal();
     
@@ -217,6 +219,7 @@ async function verSaldosAcumulados() {
   dataTabla.setFunction('newMovi', async (ref) => {
     formModal.setDataDefault('id_cliente', 'value', tmn.getData('param'));
     formModal.setDataDefault('fechahora', 'introDate', true)
+    formModal.setData('tipo_oper', 'elegirOpcion', true)
     formModal.updateDataInFormForNew();
     formModal.functions.openModal();
     
@@ -235,7 +238,6 @@ async function crearModalForm(){
 
   formModal.setData('tipo_oper', 'type', 'select');
   formModal.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
-  formModal.setData('tipo_oper', 'elegirOpcion', true)
   formModal.setData('id_cliente', 'name', 'cliente' );
   formModal.setData('id_cliente', 'type', 'select');
   formModal.setData('id_cliente', 'value', param);
