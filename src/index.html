@@ -10,26 +10,29 @@
     <link rel="stylesheet" href="./css/custom-font.css">
     <link rel="stylesheet" href="./css/animate.min.css">
   
-
-   
   </head>
   <body class="h-screen bg-neutral-200 dark:bg-neutral-900 transition-bg duration-500 antialiased">
   <div class="container mx-auto animated fadeIn p-5 transition-bg duration-500 ">
       
-
     <div class="flex gap-2">
       <div id="inputSearch" class="w-full">
-        <div class="relative flex mb-3 w-full md:w-full">
-          <div for="searchCliente" data-click="focusSearch"  class="flex items-center p-2.5 w-full z-20 text-sm text-neutral-900 bg-neutral-50 focus:outline-none ml-2 rounded-l-lg border-l-neutral-50 border-l-2 border border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500">
-            <span class="text-neutral-700 bg-neutral-50  dark:bg-neutral-700 dark:text-neutral-400 border-none outline-none mr-2">Buscar Cliente:</span>
-            <span id="searchCliente"  class="text-neutral-900 bg-neutral-50  dark:bg-neutral-700 dark:text-white border-none outline-none" contenteditable="true"></span>
-            <span id="sugerencia" class=" text-blue-400 bg-neutral-50  dark:bg-neutral-700 dark:text-blue-600 "></span>
+        <div class="relative flex items-center mb-3 w-full text-sm text-neutral-900 bg-neutral-50  rounded-lg  border border-neutral-300  dark:bg-neutral-700   dark:border-neutral-600  dark:text-white">
+          <div for="searchCliente" data-click="focusSearch"  class="flex items-center p-2.5 w-full z-20 ">
+            <span class="text-neutral-700 dark:text-neutral-400 border-none outline-none mr-2">Buscar Cliente:</span>
+            <span id="searchCliente"  class="font-medium text-neutral-900  dark:text-white border-none outline-none" contenteditable="true"></span>
+            <span id="sugerencia" class=" text-blue-400  dark:text-blue-500 "></span>
+            <span id="error" class="ml-2 text-red-400 font-bold dark:text-red-400 "></span>
+            <span id="cant" class="ml-2 text-neutral-400  dark:text-neutral-500 "></span>
           </div>
-          <input type="search" id="searchInput" data-value="param" class="block p-2.5 w-20 z-20 text-sm text-neutral-900 bg-neutral-100 focus:outline-none rounded-r-lg border-l-neutral-50 border-l-2 border border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-700 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500" placeholder="Por ID o NOMBRE ..." >
+          <div class="block p-2.5 w-fit z-20 text-sm text-right text-neutral-900 bg-neutral-100 focus:outline-none  border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-800 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500">
+            <span class="text-neutral-700 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 border-none outline-none">ID:</span>
+          </div>
+          <input type="search" id="searchInput" data-value="param" class="block p-2.5 w-20 max-w-fit z-20 text-sm text-left text-neutral-900 bg-neutral-100 focus:outline-none rounded-r-lg  border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-800 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500" placeholder="..." >
         </div>
       </div>
   
       <button data-tail="btn dark" data-theme></button>
+
 
     </div>
    
@@ -39,6 +42,8 @@
     <div id="tabla"></div>
     
 
+    
+    
      
 
  

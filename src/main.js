@@ -12,11 +12,35 @@ tmn.setData('idBuscado', '');
 tmn.setData('dataClientes', []);
 tmn.setData('param', 0);
 tmn.setData('cant', 10);
-tmn.setData('itab', 0)
+tmn.setData('itab', 0);
 
-tmn.select('#searchInput').change(() => {
-  verSaldosAcumulados();
-  verSimpleForm();
+tmn.select('#searchInput').change((element) => {
+  let value = element.target.value;
+  let result = '';
+  if (value.length > 0) {
+    const matchingClient = tmn.getData('dataClientes').find((v) => {
+      return (v.id_cliente == value)
+    });
+
+    
+
+    if (matchingClient) {
+      result = matchingClient.nombre_cliente;
+      tmn.select('#searchCliente').html(`${result}`)
+      tmn.select('#sugerencia').html('')
+      tmn.select('#error').html('');
+      verSaldosAcumulados();
+      verSimpleForm();
+    } else {
+      tmn.select('#searchCliente').html('')
+      tmn.select('#sugerencia').html(`${result}`)
+      tmn.select('#error').html(' -> El ID no existe!');
+    }
+  } else {
+    tmn.select('#searchCliente').html('')
+    tmn.select('#sugerencia').html('')
+    tmn.select('#error').html(' - No hay valor!');
+  }
 })
 
 tmn.setFunction('focusSearch', ()=>{
@@ -41,8 +65,10 @@ tmn.select('#searchCliente').input((e, element) => {
       result = matchingClient.nombre_cliente.substring(value.length);
       result = result.replace(/\s+/g, '&nbsp;');
       tmn.select('#sugerencia').html(`${result}`)
+      tmn.select('#error').html('');
     } else {
       tmn.select('#sugerencia').html(`${result}`)
+      tmn.select('#error').html(' - No encontrado!');
     }
   } else {
     tmn.select('#sugerencia').html(`${result}`)
@@ -60,11 +86,11 @@ tmn.select('#searchCliente').keyCodeDown((event, element) => {
   let index = tmn.getData('itab');
 
   if (value.length > 0) {
-
     const matchingClient = tmn.getData('dataClientes').filter(v => {
       let compara = v.nombre_cliente.replace(/\s+/g, '_');
       return (compara.toLowerCase().startsWith(value))
     });
+
 
     if (matchingClient) {
       if (event.keyCode == 9) {
@@ -79,19 +105,37 @@ tmn.select('#searchCliente').keyCodeDown((event, element) => {
         result = matchingClient[index].nombre_cliente.substring(value.length);
         result = result.replace(/\s+/g, '&nbsp;');
         tmn.select('#sugerencia').html(`${result}`)
+        tmn.select('#cant').html(`(${index + 1} de ${matchingClient.length})`);
       } else {
-        codClie = matchingClient[index].id_cliente
-        element.innerText = matchingClient[index].nombre_cliente;
-        tmn.select('#sugerencia').html('')
-        element.focus()
-        tmn.setCaretToEnd(element)
-        tmn.setData('param', codClie);
-        verSaldosAcumulados();
-        verSimpleForm();
+        if(matchingClient.length > 0){
+          codClie = matchingClient[index].id_cliente
+          console.log(matchingClient[index].id_cliente)
+          element.innerText = matchingClient[index].nombre_cliente;
+          tmn.select('#sugerencia').html('');
+          tmn.select('#error').html('');
+          tmn.select('#cant').html('');
+          element.focus()
+          tmn.setCaretToEnd(element)
+          tmn.setData('param', codClie);
+          verSaldosAcumulados();
+          verSimpleForm();
+        } else {
+          console.error('No hay coincidencias');
+          codClie = 0;
+          tmn.select('#sugerencia').html('');
+          tmn.select('#cant').html('');
+          tmn.select('#error').html('? No existe!');
+          element.focus();
+          tmn.setCaretToEnd(element);
+          tmn.setData('param', codClie);
+          verSaldosAcumulados();
+          verSimpleForm();
+        }
       }
     }
   } else {
     tmn.select('#sugerencia').html('');
+    tmn.select('#error').html('');
   }
 }, [13, 39, 9])
 
@@ -140,8 +184,9 @@ async function verSaldosAcumulados() {
   await dataTabla.setStructure('movimientos');
   await dataTabla.addObjectFromDBSelect(`CALL saldos_acumulados(${param}, ${cant})`);
 
-  dataTabla.orderColumns = ['tipo_oper', 'id', 'fechahora', 'importe', 'saldo'];
-  dataTabla.widthColumns = ['w-5', 'w-5', 'w-10', 'w-15', 'w-35']
+  
+  dataTabla.orderColumns = ['tipo_oper', 'id', 'fechahora', 'id_factura', 'importe', 'saldo'];
+  dataTabla.widthColumns = ['w-10', 'w-10', 'w-10', 'w-20', 'w-20', 'w-35'];
   dataTabla.setDataKeys('attribute', { importe: 'currency', saldo: 'pesos' })
   dataTabla.setDataKeys('name', { id_factura: 'Remito' })
   console.log(dataTabla.getDataAll())

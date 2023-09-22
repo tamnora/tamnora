@@ -406,36 +406,293 @@ export async function runCode(input) {
 
 }
 
+export function colorList(){
+  const colors = `
+  <div class="grid grid-cols-5">
+      <span class='bg-inherit text-inherit'> inherit</span>
+<span class='bg-current text-current'> current</span>
+<span class='bg-transparent text-transparent'> transparent</span>
+<span class='bg-black text-black'> black</span>
+<span class='bg-white text-white'> white</span>
+<span class='bg-slate-50 text-slate-50'> slate-50</span>
+<span class='bg-slate-100 text-slate-100'> slate-100</span>
+<span class='bg-slate-200 text-slate-200'> slate-200</span>
+<span class='bg-slate-300 text-slate-300'> slate-300</span>
+<span class='bg-slate-400 text-slate-400'> slate-400</span>
+<span class='bg-slate-500 text-slate-500'> slate-500</span>
+<span class='bg-slate-600 text-slate-600'> slate-600</span>
+<span class='bg-slate-700 text-slate-700'> slate-700</span>
+<span class='bg-slate-800 text-slate-800'> slate-800</span>
+<span class='bg-slate-900 text-slate-900'> slate-900</span>
+<span class='bg-slate-950 text-slate-950'> slate-950</span>
+<span class='bg-gray-50 text-gray-50'> gray-50</span>
+<span class='bg-gray-100 text-gray-100'> gray-100</span>
+<span class='bg-gray-200 text-gray-200'> gray-200</span>
+<span class='bg-gray-300 text-gray-300'> gray-300</span>
+<span class='bg-gray-400 text-gray-400'> gray-400</span>
+<span class='bg-gray-500 text-gray-500'> gray-500</span>
+<span class='bg-gray-600 text-gray-600'> gray-600</span>
+<span class='bg-gray-700 text-gray-700'> gray-700</span>
+<span class='bg-gray-800 text-gray-800'> gray-800</span>
+<span class='bg-gray-900 text-gray-900'> gray-900</span>
+<span class='bg-gray-950 text-gray-950'> gray-950</span>
+<span class='bg-zinc-50 text-zinc-50'> zinc-50</span>
+<span class='bg-zinc-100 text-zinc-100'> zinc-100</span>
+<span class='bg-zinc-200 text-zinc-200'> zinc-200</span>
+<span class='bg-zinc-300 text-zinc-300'> zinc-300</span>
+<span class='bg-zinc-400 text-zinc-400'> zinc-400</span>
+<span class='bg-zinc-500 text-zinc-500'> zinc-500</span>
+<span class='bg-zinc-600 text-zinc-600'> zinc-600</span>
+<span class='bg-zinc-700 text-zinc-700'> zinc-700</span>
+<span class='bg-zinc-800 text-zinc-800'> zinc-800</span>
+<span class='bg-zinc-900 text-zinc-900'> zinc-900</span>
+<span class='bg-zinc-950 text-zinc-950'> zinc-950</span>
+<span class='bg-neutral-50 text-neutral-50'> neutral-50</span>
+<span class='bg-neutral-100 text-neutral-100'> neutral-100</span>
+<span class='bg-neutral-200 text-neutral-200'> neutral-200</span>
+<span class='bg-neutral-300 text-neutral-300'> neutral-300</span>
+<span class='bg-neutral-400 text-neutral-400'> neutral-400</span>
+<span class='bg-neutral-500 text-neutral-500'> neutral-500</span>
+<span class='bg-neutral-600 text-neutral-600'> neutral-600</span>
+<span class='bg-neutral-700 text-neutral-700'> neutral-700</span>
+<span class='bg-neutral-800 text-neutral-800'> neutral-800</span>
+<span class='bg-neutral-900 text-neutral-900'> neutral-900</span>
+<span class='bg-neutral-950 text-neutral-950'> neutral-950</span>
+<span class='bg-stone-50 text-stone-50'> stone-50</span>
+<span class='bg-stone-100 text-stone-100'> stone-100</span>
+<span class='bg-stone-200 text-stone-200'> stone-200</span>
+<span class='bg-stone-300 text-stone-300'> stone-300</span>
+<span class='bg-stone-400 text-stone-400'> stone-400</span>
+<span class='bg-stone-500 text-stone-500'> stone-500</span>
+<span class='bg-stone-600 text-stone-600'> stone-600</span>
+<span class='bg-stone-700 text-stone-700'> stone-700</span>
+<span class='bg-stone-800 text-stone-800'> stone-800</span>
+<span class='bg-stone-900 text-stone-900'> stone-900</span>
+<span class='bg-stone-950 text-stone-950'> stone-950</span>
+<span class='bg-red-50 text-red-50'> red-50</span>
+<span class='bg-red-100 text-red-100'> red-100</span>
+<span class='bg-red-200 text-red-200'> red-200</span>
+<span class='bg-red-300 text-red-300'> red-300</span>
+<span class='bg-red-400 text-red-400'> red-400</span>
+<span class='bg-red-500 text-red-500'> red-500</span>
+<span class='bg-red-600 text-red-600'> red-600</span>
+<span class='bg-red-700 text-red-700'> red-700</span>
+<span class='bg-red-800 text-red-800'> red-800</span>
+<span class='bg-red-900 text-red-900'> red-900</span>
+<span class='bg-red-950 text-red-950'> red-950</span>
+<span class='bg-orange-50 text-orange-50'> orange-50</span>
+<span class='bg-orange-100 text-orange-100'> orange-100</span>
+<span class='bg-orange-200 text-orange-200'> orange-200</span>
+<span class='bg-orange-300 text-orange-300'> orange-300</span>
+<span class='bg-orange-400 text-orange-400'> orange-400</span>
+<span class='bg-orange-500 text-orange-500'> orange-500</span>
+<span class='bg-orange-600 text-orange-600'> orange-600</span>
+<span class='bg-orange-700 text-orange-700'> orange-700</span>
+<span class='bg-orange-800 text-orange-800'> orange-800</span>
+<span class='bg-orange-900 text-orange-900'> orange-900</span>
+<span class='bg-orange-950 text-orange-950'> orange-950</span>
+<span class='bg-amber-50 text-amber-50'> amber-50</span>
+<span class='bg-amber-100 text-amber-100'> amber-100</span>
+<span class='bg-amber-200 text-amber-200'> amber-200</span>
+<span class='bg-amber-300 text-amber-300'> amber-300</span>
+<span class='bg-amber-400 text-amber-400'> amber-400</span>
+<span class='bg-amber-500 text-amber-500'> amber-500</span>
+<span class='bg-amber-600 text-amber-600'> amber-600</span>
+<span class='bg-amber-700 text-amber-700'> amber-700</span>
+<span class='bg-amber-800 text-amber-800'> amber-800</span>
+<span class='bg-amber-900 text-amber-900'> amber-900</span>
+<span class='bg-amber-950 text-amber-950'> amber-950</span>
+<span class='bg-yellow-50 text-yellow-50'> yellow-50</span>
+<span class='bg-yellow-100 text-yellow-100'> yellow-100</span>
+<span class='bg-yellow-200 text-yellow-200'> yellow-200</span>
+<span class='bg-yellow-300 text-yellow-300'> yellow-300</span>
+<span class='bg-yellow-400 text-yellow-400'> yellow-400</span>
+<span class='bg-yellow-500 text-yellow-500'> yellow-500</span>
+<span class='bg-yellow-600 text-yellow-600'> yellow-600</span>
+<span class='bg-yellow-700 text-yellow-700'> yellow-700</span>
+<span class='bg-yellow-800 text-yellow-800'> yellow-800</span>
+<span class='bg-yellow-900 text-yellow-900'> yellow-900</span>
+<span class='bg-yellow-950 text-yellow-950'> yellow-950</span>
+<span class='bg-lime-50 text-lime-50'> lime-50</span>
+<span class='bg-lime-100 text-lime-100'> lime-100</span>
+<span class='bg-lime-200 text-lime-200'> lime-200</span>
+<span class='bg-lime-300 text-lime-300'> lime-300</span>
+<span class='bg-lime-400 text-lime-400'> lime-400</span>
+<span class='bg-lime-500 text-lime-500'> lime-500</span>
+<span class='bg-lime-600 text-lime-600'> lime-600</span>
+<span class='bg-lime-700 text-lime-700'> lime-700</span>
+<span class='bg-lime-800 text-lime-800'> lime-800</span>
+<span class='bg-lime-900 text-lime-900'> lime-900</span>
+<span class='bg-lime-950 text-lime-950'> lime-950</span>
+<span class='bg-green-50 text-green-50'> green-50</span>
+<span class='bg-green-100 text-green-100'> green-100</span>
+<span class='bg-green-200 text-green-200'> green-200</span>
+<span class='bg-green-300 text-green-300'> green-300</span>
+<span class='bg-green-400 text-green-400'> green-400</span>
+<span class='bg-green-500 text-green-500'> green-500</span>
+<span class='bg-green-600 text-green-600'> green-600</span>
+<span class='bg-green-700 text-green-700'> green-700</span>
+<span class='bg-green-800 text-green-800'> green-800</span>
+<span class='bg-green-900 text-green-900'> green-900</span>
+<span class='bg-green-950 text-green-950'> green-950</span>
+<span class='bg-emerald-50 text-emerald-50'> emerald-50</span>
+<span class='bg-emerald-100 text-emerald-100'> emerald-100</span>
+<span class='bg-emerald-200 text-emerald-200'> emerald-200</span>
+<span class='bg-emerald-300 text-emerald-300'> emerald-300</span>
+<span class='bg-emerald-400 text-emerald-400'> emerald-400</span>
+<span class='bg-emerald-500 text-emerald-500'> emerald-500</span>
+<span class='bg-emerald-600 text-emerald-600'> emerald-600</span>
+<span class='bg-emerald-700 text-emerald-700'> emerald-700</span>
+<span class='bg-emerald-800 text-emerald-800'> emerald-800</span>
+<span class='bg-emerald-900 text-emerald-900'> emerald-900</span>
+<span class='bg-emerald-950 text-emerald-950'> emerald-950</span>
+<span class='bg-teal-50 text-teal-50'> teal-50</span>
+<span class='bg-teal-100 text-teal-100'> teal-100</span>
+<span class='bg-teal-200 text-teal-200'> teal-200</span>
+<span class='bg-teal-300 text-teal-300'> teal-300</span>
+<span class='bg-teal-400 text-teal-400'> teal-400</span>
+<span class='bg-teal-500 text-teal-500'> teal-500</span>
+<span class='bg-teal-600 text-teal-600'> teal-600</span>
+<span class='bg-teal-700 text-teal-700'> teal-700</span>
+<span class='bg-teal-800 text-teal-800'> teal-800</span>
+<span class='bg-teal-900 text-teal-900'> teal-900</span>
+<span class='bg-teal-950 text-teal-950'> teal-950</span>
+<span class='bg-cyan-50 text-cyan-50'> cyan-50</span>
+<span class='bg-cyan-100 text-cyan-100'> cyan-100</span>
+<span class='bg-cyan-200 text-cyan-200'> cyan-200</span>
+<span class='bg-cyan-300 text-cyan-300'> cyan-300</span>
+<span class='bg-cyan-400 text-cyan-400'> cyan-400</span>
+<span class='bg-cyan-500 text-cyan-500'> cyan-500</span>
+<span class='bg-cyan-600 text-cyan-600'> cyan-600</span>
+<span class='bg-cyan-700 text-cyan-700'> cyan-700</span>
+<span class='bg-cyan-800 text-cyan-800'> cyan-800</span>
+<span class='bg-cyan-900 text-cyan-900'> cyan-900</span>
+<span class='bg-cyan-950 text-cyan-950'> cyan-950</span>
+<span class='bg-sky-50 text-sky-50'> sky-50</span>
+<span class='bg-sky-100 text-sky-100'> sky-100</span>
+<span class='bg-sky-200 text-sky-200'> sky-200</span>
+<span class='bg-sky-300 text-sky-300'> sky-300</span>
+<span class='bg-sky-400 text-sky-400'> sky-400</span>
+<span class='bg-sky-500 text-sky-500'> sky-500</span>
+<span class='bg-sky-600 text-sky-600'> sky-600</span>
+<span class='bg-sky-700 text-sky-700'> sky-700</span>
+<span class='bg-sky-800 text-sky-800'> sky-800</span>
+<span class='bg-sky-900 text-sky-900'> sky-900</span>
+<span class='bg-sky-950 text-sky-950'> sky-950</span>
+<span class='bg-blue-50 text-blue-50'> blue-50</span>
+<span class='bg-blue-100 text-blue-100'> blue-100</span>
+<span class='bg-blue-200 text-blue-200'> blue-200</span>
+<span class='bg-blue-300 text-blue-300'> blue-300</span>
+<span class='bg-blue-400 text-blue-400'> blue-400</span>
+<span class='bg-blue-500 text-blue-500'> blue-500</span>
+<span class='bg-blue-600 text-blue-600'> blue-600</span>
+<span class='bg-blue-700 text-blue-700'> blue-700</span>
+<span class='bg-blue-800 text-blue-800'> blue-800</span>
+<span class='bg-blue-900 text-blue-900'> blue-900</span>
+<span class='bg-blue-950 text-blue-950'> blue-950</span>
+<span class='bg-indigo-50 text-indigo-50'> indigo-50</span>
+<span class='bg-indigo-100 text-indigo-100'> indigo-100</span>
+<span class='bg-indigo-200 text-indigo-200'> indigo-200</span>
+<span class='bg-indigo-300 text-indigo-300'> indigo-300</span>
+<span class='bg-indigo-400 text-indigo-400'> indigo-400</span>
+<span class='bg-indigo-500 text-indigo-500'> indigo-500</span>
+<span class='bg-indigo-600 text-indigo-600'> indigo-600</span>
+<span class='bg-indigo-700 text-indigo-700'> indigo-700</span>
+<span class='bg-indigo-800 text-indigo-800'> indigo-800</span>
+<span class='bg-indigo-900 text-indigo-900'> indigo-900</span>
+<span class='bg-indigo-950 text-indigo-950'> indigo-950</span>
+<span class='bg-violet-50 text-violet-50'> violet-50</span>
+<span class='bg-violet-100 text-violet-100'> violet-100</span>
+<span class='bg-violet-200 text-violet-200'> violet-200</span>
+<span class='bg-violet-300 text-violet-300'> violet-300</span>
+<span class='bg-violet-400 text-violet-400'> violet-400</span>
+<span class='bg-violet-500 text-violet-500'> violet-500</span>
+<span class='bg-violet-600 text-violet-600'> violet-600</span>
+<span class='bg-violet-700 text-violet-700'> violet-700</span>
+<span class='bg-violet-800 text-violet-800'> violet-800</span>
+<span class='bg-violet-900 text-violet-900'> violet-900</span>
+<span class='bg-violet-950 text-violet-950'> violet-950</span>
+<span class='bg-purple-50 text-purple-50'> purple-50</span>
+<span class='bg-purple-100 text-purple-100'> purple-100</span>
+<span class='bg-purple-200 text-purple-200'> purple-200</span>
+<span class='bg-purple-300 text-purple-300'> purple-300</span>
+<span class='bg-purple-400 text-purple-400'> purple-400</span>
+<span class='bg-purple-500 text-purple-500'> purple-500</span>
+<span class='bg-purple-600 text-purple-600'> purple-600</span>
+<span class='bg-purple-700 text-purple-700'> purple-700</span>
+<span class='bg-purple-800 text-purple-800'> purple-800</span>
+<span class='bg-purple-900 text-purple-900'> purple-900</span>
+<span class='bg-purple-950 text-purple-950'> purple-950</span>
+<span class='bg-fuchsia-50 text-fuchsia-50'> fuchsia-50</span>
+<span class='bg-fuchsia-100 text-fuchsia-100'> fuchsia-100</span>
+<span class='bg-fuchsia-200 text-fuchsia-200'> fuchsia-200</span>
+<span class='bg-fuchsia-300 text-fuchsia-300'> fuchsia-300</span>
+<span class='bg-fuchsia-400 text-fuchsia-400'> fuchsia-400</span>
+<span class='bg-fuchsia-500 text-fuchsia-500'> fuchsia-500</span>
+<span class='bg-fuchsia-600 text-fuchsia-600'> fuchsia-600</span>
+<span class='bg-fuchsia-700 text-fuchsia-700'> fuchsia-700</span>
+<span class='bg-fuchsia-800 text-fuchsia-800'> fuchsia-800</span>
+<span class='bg-fuchsia-900 text-fuchsia-900'> fuchsia-900</span>
+<span class='bg-fuchsia-950 text-fuchsia-950'> fuchsia-950</span>
+<span class='bg-pink-50 text-pink-50'> pink-50</span>
+<span class='bg-pink-100 text-pink-100'> pink-100</span>
+<span class='bg-pink-200 text-pink-200'> pink-200</span>
+<span class='bg-pink-300 text-pink-300'> pink-300</span>
+<span class='bg-pink-400 text-pink-400'> pink-400</span>
+<span class='bg-pink-500 text-pink-500'> pink-500</span>
+<span class='bg-pink-600 text-pink-600'> pink-600</span>
+<span class='bg-pink-700 text-pink-700'> pink-700</span>
+<span class='bg-pink-800 text-pink-800'> pink-800</span>
+<span class='bg-pink-900 text-pink-900'> pink-900</span>
+<span class='bg-pink-950 text-pink-950'> pink-950</span>
+<span class='bg-rose-50 text-rose-50'> rose-50</span>
+<span class='bg-rose-100 text-rose-100'> rose-100</span>
+<span class='bg-rose-200 text-rose-200'> rose-200</span>
+<span class='bg-rose-300 text-rose-300'> rose-300</span>
+<span class='bg-rose-400 text-rose-400'> rose-400</span>
+<span class='bg-rose-500 text-rose-500'> rose-500</span>
+<span class='bg-rose-600 text-rose-600'> rose-600</span>
+<span class='bg-rose-700 text-rose-700'> rose-700</span>
+<span class='bg-rose-800 text-rose-800'> rose-800</span>
+<span class='bg-rose-900 text-rose-900'> rose-900</span>
+<span class='bg-rose-950 text-rose-950'> rose-950</span>
+
+      <!-- Aquí puedes continuar con el resto de los colores -->
+    </div>
+  `
+}
+
 export class Tamnora {
   constructor(config = {}) {
     this.data = this.createReactiveProxy(config.data);
     this._componentHTML = config.componentHTML || {};
     this.def = {};
+    this.colorPrimary = 'neutral';
     this._styleClasses = config.styleClasses || {
-      label: 'block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400',
-      navlink: "block py-2 pl-3 pr-4 text-neutral-900 rounded hover:bg-neutral-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-neutral-700 dark:hover:text-white md:dark:hover:bg-transparent",
-      input: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
-      select: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
-      btn: "h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500",
-      btn2: "text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 focus:ring-4 focus:ring-neutral-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 dark:focus:ring-neutral-700 transition-bg duration-500",
-      btnSmall: "text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 transition-bg duration-500",
-      btnSimple: "text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-semibold rounded-lg text-sm px-3 py-2 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 transition-bg duration-500",
-      table: "w-full text-sm text-left text-neutral-500 dark:text-neutral-400",
-      thead: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
-      th: "px-6 py-3 select-none text-xs text-neutral-700 uppercase dark:text-neutral-400",
-      tr: "border-b border-neutral-200 dark:border-neutral-700",
-      td: "px-6 py-3 select-none",
-      tdclick: "px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400",
-      trh: "text-md font-semibold",
-      tdh: "px-6 py-2 select-none ",
-      tdnumber: "px-6 py-4 text-right",
-      darkBlue: "bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700",
-      darkRed: "bg-red-700 text-white hover:bg-red-800 focus:ring-red-700",
-      darkGreen: "bg-green-700 text-white hover:bg-green-800 focus:ring-green-700",
-      darkNeutral: "bg-neutral-700 text-white hover:bg-neutral-800 focus:ring-neutral-700",
-      dark: "bg-neutral-300 text-neutral-800 hover:bg-neutral-100 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 hover:dark:bg-neutral-700 hover:dark:text-white focus:ring-neutral-700",
-      navactive: "text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500",
-      inactive: "text-neutral-600",
+      label: `block pl-1 text-sm font-medium text-${this.colorPrimary}-900 dark:text-${this.colorPrimary}-400`,
+      navlink: `block py-2 pl-3 pr-4 text-${this.colorPrimary}-900 rounded hover:bg-${this.colorPrimary}-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-${this.colorPrimary}-700 dark:hover:text-white md:dark:hover:bg-transparent`,
+      input: `bg-${this.colorPrimary}-50 border border-${this.colorPrimary}-300 text-${this.colorPrimary}-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-${this.colorPrimary}-800 dark:border-${this.colorPrimary}-700 dark:placeholder-${this.colorPrimary}-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      select: `bg-${this.colorPrimary}-50 border border-${this.colorPrimary}-300 text-${this.colorPrimary}-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-${this.colorPrimary}-800 dark:border-${this.colorPrimary}-700 dark:placeholder-${this.colorPrimary}-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      btn: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500`,
+      btn2: `text-${this.colorPrimary}-900 bg-white border border-${this.colorPrimary}-300 focus:outline-none hover:bg-${this.colorPrimary}-100 focus:ring-4 focus:ring-${this.colorPrimary}-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-${this.colorPrimary}-800 dark:text-white dark:border-${this.colorPrimary}-600 dark:hover:bg-${this.colorPrimary}-700 dark:hover:border-${this.colorPrimary}-600 dark:focus:ring-${this.colorPrimary}-700 transition-bg duration-500`,
+      btnSmall: `text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 transition-bg duration-500`,
+      btnSimple: `text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-semibold rounded-lg text-sm px-3 py-2 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 transition-bg duration-500`,
+      table: `w-full text-sm text-left text-${this.colorPrimary}-500 dark:text-${this.colorPrimary}-400`,
+      thead: `bg-white dark:bg-${this.colorPrimary}-800 text-${this.colorPrimary}-700  dark:text-${this.colorPrimary}-400`,
+      th: `px-6 py-3 select-none text-xs text-${this.colorPrimary}-700 uppercase dark:text-${this.colorPrimary}-400`,
+      tr: `border-b border-${this.colorPrimary}-200 dark:border-${this.colorPrimary}-700`,
+      td: `px-6 py-3 select-none`,
+      tdclick: `px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400`,
+      trh: `text-md font-semibold`,
+      tdh: `px-6 py-2 select-none `,
+      tdnumber: `px-6 py-4 text-right`,
+      darkBlue: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
+      darkRed: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
+      darkGreen: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
+      darkNeutral: `bg-${this.colorPrimary}-700 text-white hover:bg-${this.colorPrimary}-800 focus:ring-${this.colorPrimary}-700`,
+      dark: `bg-${this.colorPrimary}-300 text-${this.colorPrimary}-800 hover:bg-${this.colorPrimary}-100 hover:text-${this.colorPrimary}-900 dark:bg-${this.colorPrimary}-800 dark:text-${this.colorPrimary}-100 hover:dark:bg-${this.colorPrimary}-700 hover:dark:text-white focus:ring-${this.colorPrimary}-700`,
+      navactive: `text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`,
+      inactive: `text-${this.colorPrimary}-600`,
     };
     this.functions = {};
     this.templates = {};
@@ -2040,6 +2297,7 @@ export class DataObject {
     this.formOptions = {};
     this.data = this.createReactiveProxy(fields.data);
     this.table = '';
+    this.colorPrimary = 'neutral';
     this.key = '';
     this.numberAlert = 0;
     this.resetOnSubmit = false;
@@ -2202,24 +2460,24 @@ export class DataObject {
       reload: () => { }
     };
     this.formClass = {
-      divPadre: 'relative overflow-x-auto shadow-md sm:rounded-lg mb-5',
-      header: "bg-white dark:bg-neutral-800",
-      title: "text-lg font-semibold text-left text-neutral-900 dark:text-white",
-      subtitle: "mt-1 text-sm font-normal text-gray-500 dark:text-gray-400",
-      label: 'block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400',
-      input: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
-      select: "bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700",
-      btn: "h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500",
-      btnSmall: "text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500",
-      submit: "h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-blue-100 text-blue-900 hover:bg-blue-200 dark:bg-blue-500 dark:text-blue-100 dark:hover:bg-blue-600",
-      delete: "h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-red-100 text-red-900 hover:bg-red-200 dark:bg-red-500 dark:text-red-100 dark:hover:bg-red-600",
-      darkBlue: "bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700",
-      darkRed: "bg-red-700 text-white hover:bg-red-800 focus:ring-red-700",
-      darkGreen: "bg-green-700 text-white hover:bg-green-800 focus:ring-green-700",
-      darkNeutral: "bg-neutral-700 text-white hover:bg-neutral-800 focus:ring-neutral-700",
-      dark: "bg-neutral-300 text-neutral-800 hover:bg-neutral-100 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 hover:dark:bg-neutral-700 hover:dark:text-white focus:ring-neutral-700",
-      navactive: "text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500",
-      inactive: "text-neutral-600",
+      divPadre: `relative overflow-x-auto shadow-md sm:rounded-lg mb-5`,
+      header: `bg-white dark:bg-${this.colorPrimary}-800`,
+      title: `text-lg font-semibold text-left text-${this.colorPrimary}-900 dark:text-white`,
+      subtitle: `mt-1 text-sm font-normal text-gray-500 dark:text-gray-400`,
+      label: `block pl-1 text-sm font-medium text-${this.colorPrimary}-900 dark:text-${this.colorPrimary}-400`,
+      input: `bg-${this.colorPrimary}-50 border border-${this.colorPrimary}-300 text-${this.colorPrimary}-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-${this.colorPrimary}-700 dark:border-${this.colorPrimary}-700 dark:placeholder-${this.colorPrimary}-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      select: `bg-${this.colorPrimary}-50 border border-${this.colorPrimary}-300 text-${this.colorPrimary}-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-${this.colorPrimary}-700 dark:border-${this.colorPrimary}-700 dark:placeholder-${this.colorPrimary}-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      btn: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500`,
+      btnSmall: `text-${this.colorPrimary}-900 bg-white border border-${this.colorPrimary}-300 focus:outline-none hover:bg-${this.colorPrimary}-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-${this.colorPrimary}-800 dark:text-white dark:border-${this.colorPrimary}-600 dark:hover:bg-${this.colorPrimary}-700 dark:hover:border-${this.colorPrimary}-600 transition-bg duration-500`,
+      submit: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-blue-100 text-blue-900 hover:bg-blue-200 dark:bg-blue-500 dark:text-blue-100 dark:hover:bg-blue-600`,
+      delete: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-red-100 text-red-900 hover:bg-red-200 dark:bg-red-500 dark:text-red-100 dark:hover:bg-red-600`,
+      darkBlue: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
+      darkRed: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
+      darkGreen: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
+      darkNeutral: `bg-${this.colorPrimary}-700 text-white hover:bg-${this.colorPrimary}-800 focus:ring-${this.colorPrimary}-700`,
+      dark: `bg-${this.colorPrimary}-300 text-${this.colorPrimary}-800 hover:bg-${this.colorPrimary}-100 hover:text-${this.colorPrimary}-900 dark:bg-${this.colorPrimary}-800 dark:text-${this.colorPrimary}-100 hover:dark:bg-${this.colorPrimary}-700 hover:dark:text-white focus:ring-${this.colorPrimary}-700`,
+      navactive: `text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`,
+      inactive: `text-${this.colorPrimary}-600`,
     };
 
     if (Object.keys(fields).length > 0) {
@@ -3434,11 +3692,11 @@ export class DataObject {
     let nameForm = idElem;
 
     form += `<div class="${this.formClass.divPadre}">`;
-    form += `<div class=" bg-white dark:bg-neutral-800">`;
+    form += `<div class=" bg-white dark:bg-${this.colorPrimary}-800">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'
 
     if ("title" in data || "subtitle" in data || "buttons" in data) {
-      form += `<div class="flex flex-col md:flex-row  justify-between items-start p-5 border-b rounded-t dark:border-neutral-600">`
+      form += `<div class="flex flex-col md:flex-row  justify-between items-start p-5 border-b rounded-t dark:border-${this.colorPrimary}-600">`
       if ("title" in data || "subtitle" in data) {
         form += `<div class="flex flex-col mb-3">`;
         if ("title" in data) {
@@ -3595,7 +3853,7 @@ export class DataObject {
     form += `</div></div>`;
 
     if (data.submit || data.delete) {
-      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">`;
+      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-${this.colorPrimary}-200 rounded-b dark:border-${this.colorPrimary}-600">`;
 
       if (data.submit) {
         form += ` <button type="submit" class="${this.formClass.submit}">${data.submit}</button>`;
@@ -3641,15 +3899,15 @@ export class DataObject {
     
 
 
-    let form = `<div id="${nameModal}_mod" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center ">
+    let form = `<div id="${nameModal}_mod" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-${this.colorPrimary}-900/50 dark:bg-${this.colorPrimary}-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center ">
     <div class="relative w-full max-w-3xl max-h-full ">
-        <div class="relative bg-white rounded-lg shadow dark:bg-neutral-800  dark:shadow-neutral-300/50">`;
+        <div class="relative bg-white rounded-lg shadow dark:bg-${this.colorPrimary}-800  dark:shadow-${this.colorPrimary}-300/50">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3';
 
-    form += `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-neutral-600">`
+    form += `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-${this.colorPrimary}-600">`
     form += '<div class="flex flex-col ">';
     if (data.title) {
-      form += `<h3 class="text-lg font-semibold text-left text-neutral-900  dark:text-white">${data.title}</h3>`;
+      form += `<h3 class="text-lg font-semibold text-left text-${this.colorPrimary}-900  dark:text-white">${data.title}</h3>`;
     }
 
     if ("subtitle" in data) {
@@ -3661,7 +3919,7 @@ export class DataObject {
     form += '</div>'
 
 
-    form += `<button data-modal="closeModal,#${nameModal}" type="button" class="text-neutral-400 bg-transparent hover:bg-neutral-200 hover:text-neutral-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-neutral-600 dark:hover:text-white">
+    form += `<button data-modal="closeModal,#${nameModal}" type="button" class="text-${this.colorPrimary}-400 bg-transparent hover:bg-${this.colorPrimary}-200 hover:text-${this.colorPrimary}-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-${this.colorPrimary}-600 dark:hover:text-white">
     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
     </svg>
@@ -3799,7 +4057,7 @@ export class DataObject {
     form += `</div></div>`;
 
     if (data.submit || data.delete) {
-      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">`;
+      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-${this.colorPrimary}-200 rounded-b dark:border-${this.colorPrimary}-600">`;
 
       if (data.submit) {
         form += ` <button type="submit" class="${this.formClass.submit}">${data.submit}</button>`;
@@ -3933,47 +4191,26 @@ export class DataObject {
 
     }
   }
-
-
-
-
 }
 
 export class DataArray {
-  constructor(name, initial={fields: [], initialData : []}) {
+  constructor(name, colorPrimary = 'neutral', initial={fields: [], initialData : []}) {
     this.from = 1;
     this.recordsPerView = 10;
     this.paginations = true;
     this.name = name || 'newTable';
     this.tableOptions = {};
     this.tableElement = '';
+    this.colorPrimary = colorPrimary;
     this.functions = {};
     this.structure = [];
     this.orderColumns = [];
     this.widthColumns = [];
+    this.widthTable = 'w-full';
+    this.widthPadre = 'w-full';
     this.arrayOrder = [];
     this.defaultRow = {};
-    this.tableClass = {
-      divPadre: "relative bg-white dark:bg-neutral-800 sm:rounded-lg",
-      tableContainer: "overflow-x-auto shadow-md",
-      table: "w-full text-sm text-left text-neutral-500 dark:text-neutral-400",
-      header: "bg-white dark:bg-neutral-800",
-      title: "text-lg font-semibold text-left text-neutral-900 dark:text-white",
-      btnSmall: "text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500",
-      thead: "bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600",
-      tfoot: "bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400",
-      pagination: "mt-1 text-neutral-700 py-3 dark:text-neutral-400",
-      paginationBtn: "bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white",
-      paginationBtnDisable: "bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600",
-      th: "px-6 py-2 select-none text-xs text-neutral-600 uppercase dark:text-neutral-400 whitespace-nowrap",
-      tr: "border-b border-neutral-200 dark:border-neutral-700",
-      td: "px-6 py-3 select-none whitespace-nowrap",
-      tdclick: "px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400",
-      trh: "text-md font-semibold whitespace-nowrap",
-      trtitle: "text-md font-semibold ",
-      tdh: "px-6 py-2 select-none whitespace-nowrap",
-      tdnumber: "px-6 py-4 text-right",
-    };
+    this.tableClass = {};
     this.dataArray = initial.initialData.map(item => {
       const newItem = {};
       initial.fields.forEach(field => {
@@ -3996,6 +4233,36 @@ export class DataArray {
       });
       return newItem;
     });
+
+    this.autoClass();
+  }
+
+  setClass(obj){
+    this.tableClass = obj;
+  }
+
+  autoClass(){
+    this.tableClass = {
+      divPadre: `relative bg-white dark:bg-${this.colorPrimary}-800 sm:rounded-lg`,
+      tableContainer: `overflow-x-auto shadow-md`,
+      table: `w-full text-sm text-left text-${this.colorPrimary}-500 dark:text-${this.colorPrimary}-400`,
+      header: `bg-white dark:bg-${this.colorPrimary}-800`,
+      title: `text-lg font-semibold text-left text-${this.colorPrimary}-900 dark:text-white`,
+      btnSmall: `text-${this.colorPrimary}-900 bg-white border border-${this.colorPrimary}-300 focus:outline-none hover:bg-${this.colorPrimary}-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-${this.colorPrimary}-800 dark:text-white dark:border-${this.colorPrimary}-600 dark:hover:bg-${this.colorPrimary}-700 dark:hover:border-${this.colorPrimary}-600 transition-bg duration-500`,
+      thead: `bg-white dark:bg-${this.colorPrimary}-800 text-${this.colorPrimary}-700 dark:text-${this.colorPrimary}-400 border-b border-${this.colorPrimary}-300 dark:border-${this.colorPrimary}-600`,
+      tfoot: `bg-white dark:bg-${this.colorPrimary}-800 text-${this.colorPrimary}-700  dark:text-${this.colorPrimary}-400`,
+      pagination: `mt-1 text-${this.colorPrimary}-700 py-3 dark:text-${this.colorPrimary}-400`,
+      paginationBtn: `bg-${this.colorPrimary}-100 text-${this.colorPrimary}-700 hover:bg-${this.colorPrimary}-200 dark:bg-${this.colorPrimary}-800 dark:border-${this.colorPrimary}-700 dark:text-${this.colorPrimary}-400 dark:hover:bg-${this.colorPrimary}-700 dark:hover:text-white`,
+      paginationBtnDisable: `bg-${this.colorPrimary}-100 text-${this.colorPrimary}-400  dark:bg-${this.colorPrimary}-800 dark:border-${this.colorPrimary}-700 dark:text-${this.colorPrimary}-600`,
+      th: `px-6 py-2 select-none text-xs text-${this.colorPrimary}-600 uppercase dark:text-${this.colorPrimary}-400 whitespace-nowrap`,
+      tr: `border-b border-${this.colorPrimary}-200 dark:border-${this.colorPrimary}-700`,
+      td: `px-6 py-3 select-none whitespace-nowrap`,
+      tdclick: `px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400`,
+      trh: `text-md font-semibold whitespace-nowrap`,
+      trtitle: `text-md font-semibold`,
+      tdh: `px-6 py-2 select-none whitespace-nowrap`,
+      tdnumber: `px-6 py-4 text-right`,
+    };
   }
 
   setData(index, fieldName, key, value) {
@@ -4116,7 +4383,7 @@ export class DataArray {
           "name": clave,
           "required": false,
           "placeholder": "",
-          "value": 'No existe registro',
+          "value": ' - ',
           "column": 0,
           "attribute": 0,
           "hidden": false,
@@ -4475,6 +4742,8 @@ export class DataArray {
     let hayMenos = false;
     let arrayTable = 'dataArray'
 
+   
+
     if(this.orderColumns.length > 0){
       this.arrayOrder = this.dataArray.map((objeto) =>
           this.reordenarClaves(objeto, this.orderColumns)
@@ -4483,8 +4752,10 @@ export class DataArray {
 
     }
 
+  console.log(this.widthTable)
+
     
-    table += `<div class="${this.tableClass.divPadre}">`;
+    table += `<div class="${this.tableClass.divPadre} ${this.widthPadre}">`;
     
     if ("title" in options || "subtitle" in options || "btnNew" in options || "buttons" in options) {
       table += `<div class="flex flex-col md:flex-row justify-between items-start w-full py-3 px-5 ${this.tableClass.header}">`;
@@ -4505,7 +4776,7 @@ export class DataArray {
       table += '</div>';
     }
     
-    table += `<div class="${this.tableClass.tableContainer}">`;
+    table += `<div class="${this.tableClass.tableContainer}  ${this.widthTable}">`;
     table += `<table class="${this.tableClass.table}">`;
     table += `<thead class="${this.tableClass.thead}">`;
 
@@ -4799,8 +5070,8 @@ export class DataArray {
 
       table += `<div class="flex flex-col items-center ${this.tableClass.pagination}">
 			<!-- Help text -->
-			<span class="text-sm text-neutral-700 dark:text-neutral-400">
-					Registro <span class="font-semibold text-neutral-900 dark:text-white">${desde}</span> al <span class="font-semibold text-neutral-900 dark:text-white">${hasta}</span> (total: <span class="font-semibold text-neutral-900 dark:text-white">${count}</span> registros)
+			<span class="text-sm text-${this.colorPrimary}-700 dark:text-${this.colorPrimary}-400">
+					Registro <span class="font-semibold text-${this.colorPrimary}-900 dark:text-white">${desde}</span> al <span class="font-semibold text-${this.colorPrimary}-900 dark:text-white">${hasta}</span> (total: <span class="font-semibold text-${this.colorPrimary}-900 dark:text-white">${count}</span> registros)
 			</span>
 			<div class="inline-flex mt-2 xs:mt-0">
 				<!-- Buttons -->
