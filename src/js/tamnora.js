@@ -2543,6 +2543,7 @@ export class DataObject {
             const datt = this.name;
             this.setDataFromModel(this.data[datt]);
             const paraSQL = this.getDataAll();
+            console.log(paraSQL)
             const send = prepararSQL(this.table, paraSQL);
 
             if (send.status == 1) {
@@ -2913,16 +2914,22 @@ export class DataObject {
     Object.keys(objectModel).forEach((fieldName) => {
       let value = objectModel[fieldName];
 
-      if (this.camposRegistro[fieldName].type == 'number' || this.camposRegistro[fieldName].type == 'select') {
-        if (!isNaN(parseFloat(value)) && isFinite(value)) {
-          this.camposRegistro[fieldName].value = parseFloat(value)
+      if(this.camposRegistro[fieldName]){
+        if (this.camposRegistro[fieldName].type == 'number' || this.camposRegistro[fieldName].type == 'select') {
+          if (!isNaN(parseFloat(value)) && isFinite(value)) {
+            this.camposRegistro[fieldName].value = parseFloat(value)
+          } else {
+            this.camposRegistro[fieldName].value = value;
+          }
         } else {
           this.camposRegistro[fieldName].value = value;
+  
         }
-      } else {
-        this.camposRegistro[fieldName].value = value;
 
+      } else {
+        console.error('No existe ', fieldName, value)
       }
+      
 
     })
   }
@@ -2969,25 +2976,7 @@ export class DataObject {
     orden.forEach((clave) => {
       if (objeto.hasOwnProperty(clave)) {
         resultado[clave] = objeto[clave];
-      } else {
-        resultado[clave] = {
-          "type": 'text',
-          "name": clave,
-          "required": false,
-          "placeholder": "",
-          "value": ' - ',
-          "column": 0,
-          "attribute": 0,
-          "hidden": false,
-          "pattern": '',
-          "defaultValue": "...",
-          "elegirOpcion": false,
-          "key": "",
-          "introDate": false,
-          "setDate": 0,
-          "options": []
-        };
-      }
+      } 
     });
     return resultado;
   }

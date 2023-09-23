@@ -92,7 +92,7 @@ async function verSimpleForm(){
   await simpleForm.addObjectFromRunCode(`-st clientes -wr id_cliente = ${tmn.getData('id_cliente')}`);
 
   
-  simpleForm.orderColumns = ['id_cliente', 'nombre_cliente', 'telefono_cliente', 'mail_cliente', 'direccion_cliente', 'tipo', 'date_added', 'status_cliente'];
+  simpleForm.orderColumns = ['id_cliente', 'nombre_cliente', 'telefono_cliente', 'email_cliente', 'direccion_cliente', 'tipo', 'date_added', 'status_cliente'];
   simpleForm.setData('tipo', 'type', 'select');
   simpleForm.setData('tipo', 'options', [{ value: 0, label: 'Cliente' }, { value: 1, label: 'Proveedor' }]);
   simpleForm.setData('status_cliente', 'type', 'select');
@@ -104,7 +104,7 @@ async function verSimpleForm(){
     nombre_cliente: 'Cliente', 
     telefono_cliente: 'Teléfono', 
     mail_cliente: 'Email',
-    direccion_cliente: 'Domicilio',
+    direccion_cliente: 'Dirección',
     date_added: 'Ingreso',
     status_cliente: 'Estado'
   })
@@ -121,6 +121,7 @@ async function verSimpleForm(){
     options.subtitle = `${tmn.getData('nombre_cliente')} (Cod. Cliente: ${tmn.getData('id_cliente')})`
   } 
  
+  console.log(simpleForm.getDataAll())
  
   simpleForm.createForm(options);
 }
