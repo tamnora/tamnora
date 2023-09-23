@@ -10,134 +10,13 @@ tmn.themeColorDark = '#713228';
 
 tmn.setData('idBuscado', '');
 tmn.setData('dataClientes', []);
-tmn.setData('param', 0);
+
 tmn.setData('cant', 10);
 tmn.setData('itab', 0);
-
-tmn.select('#searchInput').change((element) => {
-  let value = element.target.value;
-  let result = '';
-  if (value.length > 0) {
-    const matchingClient = tmn.getData('dataClientes').find((v) => {
-      return (v.id_cliente == value)
-    });
-
-    
-
-    if (matchingClient) {
-      result = matchingClient.nombre_cliente;
-      tmn.select('#searchCliente').html(`${result}`)
-      tmn.select('#sugerencia').html('')
-      tmn.select('#error').html('');
-      verSaldosAcumulados();
-      verSimpleForm();
-    } else {
-      tmn.select('#searchCliente').html('')
-      tmn.select('#sugerencia').html(`${result}`)
-      tmn.select('#error').html(' -> El ID no existe!');
-    }
-  } else {
-    tmn.select('#searchCliente').html('')
-    tmn.select('#sugerencia').html('')
-    tmn.select('#error').html(' - No hay valor!');
-  }
-})
-
-tmn.setFunction('focusSearch', ()=>{
-  tmn.select('#searchCliente').inFocus();
-})
-
-tmn.select('#searchCliente').input((e, element) => {
-  e.preventDefault();
-  let value = e.target.innerText.toLowerCase();
-  value = value.replace(/\s+/g, '_');
-  const selectionStart = element.selectionStart;
-  let result = '';
-
-  if (value.length > 0) {
-    const matchingClient = tmn.getData('dataClientes').find((v) => {
-      let compara = v.nombre_cliente.replace(/\s+/g, '_');
-      return (compara.toLowerCase().startsWith(value))
-    }
-    );
-
-    if (matchingClient) {
-      result = matchingClient.nombre_cliente.substring(value.length);
-      result = result.replace(/\s+/g, '&nbsp;');
-      tmn.select('#sugerencia').html(`${result}`)
-      tmn.select('#error').html('');
-    } else {
-      tmn.select('#sugerencia').html(`${result}`)
-      tmn.select('#error').html(' - No encontrado!');
-    }
-  } else {
-    tmn.select('#sugerencia').html(`${result}`)
-  }
-})
+tmn.setData('id_cliente', 0)
+tmn.setData('nombre_cliente', '')
 
 
-
-tmn.select('#searchCliente').keyCodeDown((event, element) => {
-  event.preventDefault();
-  let value = event.target.innerText.toLowerCase();
-  value = value.replace(/\s+/g, '_');
-  let result;
-  let codClie;
-  let index = tmn.getData('itab');
-
-  if (value.length > 0) {
-    const matchingClient = tmn.getData('dataClientes').filter(v => {
-      let compara = v.nombre_cliente.replace(/\s+/g, '_');
-      return (compara.toLowerCase().startsWith(value))
-    });
-
-
-    if (matchingClient) {
-      if (event.keyCode == 9) {
-        if (index < matchingClient.length - 1) {
-          index++
-          tmn.setData('itab', index);
-        } else {
-          index = 0;
-          tmn.setData('itab', index);
-        }
-        console.log(matchingClient.length)
-        result = matchingClient[index].nombre_cliente.substring(value.length);
-        result = result.replace(/\s+/g, '&nbsp;');
-        tmn.select('#sugerencia').html(`${result}`)
-        tmn.select('#cant').html(`(${index + 1} de ${matchingClient.length})`);
-      } else {
-        if(matchingClient.length > 0){
-          codClie = matchingClient[index].id_cliente
-          console.log(matchingClient[index].id_cliente)
-          element.innerText = matchingClient[index].nombre_cliente;
-          tmn.select('#sugerencia').html('');
-          tmn.select('#error').html('');
-          tmn.select('#cant').html('');
-          element.focus()
-          tmn.setCaretToEnd(element)
-          tmn.setData('param', codClie);
-          verSaldosAcumulados();
-          verSimpleForm();
-        } else {
-          console.error('No hay coincidencias');
-          codClie = 0;
-          tmn.select('#sugerencia').html('');
-          tmn.select('#cant').html('');
-          tmn.select('#error').html('? No existe!');
-          element.focus();
-          tmn.setCaretToEnd(element);
-          tmn.setData('param', codClie);
-          verSaldosAcumulados();
-          verSimpleForm();
-        }
-      }
-    }
-  } else {
-    tmn.select('#sugerencia').html('');
-    tmn.select('#error').html('');
-  }
-}, [13, 39, 9])
 
 async function cargarClientes() {
   const strClientes = await runCode('-sl id_cliente, nombre_cliente -fr clientes -wr tipo = 0 -ob nombre_cliente');
@@ -145,9 +24,8 @@ async function cargarClientes() {
 }
 
 async function verSimpleForm(){
-  let param = tmn.getData('param');
   await simpleForm.setStructure('movimientos', 'id');
-  await simpleForm.addObjectFromRunCode(`-st movimientos -wr id = '${param}'`, true);
+  await simpleForm.addObjectFromRunCode(`-st movimientos -lt 1`, true);
 
   const optionsClientes = [];
   tmn.getData('dataClientes').forEach(cliente => {
@@ -159,7 +37,7 @@ async function verSimpleForm(){
   simpleForm.setData('tipo_oper', 'elegirOpcion', true);
   simpleForm.setData('id_cliente', 'name', 'cliente' );
   simpleForm.setData('id_cliente', 'type', 'select');
-  simpleForm.setData('id_cliente', 'value', param);
+  simpleForm.setData('id_cliente', 'value', tmn.getData('id_cliente'));
   simpleForm.setData('id_cliente', 'options', optionsClientes);
   
   simpleForm.setData('fechahora', 'introDate', true);
@@ -178,11 +56,9 @@ async function verSimpleForm(){
 }
 
 async function verSaldosAcumulados() {
-  let rstData;
-  let param = tmn.getData('param') || 0;
   let cant = tmn.getData('cant') || 5;
   await dataTabla.setStructure('movimientos');
-  await dataTabla.addObjectFromDBSelect(`CALL saldos_acumulados(${param}, ${cant})`);
+  await dataTabla.addObjectFromDBSelect(`CALL saldos_acumulados(${tmn.getData('id_cliente')}, ${cant})`);
 
   
   dataTabla.orderColumns = ['tipo_oper', 'id', 'fechahora', 'id_factura', 'importe', 'saldo'];
@@ -207,7 +83,7 @@ async function verSaldosAcumulados() {
 
   const options = {
     title: 'Movimientos del cliente',
-    subtitle: 'Selecciona para editar',
+    subtitle: `No se ha seleccionado ningún Cliente`,
     buttons: buttons,
     header: {
       tipo_oper: { class: 'text-left', title: 'Operación' },
@@ -251,6 +127,11 @@ async function verSaldosAcumulados() {
       }
     }
   }
+
+  if(tmn.getData('id_cliente') > 0){
+    options.subtitle = `${tmn.getData('nombre_cliente')} (Cod. Cliente: ${tmn.getData('id_cliente')})`
+  } 
+
   dataTabla.createTable(options);
 
   dataTabla.setFunction('showMovi', async (ref) => {
@@ -262,7 +143,7 @@ async function verSaldosAcumulados() {
   })
 
   dataTabla.setFunction('newMovi', async (ref) => {
-    formModal.setDataDefault('id_cliente', 'value', tmn.getData('param'));
+    formModal.setDataDefault('id_cliente', 'value', tmn.getData('id_cliente'));
     formModal.setDataDefault('fechahora', 'introDate', true)
     formModal.setData('tipo_oper', 'elegirOpcion', true)
     formModal.updateDataInFormForNew();
@@ -272,7 +153,6 @@ async function verSaldosAcumulados() {
 }
 
 async function crearModalForm(){
-  let param = tmn.getData('param') || 0;
   await formModal.setStructure('movimientos', 'id');
   await formModal.addObjectFromRunCode(`-st movimientos -lt 1`, true);
 
@@ -285,7 +165,7 @@ async function crearModalForm(){
   formModal.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
   formModal.setData('id_cliente', 'name', 'cliente' );
   formModal.setData('id_cliente', 'type', 'select');
-  formModal.setData('id_cliente', 'value', param);
+  formModal.setData('id_cliente', 'value', tmn.getData('id_cliente'));
   formModal.setData('id_cliente', 'options', optionsClientes);
   formModal.setData('id_cliente', 'required', true);
 
@@ -302,10 +182,22 @@ async function crearModalForm(){
   
 }
 
+tmn.setFunction('papitaResult', (data)=>{
+  tmn.setData('id_cliente', data.id);
+  tmn.setData('nombre_cliente', data.name)
+  cargarClientes();
+  verSaldosAcumulados();
+  verSimpleForm();
+  console.log(data)
+})
+
+tmn.createSearchInput('papita', 'clientes', 'id_cliente', 'nombre_cliente');
+
 cargarClientes();
 verSaldosAcumulados();
 verSimpleForm();
 crearModalForm();
+
 
 tmn.onMount(() => {
   tmn.changeThemeColor();

@@ -955,6 +955,207 @@ export class Tamnora {
     this.functions[name] = fn
   }
 
+  async createSearchInput(nameIdElement, table, id, name, titleId = 'ID:', titleName = 'Buscar Nombre:'){
+    const searchName = `${nameIdElement}_searchName`;
+    const containerSearchName = `${nameIdElement}_conten_search`;
+    const searchInput = `${nameIdElement}_searchInput`;
+    const sugerencia = `${nameIdElement}_sugerencia`;
+    const error = `${nameIdElement}_error`;
+    const cant = `${nameIdElement}_cant`;
+    const data = `tmn${nameIdElement}`;
+    const eleComponent = document.querySelector(`#${nameIdElement}`)
+    
+    
+    const sqlt = `-sl ${id} as id, ${name} as name -fr ${table} -wr tipo = 0 -ob ${name}`;
+    const records = await runCode(sqlt);
+    this.setData(data, records)
+    this.setData(nameIdElement, {id: 0, name:''})
+    console.log(nameIdElement);
+
+    let salidaHTML = `
+        <div class="relative flex items-center mb-3 w-full text-sm text-neutral-900 bg-neutral-50  rounded-lg  border border-neutral-300  dark:bg-neutral-700   dark:border-neutral-600  dark:text-white">
+          <div id="${containerSearchName}" class="flex items-center p-2.5 w-full z-20 ">
+            <span class="text-neutral-700 dark:text-neutral-400 border-none outline-none mr-2">${titleName}</span>
+            <span id="${searchName}"  class="font-medium text-neutral-900  dark:text-white border-none outline-none" contenteditable="true"></span>
+            <span id="${sugerencia}" class=" text-blue-400  dark:text-blue-500 "></span>
+            <span id="${error}" class="ml-2 text-red-400 font-bold dark:text-red-400 "></span>
+            <span id="${cant}" class="ml-2 text-neutral-400  dark:text-neutral-500 "></span>
+          </div>
+          <div class="block p-2.5 w-fit z-20 text-sm text-right text-neutral-900 bg-neutral-100 focus:outline-none  border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-800 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500">
+            <span class="text-neutral-700 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 border-none outline-none">${titleId}</span>
+          </div>
+          <input type="search" id="${searchInput}"  class="block p-2.5 w-20 max-w-fit z-20 text-sm text-left text-neutral-900 bg-neutral-100 focus:outline-none rounded-r-lg  border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-800 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500" placeholder="..." >
+        </div>
+    `;
+
+    eleComponent.innerHTML = await salidaHTML;
+
+    
+    const eleSearchName = document.querySelector(`#${searchName}`)
+    const eleContain = document.querySelector(`#${containerSearchName}`)
+    const eleSearchInput = document.querySelector(`#${searchInput}`)
+    const eleSugerencia = document.querySelector(`#${sugerencia}`)
+    const eleError = document.querySelector(`#${error}`)
+    const eleCant = document.querySelector(`#${cant}`)
+
+    
+
+    eleSearchInput.addEventListener('change', (elem) => {
+      let value = elem.target.value;
+      let result = '';
+      if (value.length > 0) {
+        const matchingClient = this.getData(data).find((v) => {
+          return (v.id == value)
+        });
+    
+        if (matchingClient) {
+          result = matchingClient.name;
+          eleSearchName.innerHTML = result;
+          eleSugerencia.innerHTML = '';
+          eleError.innerHTML = '';
+          this.setData(nameIdElement, {id: value, name: result})
+        } else {
+          eleSearchName.innerHTML = '';
+          eleSugerencia.innerHTML = `${result}`;
+          eleError.innerHTML = ' -> El ID no existe!';
+          this.setData(nameIdElement, {id: 0, name:''})
+        }
+      } else {
+        eleSearchName.innerHTML = '';
+        eleSugerencia.innerHTML = '';
+        eleError.innerHTML = ' - No hay valor!';
+        this.setData(nameIdElement, {id: 0, name:''})
+      }
+      if(this.functions[`${nameIdElement}Result`]){
+        let resultData = this.getData(nameIdElement);
+        this.functions[`${nameIdElement}Result`](resultData);
+      } else {
+        console.error(`la funcion ${nameIdElement}Result no existe en tamnora!`);
+      }
+      //console.log(this.getData(nameIdElement))
+    })
+    
+    
+    eleContain.addEventListener('click', ()=>{
+      eleSearchName.focus();
+    })
+    
+    eleSearchName.addEventListener('input',(e) => {
+      e.preventDefault();
+      let value = e.target.innerText.toLowerCase();
+      value = value.replace(/\s+/g, '_');
+      let result = '';
+    
+      if (value.length > 0) {
+        const matchingClient = this.getData(data).find((v) => {
+          let compara = v.name.replace(/\s+/g, '_');
+          return (compara.toLowerCase().startsWith(value))
+        }
+        );
+    
+        if (matchingClient) {
+          result = matchingClient.name.substring(value.length);
+          result = result.replace(/\s+/g, '&nbsp;');
+          eleSugerencia.innerHTML = result;
+          eleError.innerHTML = '';
+          
+        } else {
+          eleSugerencia.innerHTML = result;
+          eleError.innerHTML = ' - No encontrado!';
+        }
+      } else {
+        eleSugerencia.innerHTML = result;
+        eleError.innerHTML = '';
+      }
+    })
+    
+    
+    eleSearchName.addEventListener('keydown', (event) => {
+      if ([13, 39, 9].includes(event.keyCode)) {
+        event.preventDefault();
+        
+      let value = event.target.innerText.toLowerCase();
+      value = value.replace(/\s+/g, '_');
+      let result;
+      let resId, resName;
+      let index = this.getData('itab');
+    
+      if (value.length > 0) {
+        const matchingClient = this.getData(data).filter(v => {
+          let compara = v.name.replace(/\s+/g, '_');
+          return (compara.toLowerCase().startsWith(value))
+        });
+    
+    
+        if (matchingClient) {
+          if (event.keyCode == 9) {
+            if (index < matchingClient.length - 1) {
+              index++
+              this.setData('itab', index);
+            } else {
+              index = 0;
+              this.setData('itab', index);
+            }
+            console.log(matchingClient.length)
+            result = matchingClient[index].name.substring(value.length);
+            result = result.replace(/\s+/g, '&nbsp;');
+            eleSugerencia.innerHTML = result;
+            eleError.innerHTML = '';
+            eleCant.innerHTML = `(${index + 1} de ${matchingClient.length})`;
+            
+          } else {
+            if(matchingClient.length > 0){
+              resId = matchingClient[index].id;
+              resName = matchingClient[index].name;
+              
+              
+              eleSearchName.innerHTML = resName;
+              eleSearchInput.value = resId;
+              eleSugerencia.innerHTML = '';
+              eleError.innerHTML = '';
+              eleCant.innerHTML = '';
+              eleSearchName.focus()
+              this.setCaretToEnd(eleSearchName)
+              this.setData(nameIdElement, {id: resId, name: resName})
+              // verSimpleForm();
+            } else {
+              console.error('No hay coincidencias');
+              resId = 0;
+              eleSearchName.innerHTML = resName;
+              eleSearchInput.value = resId;
+              eleSugerencia.innerHTML = '';
+              eleError.innerHTML = '? No existe!';
+              eleCant.innerHTML = '';
+              eleSearchName.focus();
+              this.setCaretToEnd(eleSearchName);
+              
+              this.setData(nameIdElement, {id: 0, name:''})
+              // verSaldosAcumulados();
+              // verSimpleForm();
+            }
+
+            if(this.functions[`${nameIdElement}Result`]){
+              let resultData = this.getData(nameIdElement);
+              this.functions[`${nameIdElement}Result`](resultData);
+            } else {
+              console.error(`la funcion ${nameIdElement}Result no existe en tamnora!`);
+            }
+          }
+        }
+      } else {
+        eleSugerencia.innerHTML = '';
+        eleError.innerHTML = '';
+        eleCant.innerHTML = '';
+        this.setData(nameIdElement, {id: 0, name:''})
+      }
+
+      //console.log(this.getData(nameIdElement));
+  }})
+
+
+   
+  }
+
 
   // Actualiza los elementos vinculados a un atributo data-value cuando el dato cambia
   updateElementsWithDataValue(dataKey, value) {
