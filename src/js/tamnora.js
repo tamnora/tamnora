@@ -669,18 +669,18 @@ export class Tamnora {
     this.def = {};
     this.colorPrimary = 'neutral';
     this._styleClasses = config.styleClasses || {
-      label: `block pl-1 text-sm font-medium text-${this.colorPrimary}-900 dark:text-${this.colorPrimary}-400`,
-      navlink: `block py-2 pl-3 pr-4 text-${this.colorPrimary}-900 rounded hover:bg-${this.colorPrimary}-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-${this.colorPrimary}-700 dark:hover:text-white md:dark:hover:bg-transparent`,
-      input: `bg-${this.colorPrimary}-50 border border-${this.colorPrimary}-300 text-${this.colorPrimary}-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-${this.colorPrimary}-800 dark:border-${this.colorPrimary}-700 dark:placeholder-${this.colorPrimary}-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
-      select: `bg-${this.colorPrimary}-50 border border-${this.colorPrimary}-300 text-${this.colorPrimary}-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-${this.colorPrimary}-800 dark:border-${this.colorPrimary}-700 dark:placeholder-${this.colorPrimary}-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      label: `block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400`,
+      navlink: `block py-2 pl-3 pr-4 text-neutral-900 rounded hover:bg-neutral-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-neutral-700 dark:hover:text-white md:dark:hover:bg-transparent`,
+      input: `bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      select: `bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
       btn: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500`,
-      btn2: `text-${this.colorPrimary}-900 bg-white border border-${this.colorPrimary}-300 focus:outline-none hover:bg-${this.colorPrimary}-100 focus:ring-4 focus:ring-${this.colorPrimary}-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-${this.colorPrimary}-800 dark:text-white dark:border-${this.colorPrimary}-600 dark:hover:bg-${this.colorPrimary}-700 dark:hover:border-${this.colorPrimary}-600 dark:focus:ring-${this.colorPrimary}-700 transition-bg duration-500`,
+      btn2: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 focus:ring-4 focus:ring-neutral-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 dark:focus:ring-neutral-700 transition-bg duration-500`,
       btnSmall: `text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 transition-bg duration-500`,
       btnSimple: `text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-semibold rounded-lg text-sm px-3 py-2 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 transition-bg duration-500`,
-      table: `w-full text-sm text-left text-${this.colorPrimary}-500 dark:text-${this.colorPrimary}-400`,
-      thead: `bg-white dark:bg-${this.colorPrimary}-800 text-${this.colorPrimary}-700  dark:text-${this.colorPrimary}-400`,
-      th: `px-6 py-3 select-none text-xs text-${this.colorPrimary}-700 uppercase dark:text-${this.colorPrimary}-400`,
-      tr: `border-b border-${this.colorPrimary}-200 dark:border-${this.colorPrimary}-700`,
+      table: `w-full text-sm text-left text-neutral-500 dark:text-neutral-400`,
+      thead: `bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400`,
+      th: `px-6 py-3 select-none text-xs text-neutral-700 uppercase dark:text-neutral-400`,
+      tr: `border-b border-neutral-200 dark:border-neutral-700`,
       td: `px-6 py-3 select-none`,
       tdclick: `px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400`,
       trh: `text-md font-semibold`,
@@ -689,10 +689,10 @@ export class Tamnora {
       darkBlue: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
       darkRed: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
       darkGreen: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
-      darkNeutral: `bg-${this.colorPrimary}-700 text-white hover:bg-${this.colorPrimary}-800 focus:ring-${this.colorPrimary}-700`,
-      dark: `bg-${this.colorPrimary}-300 text-${this.colorPrimary}-800 hover:bg-${this.colorPrimary}-100 hover:text-${this.colorPrimary}-900 dark:bg-${this.colorPrimary}-800 dark:text-${this.colorPrimary}-100 hover:dark:bg-${this.colorPrimary}-700 hover:dark:text-white focus:ring-${this.colorPrimary}-700`,
+      darkNeutral: `bg-neutral-700 text-white hover:bg-neutral-800 focus:ring-neutral-700`,
+      dark: `bg-neutral-300 text-neutral-800 hover:bg-neutral-100 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 hover:dark:bg-neutral-700 hover:dark:text-white focus:ring-neutral-700`,
       navactive: `text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`,
-      inactive: `text-${this.colorPrimary}-600`,
+      inactive: `text-neutral-600`,
     };
     this.functions = {};
     this.templates = {};
@@ -2493,12 +2493,13 @@ export class Tamnora {
 }
 
 export class DataObject {
-  constructor(name = 'newform', fields = {}) {
+  constructor(name = 'newform', colorPrimary = 'neutral', fields = {}) {
     this.camposRegistro = {};
     this.formOptions = {};
     this.data = this.createReactiveProxy(fields.data);
     this.table = '';
-    this.colorPrimary = 'neutral';
+    this.formClass = {};
+    this.colorPrimary = colorPrimary;
     this.key = '';
     this.numberAlert = 0;
     this.resetOnSubmit = false;
@@ -2660,27 +2661,7 @@ export class DataObject {
       },
       reload: () => { }
     };
-    this.formClass = {
-      divPadre: `relative overflow-x-auto shadow-md sm:rounded-lg mb-5`,
-      header: `bg-white dark:bg-${this.colorPrimary}-800`,
-      title: `text-lg font-semibold text-left text-${this.colorPrimary}-900 dark:text-white`,
-      subtitle: `mt-1 text-sm font-normal text-gray-500 dark:text-gray-400`,
-      label: `block pl-1 text-sm font-medium text-${this.colorPrimary}-900 dark:text-${this.colorPrimary}-400`,
-      input: `bg-${this.colorPrimary}-50 border border-${this.colorPrimary}-300 text-${this.colorPrimary}-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-${this.colorPrimary}-700 dark:border-${this.colorPrimary}-700 dark:placeholder-${this.colorPrimary}-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
-      select: `bg-${this.colorPrimary}-50 border border-${this.colorPrimary}-300 text-${this.colorPrimary}-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-${this.colorPrimary}-700 dark:border-${this.colorPrimary}-700 dark:placeholder-${this.colorPrimary}-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
-      btn: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500`,
-      btnSmall: `text-${this.colorPrimary}-900 bg-white border border-${this.colorPrimary}-300 focus:outline-none hover:bg-${this.colorPrimary}-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-${this.colorPrimary}-800 dark:text-white dark:border-${this.colorPrimary}-600 dark:hover:bg-${this.colorPrimary}-700 dark:hover:border-${this.colorPrimary}-600 transition-bg duration-500`,
-      submit: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-blue-100 text-blue-900 hover:bg-blue-200 dark:bg-blue-500 dark:text-blue-100 dark:hover:bg-blue-600`,
-      delete: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-red-100 text-red-900 hover:bg-red-200 dark:bg-red-500 dark:text-red-100 dark:hover:bg-red-600`,
-      darkBlue: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
-      darkRed: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
-      darkGreen: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
-      darkNeutral: `bg-${this.colorPrimary}-700 text-white hover:bg-${this.colorPrimary}-800 focus:ring-${this.colorPrimary}-700`,
-      dark: `bg-${this.colorPrimary}-300 text-${this.colorPrimary}-800 hover:bg-${this.colorPrimary}-100 hover:text-${this.colorPrimary}-900 dark:bg-${this.colorPrimary}-800 dark:text-${this.colorPrimary}-100 hover:dark:bg-${this.colorPrimary}-700 hover:dark:text-white focus:ring-${this.colorPrimary}-700`,
-      navactive: `text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`,
-      inactive: `text-${this.colorPrimary}-600`,
-    };
-
+    
     if (Object.keys(fields).length > 0) {
       fields.forEach(field => {
         this.camposRegistro[field] = {
@@ -2702,6 +2683,35 @@ export class DataObject {
         };
       });
     }
+
+    this.autoClass();
+  }
+
+  setClass(obj){
+    this.formClass = obj;
+  }
+
+  autoClass(){
+    this.formClass = {
+      divPadre: `relative overflow-x-auto shadow-md sm:rounded-lg mb-5`,
+      header: `bg-white dark:bg-neutral-800`,
+      title: `text-lg font-semibold text-left text-neutral-900 dark:text-white`,
+      subtitle: `mt-1 text-sm font-normal text-gray-500 dark:text-gray-400`,
+      label: `block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400`,
+      input: `bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      select: `bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      btn: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500`,
+      btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500`,
+      submit: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-blue-100 text-blue-900 hover:bg-blue-200 dark:bg-blue-500 dark:text-blue-100 dark:hover:bg-blue-600`,
+      delete: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-red-100 text-red-900 hover:bg-red-200 dark:bg-red-500 dark:text-red-100 dark:hover:bg-red-600`,
+      darkBlue: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
+      darkRed: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
+      darkGreen: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
+      darkNeutral: `bg-neutral-700 text-white hover:bg-neutral-800 focus:ring-neutral-700`,
+      dark: `bg-neutral-300 text-neutral-800 hover:bg-neutral-100 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 hover:dark:bg-neutral-700 hover:dark:text-white focus:ring-neutral-700`,
+      navactive: `text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`,
+      inactive: `text-neutral-600`,
+    };
   }
 
   getFunction() {
@@ -3893,11 +3903,11 @@ export class DataObject {
     let nameForm = idElem;
 
     form += `<div class="${this.formClass.divPadre}">`;
-    form += `<div class=" bg-white dark:bg-${this.colorPrimary}-800">`;
+    form += `<div class=" bg-white dark:bg-neutral-800">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'
 
     if ("title" in data || "subtitle" in data || "buttons" in data) {
-      form += `<div class="flex flex-col md:flex-row  justify-between items-start p-5 border-b rounded-t dark:border-${this.colorPrimary}-600">`
+      form += `<div class="flex flex-col md:flex-row  justify-between items-start p-5 border-b rounded-t dark:border-neutral-600">`
       if ("title" in data || "subtitle" in data) {
         form += `<div class="flex flex-col mb-3">`;
         if ("title" in data) {
@@ -4054,7 +4064,7 @@ export class DataObject {
     form += `</div></div>`;
 
     if (data.submit || data.delete) {
-      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-${this.colorPrimary}-200 rounded-b dark:border-${this.colorPrimary}-600">`;
+      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">`;
 
       if (data.submit) {
         form += ` <button type="submit" class="${this.formClass.submit}">${data.submit}</button>`;
@@ -4100,15 +4110,15 @@ export class DataObject {
     
 
 
-    let form = `<div id="${nameModal}_mod" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-${this.colorPrimary}-900/50 dark:bg-${this.colorPrimary}-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center ">
+    let form = `<div id="${nameModal}_mod" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center ">
     <div class="relative w-full max-w-3xl max-h-full ">
-        <div class="relative bg-white rounded-lg shadow dark:bg-${this.colorPrimary}-800  dark:shadow-${this.colorPrimary}-300/50">`;
+        <div class="relative bg-white rounded-lg shadow dark:bg-neutral-800  dark:shadow-neutral-300/50">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3';
 
-    form += `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-${this.colorPrimary}-600">`
+    form += `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-neutral-600">`
     form += '<div class="flex flex-col ">';
     if (data.title) {
-      form += `<h3 class="text-lg font-semibold text-left text-${this.colorPrimary}-900  dark:text-white">${data.title}</h3>`;
+      form += `<h3 class="text-lg font-semibold text-left text-neutral-900  dark:text-white">${data.title}</h3>`;
     }
 
     if ("subtitle" in data) {
@@ -4120,7 +4130,7 @@ export class DataObject {
     form += '</div>'
 
 
-    form += `<button data-modal="closeModal,#${nameModal}" type="button" class="text-${this.colorPrimary}-400 bg-transparent hover:bg-${this.colorPrimary}-200 hover:text-${this.colorPrimary}-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-${this.colorPrimary}-600 dark:hover:text-white">
+    form += `<button data-modal="closeModal,#${nameModal}" type="button" class="text-neutral-400 bg-transparent hover:bg-neutral-200 hover:text-neutral-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-neutral-600 dark:hover:text-white">
     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
     </svg>
@@ -4258,7 +4268,7 @@ export class DataObject {
     form += `</div></div>`;
 
     if (data.submit || data.delete) {
-      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-${this.colorPrimary}-200 rounded-b dark:border-${this.colorPrimary}-600">`;
+      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">`;
 
       if (data.submit) {
         form += ` <button type="submit" class="${this.formClass.submit}">${data.submit}</button>`;
@@ -4444,19 +4454,19 @@ export class DataArray {
 
   autoClass(){
     this.tableClass = {
-      divPadre: `relative bg-white dark:bg-${this.colorPrimary}-800 sm:rounded-lg`,
+      divPadre: `relative bg-white dark:bg-neutral-800 sm:rounded-lg`,
       tableContainer: `overflow-x-auto shadow-md`,
-      table: `w-full text-sm text-left text-${this.colorPrimary}-500 dark:text-${this.colorPrimary}-400`,
-      header: `bg-white dark:bg-${this.colorPrimary}-800`,
-      title: `text-lg font-semibold text-left text-${this.colorPrimary}-900 dark:text-white`,
-      btnSmall: `text-${this.colorPrimary}-900 bg-white border border-${this.colorPrimary}-300 focus:outline-none hover:bg-${this.colorPrimary}-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-${this.colorPrimary}-800 dark:text-white dark:border-${this.colorPrimary}-600 dark:hover:bg-${this.colorPrimary}-700 dark:hover:border-${this.colorPrimary}-600 transition-bg duration-500`,
-      thead: `bg-white dark:bg-${this.colorPrimary}-800 text-${this.colorPrimary}-700 dark:text-${this.colorPrimary}-400 border-b border-${this.colorPrimary}-300 dark:border-${this.colorPrimary}-600`,
-      tfoot: `bg-white dark:bg-${this.colorPrimary}-800 text-${this.colorPrimary}-700  dark:text-${this.colorPrimary}-400`,
-      pagination: `mt-1 text-${this.colorPrimary}-700 py-3 dark:text-${this.colorPrimary}-400`,
-      paginationBtn: `bg-${this.colorPrimary}-100 text-${this.colorPrimary}-700 hover:bg-${this.colorPrimary}-200 dark:bg-${this.colorPrimary}-800 dark:border-${this.colorPrimary}-700 dark:text-${this.colorPrimary}-400 dark:hover:bg-${this.colorPrimary}-700 dark:hover:text-white`,
-      paginationBtnDisable: `bg-${this.colorPrimary}-100 text-${this.colorPrimary}-400  dark:bg-${this.colorPrimary}-800 dark:border-${this.colorPrimary}-700 dark:text-${this.colorPrimary}-600`,
-      th: `px-6 py-2 select-none text-xs text-${this.colorPrimary}-600 uppercase dark:text-${this.colorPrimary}-400 whitespace-nowrap`,
-      tr: `border-b border-${this.colorPrimary}-200 dark:border-${this.colorPrimary}-700`,
+      table: `w-full text-sm text-left text-neutral-500 dark:text-neutral-400`,
+      header: `bg-white dark:bg-neutral-800`,
+      title: `text-lg font-semibold text-left text-neutral-900 dark:text-white`,
+      btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500`,
+      thead: `bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600`,
+      tfoot: `bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400`,
+      pagination: `mt-1 text-neutral-700 py-3 dark:text-neutral-400`,
+      paginationBtn: `bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white`,
+      paginationBtnDisable: `bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600`,
+      th: `px-6 py-2 select-none text-xs text-neutral-600 uppercase dark:text-neutral-400 whitespace-nowrap`,
+      tr: `border-b border-neutral-200 dark:border-neutral-700`,
       td: `px-6 py-3 select-none whitespace-nowrap`,
       tdclick: `px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400`,
       trh: `text-md font-semibold whitespace-nowrap`,
@@ -5270,8 +5280,8 @@ export class DataArray {
 
       table += `<div class="flex flex-col items-center ${this.tableClass.pagination}">
 			<!-- Help text -->
-			<span class="text-sm text-${this.colorPrimary}-700 dark:text-${this.colorPrimary}-400">
-					Registro <span class="font-semibold text-${this.colorPrimary}-900 dark:text-white">${desde}</span> al <span class="font-semibold text-${this.colorPrimary}-900 dark:text-white">${hasta}</span> (total: <span class="font-semibold text-${this.colorPrimary}-900 dark:text-white">${count}</span> registros)
+			<span class="text-sm text-neutral-700 dark:text-neutral-400">
+					Registro <span class="font-semibold text-neutral-900 dark:text-white">${desde}</span> al <span class="font-semibold text-neutral-900 dark:text-white">${hasta}</span> (total: <span class="font-semibold text-neutral-900 dark:text-white">${count}</span> registros)
 			</span>
 			<div class="inline-flex mt-2 xs:mt-0">
 				<!-- Buttons -->
