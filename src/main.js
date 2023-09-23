@@ -98,6 +98,16 @@ async function verSimpleForm(){
   simpleForm.setData('status_cliente', 'type', 'select');
   simpleForm.setData('status_cliente', 'options', [{ value: 0, label: 'Inactivo' }, { value: 1, label: 'Activo' }]);
   simpleForm.setData('id_cliente','attribute', 'readonly')
+  simpleForm.setDataDefault('date_added', 'introDate', true)
+  simpleForm.setDataKeys('name', {
+    id_cliente: 'Cod.Cliente', 
+    nombre_cliente: 'Cliente', 
+    telefono_cliente: 'Teléfono', 
+    mail_cliente: 'Email',
+    direccion_cliente: 'Domicilio',
+    date_added: 'Ingreso',
+    status_cliente: 'Estado'
+  })
   
  
   
