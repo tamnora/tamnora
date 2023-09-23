@@ -1,4 +1,4 @@
-const SERVER = import.meta.env.VITE_SERVER_DEV;
+const SERVER = import.meta.env.VITE_SERVER_PROD;
 
 let informe = {primero: 'nada', segundo:'nada'};
 
@@ -2734,9 +2734,13 @@ export class DataObject {
     let ejecute = false;
     if (this.structure.length == 0 || reset == true) {
       ejecute = true;
+    } else {
+      return true
     }
 
     if (ejecute) {
+      let struc = await structure('t', table);
+      if(!struc[0].resp){
       this.table = table;
       this.key = key;
            
@@ -2744,7 +2748,6 @@ export class DataObject {
       const newObject = {};
       let groupType = {};
       let primaryKey = {};
-      let struc = await structure('t', table);
       const newStruc = []
       struc.forEach(data => {
         data.table = table;
@@ -2803,11 +2806,17 @@ export class DataObject {
     }
 
     this.defaultObjeto = newObject;
+    return true
+      } else {
+        console.error(struc[0].msgError)
+        return false
+      }
     }
   }
 
   async addStructure(table) {
     let struc = await structure('t', table);
+    if(!rstData[0].resp){
     const newStruc = []
     struc.forEach(data => {
       data.table = table;
@@ -2817,6 +2826,7 @@ export class DataObject {
     const conjuntoUnico = new Set(arrayCombinado.map(objeto => JSON.stringify(objeto)));
     this.structure = Array.from(conjuntoUnico).map(JSON.parse);
     console.log(this.structure)
+    }
   }
 
 
@@ -3229,18 +3239,23 @@ export class DataObject {
 
   async addObjectFromRunCode(sq, clean = false) {
     let rstData = await runCode(sq);
-    this.setValue(this.name, {});
+    
+    if(!rstData[0].resp){
+      this.setValue(this.name, {});
 
-    if(!rstData[0].Ninguno){
-      rstData.forEach(value => {
-        this.addObject(value,[], clean)
-      })
-  
-      this.forEachField((campo, dato) => {
-        this.setValueRoute(`${this.name}!${campo}`, dato.value);
-      })
+      if(!rstData[0].Ninguno){
+        rstData.forEach(value => {
+          this.addObject(value,[], clean)
+        })
+    
+        this.forEachField((campo, dato) => {
+          this.setValueRoute(`${this.name}!${campo}`, dato.value);
+        })
+      } else {
+          this.loadDefaultObject();
+      }
     } else {
-        this.loadDefaultObject();
+      console.error(rstData[0].msgError)
     }
 
    
@@ -3249,18 +3264,22 @@ export class DataObject {
 
   async addObjectFromDBSelect(sql, clean = false){
     let rstData = await dbSelect('s', sql)
-    this.setValue(this.name, {});
 
-    if(!rstData[0].Ninguno){
-      rstData.forEach(value => {
-        this.addObject(value,[], clean)
-      })
+    if(!rstData[0].resp){
+      this.setValue(this.name, {});
+  
+      if(!rstData[0].Ninguno){
+        rstData.forEach(value => {
+          this.addObject(value,[], clean)
+        })
+  
+        this.forEachField((campo, dato) => {
+          this.setValueRoute(`${this.name}!${campo}`, dato.value);
+        })
+      } else {
+        this.loadDefaultObject()
+      }
 
-      this.forEachField((campo, dato) => {
-        this.setValueRoute(`${this.name}!${campo}`, dato.value);
-      })
-    } else {
-      this.loadDefaultObject()
     }
  
   }
@@ -4498,14 +4517,17 @@ export class DataArray {
     let ejecute = false;
     if (this.structure.length == 0 || reset == true) {
       ejecute = true;
+    } else {
+      return true
     }
 
     if (ejecute) {
+      let struc = await structure('t', table);
+      if(!struc[0].resp){
       let defaultRow = {}
       const newObject = {};
       let groupType = {};
       let primaryKey = {};
-      let struc = await structure('t', table);
       const newStruc = []
       struc.forEach(data => {
         data.table = table;
@@ -4564,13 +4586,17 @@ export class DataArray {
     }
 
     this.defaultRow = newObject;
-     
-      
+     return true
+  } else {
+    console.error(struc[0].msgError)
+    return false
+  }
     }
   }
 
   async addStructure(table) {
     let struc = await structure('t', table);
+    if(!struc[0].resp){
     const newStruc = []
     struc.forEach(data => {
       data.table = table;
@@ -4580,6 +4606,11 @@ export class DataArray {
     const conjuntoUnico = new Set(arrayCombinado.map(objeto => JSON.stringify(objeto)));
     this.structure = Array.from(conjuntoUnico).map(JSON.parse);
     console.log('addStructure', this.structure)
+    return true
+  } else {
+    console.error(struc);
+    return false
+  }
     
   }
 
@@ -4824,6 +4855,7 @@ export class DataArray {
 
   async addObjectFromDBSelect(sql){
     let rstData = await dbSelect('s', sql)
+    if(!rstData[0].resp){
  
     if(!rstData[0].Ninguno){
       this.removeAll();
@@ -4834,11 +4866,14 @@ export class DataArray {
     } else {
         this.loadDefaultRow();
     }
+  } else {
+    console.error(rstData[0].msgError)
+  }
   }
 
   async addObjectFromRunCode(sq) {
     let rstData = await runCode(sq);
-    
+    if(!rstData[0].resp){
     if(!rstData[0].Ninguno){
       this.removeAll();
       this.setDefaultRow(rstData[0]);
@@ -4848,7 +4883,9 @@ export class DataArray {
     } else {
       this.loadDefaultRow();
     }
-
+  } else {
+    console.error(rstData[0].msgError)
+  }
   }
 
   // Método para detectar el tipo de dato basado en el valor

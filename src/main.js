@@ -16,15 +16,79 @@ tmn.setData('itab', 0);
 tmn.setData('id_cliente', 0)
 tmn.setData('nombre_cliente', '')
 
+tmn.select('#simpleform').html(`
+<div role="status" class="animate-pulse mt-4 mb-20">
+    <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
+    <div class="h-2.5 mx-auto bg-gray-300 rounded-full dark:bg-gray-700 max-w-[540px]"></div>
+    <div class="flex items-center justify-center mt-4">
+        <div class="w-20 h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 mr-3"></div>
+        <div class="w-24 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+    </div>
+    <span class="sr-only">Loading...</span>
+</div>
+`)
+
+tmn.select('#tabla').html(`
+
+<div role="status" class="w-full p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
+    <div class="flex items-center justify-between">
+        <div>
+            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+        </div>
+        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+    </div>
+    <div class="flex items-center justify-between pt-4">
+        <div>
+            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+        </div>
+        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+    </div>
+    <div class="flex items-center justify-between pt-4">
+        <div>
+            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+        </div>
+        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+    </div>
+    <div class="flex items-center justify-between pt-4">
+        <div>
+            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+        </div>
+        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+    </div>
+    <div class="flex items-center justify-between pt-4">
+        <div>
+            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
+            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
+        </div>
+        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
+    </div>
+    <span class="sr-only">Loading...</span>
+</div>
+
+`)
+
 
 
 async function cargarClientes() {
   const strClientes = await runCode('-sl id_cliente, nombre_cliente -fr clientes -wr tipo = 0 -ob nombre_cliente');
-  tmn.setData('dataClientes', strClientes)
+  if(!strClientes.resp){
+    tmn.setData('dataClientes', strClientes)
+  } else {
+    console.error(strClientes.msgError)
+  }
 }
 
 async function verSimpleForm(){
-  await simpleForm.setStructure('movimientos', 'id');
+  let conex = await simpleForm.setStructure('movimientos', 'id');
+  console.log('hay conexion', conex)
+  if(!conex){
+    tmn.select('#simpleform').html('<h4 class="text-red-500 dark:text-red-500 text-center">No hay conexión a la base de datos!</h4>')
+    return
+  }
   await simpleForm.addObjectFromRunCode(`-st movimientos -lt 1`, true);
 
   const optionsClientes = [];
@@ -57,7 +121,12 @@ async function verSimpleForm(){
 
 async function verSaldosAcumulados() {
   let cant = tmn.getData('cant') || 5;
-  await dataTabla.setStructure('movimientos');
+  let conex = await dataTabla.setStructure('movimientos');
+  console.log('hay conexion', conex)
+  if(!conex){
+    tmn.select('#tabla').html('<h4 class="text-red-500 dark:text-red-500 text-center">No hay conexión a la base de datos!</h4>');
+    return 
+  }
   await dataTabla.addObjectFromDBSelect(`CALL saldos_acumulados(${tmn.getData('id_cliente')}, ${cant})`);
 
   
@@ -153,7 +222,9 @@ async function verSaldosAcumulados() {
 }
 
 async function crearModalForm(){
-  await formModal.setStructure('movimientos', 'id');
+  let conex = await formModal.setStructure('movimientos', 'id');
+  console.log('hay conexion', conex)
+  if(!conex) return
   await formModal.addObjectFromRunCode(`-st movimientos -lt 1`, true);
 
   const optionsClientes = [];
