@@ -2501,6 +2501,8 @@ export class DataObject {
     this.formClass = {};
     this.colorPrimary = colorPrimary;
     this.key = '';
+    this.orderColumns = [];
+    this.camposOrden = {}
     this.numberAlert = 0;
     this.resetOnSubmit = false;
     this.structure = [];
@@ -2960,6 +2962,34 @@ export class DataObject {
 
   getDataAll() {
     return this.camposRegistro;
+  }
+
+  reordenarClaves(objeto, orden) {
+    const resultado = {};
+    orden.forEach((clave) => {
+      if (objeto.hasOwnProperty(clave)) {
+        resultado[clave] = objeto[clave];
+      } else {
+        resultado[clave] = {
+          "type": 'text',
+          "name": clave,
+          "required": false,
+          "placeholder": "",
+          "value": ' - ',
+          "column": 0,
+          "attribute": 0,
+          "hidden": false,
+          "pattern": '',
+          "defaultValue": "...",
+          "elegirOpcion": false,
+          "key": "",
+          "introDate": false,
+          "setDate": 0,
+          "options": []
+        };
+      }
+    });
+    return resultado;
   }
 
   // Nuevo método para recorrer y aplicar una función a cada campo
@@ -3911,6 +3941,11 @@ export class DataObject {
     let element;
     let form = '';
     const idElem = this.name;
+    
+
+    if(this.orderColumns.length > 0){
+      this.camposRegistro = this.reordenarClaves(this.camposRegistro, this.orderColumns)
+    }
 
     if (!this.formElement) {
       element = document.querySelector(`#${idElem}`);
@@ -4109,6 +4144,10 @@ export class DataObject {
   createFormModal(data = {}) {
     let element;
     const idElem = this.name;
+
+    if(this.orderColumns.length > 0){
+      this.camposRegistro = this.reordenarClaves(this.camposRegistro, this.orderColumns)
+    }
 
     if (!this.formElement) {
       element = document.querySelector(`#${idElem}`);

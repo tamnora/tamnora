@@ -83,37 +83,33 @@ async function cargarClientes() {
 }
 
 async function verSimpleForm(){
-  let conex = await simpleForm.setStructure('movimientos', 'id');
+  let conex = await simpleForm.setStructure('clientes', 'id_cliente');
   console.log('hay conexion', conex)
   if(!conex){
     tmn.select('#simpleform').html('<h4 class="text-red-500 dark:text-red-500 text-center">No hay conexión a la base de datos!</h4>')
     return
   }
-  await simpleForm.addObjectFromRunCode(`-st movimientos -lt 1`, true);
+  await simpleForm.addObjectFromRunCode(`-st clientes -wr id_cliente = ${tmn.getData('id_cliente')}`);
 
-  const optionsClientes = [];
-  tmn.getData('dataClientes').forEach(cliente => {
-    optionsClientes.push({ value: cliente.id_cliente, label: cliente.nombre_cliente })
-  })
-
-  simpleForm.setData('tipo_oper', 'type', 'select');
-  simpleForm.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
-  simpleForm.setData('tipo_oper', 'elegirOpcion', true);
-  simpleForm.setData('id_cliente', 'name', 'cliente' );
-  simpleForm.setData('id_cliente', 'type', 'select');
-  simpleForm.setData('id_cliente', 'value', tmn.getData('id_cliente'));
-  simpleForm.setData('id_cliente', 'options', optionsClientes);
   
-  simpleForm.setData('fechahora', 'introDate', true);
-  simpleForm.setDataKeys('required', {id_cliente: true, importe: true, fechahora: true})
-  simpleForm.setFunction('reload', verSaldosAcumulados);
-  simpleForm.resetOnSubmit = true;
-
+  simpleForm.orderColumns = ['id_cliente', 'nombre_cliente', 'telefono_cliente', 'mail_cliente', 'direccion_cliente', 'tipo', 'date_added', 'status_cliente'];
+  simpleForm.setData('tipo', 'type', 'select');
+  simpleForm.setData('tipo', 'options', [{ value: 0, label: 'Cliente' }, { value: 1, label: 'Proveedor' }]);
+  simpleForm.setData('status_cliente', 'type', 'select');
+  simpleForm.setData('status_cliente', 'options', [{ value: 0, label: 'Inactivo' }, { value: 1, label: 'Activo' }]);
+  simpleForm.setData('id_cliente','attribute', 'readonly')
+  
+ 
   
   const options = {
-    title: 'Nuevo Movimiento',
-    submit: 'Crear'
+    title: 'Datos del Cliente',
+    subtitle: `No se ha seleccionado ningún Cliente`,
+    submit: 'Guardar'
   }
+
+  if(tmn.getData('id_cliente') > 0){
+    options.subtitle = `${tmn.getData('nombre_cliente')} (Cod. Cliente: ${tmn.getData('id_cliente')})`
+  } 
  
  
   simpleForm.createForm(options);
