@@ -65,7 +65,7 @@ async function verSaldosAcumulados() {
   dataTabla.widthColumns = ['w-10', 'w-10', 'w-10', 'w-20', 'w-20', 'w-35'];
   dataTabla.setDataKeys('attribute', { importe: 'currency', saldo: 'pesos' })
   dataTabla.setDataKeys('name', { id_factura: 'Remito' })
-  console.log(dataTabla.getDataAll())
+  
   
   let buttons = `
     <div class="inline-flex rounded-md shadow-sm" role="group">
@@ -191,7 +191,7 @@ tmn.setFunction('papitaResult', (data)=>{
   console.log(data)
 })
 
-tmn.createSearchInput('papita', 'clientes', 'id_cliente', 'nombre_cliente');
+tmn.createSearchInput('papita', 'clientes', 'id_cliente', 'nombre_cliente', 'Cod.Cli:', 'Cliente:');
 
 cargarClientes();
 verSaldosAcumulados();

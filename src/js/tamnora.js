@@ -970,7 +970,7 @@ export class Tamnora {
     const records = await runCode(sqlt);
     this.setData(data, records)
     this.setData(nameIdElement, {id: 0, name:''})
-    console.log(nameIdElement);
+    
 
     let salidaHTML = `
         <div class="relative flex items-center mb-3 w-full text-sm text-neutral-900 bg-neutral-50  rounded-lg  border border-neutral-300  dark:bg-neutral-700   dark:border-neutral-600  dark:text-white">
@@ -4953,8 +4953,7 @@ export class DataArray {
 
     }
 
-  console.log(this.widthTable)
-
+  
     
     table += `<div class="${this.tableClass.divPadre} ${this.widthPadre}">`;
     
