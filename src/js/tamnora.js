@@ -973,18 +973,20 @@ export class Tamnora {
     
 
     let salidaHTML = `
-        <div class="relative flex items-center mb-3 w-full text-sm text-neutral-900 bg-neutral-50  rounded-lg  border border-neutral-300  dark:bg-neutral-700   dark:border-neutral-600  dark:text-white">
-          <div id="${containerSearchName}" class="flex items-center p-2.5 w-full z-20 ">
-            <span class="text-neutral-700 dark:text-neutral-400 border-none outline-none mr-2">${titleName}</span>
-            <span id="${searchName}"  class="font-medium text-neutral-900  dark:text-white border-none outline-none" contenteditable="true"></span>
-            <span id="${sugerencia}" class=" text-blue-400  dark:text-blue-500 "></span>
+        <div class="relative flex flex-col md:flex-row  mb-3 w-full text-sm text-neutral-900 bg-neutral-100  rounded-lg  border border-neutral-300  dark:bg-neutral-800   dark:border-neutral-600  dark:text-white transition-bg duration-500 antialiased">
+          <div id="${containerSearchName}" class="flex grow p-2.5  z-20 justify-start border-b dark:border-neutral-500 md:border-none">
+            <span class="text-neutral-800 dark:text-neutral-400 border-none outline-none mr-2">${titleName}</span>
+            <span id="${searchName}"  class="font-semibold text-blue-700  dark:text-blue-200 border-none outline-none" contenteditable="true"></span>
+            <span id="${sugerencia}" class=" text-neutral-400  dark:text-neutral-500 "></span>
             <span id="${error}" class="ml-2 text-red-400 font-bold dark:text-red-400 "></span>
             <span id="${cant}" class="ml-2 text-neutral-400  dark:text-neutral-500 "></span>
           </div>
-          <div class="block p-2.5 w-fit z-20 text-sm text-right text-neutral-900 bg-neutral-100 focus:outline-none  border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-800 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500">
-            <span class="text-neutral-700 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 border-none outline-none">${titleId}</span>
+          <div class="flex">
+            <div class="block p-2.5 w-fit z-20 text-sm text-right text-neutral-900  focus:outline-none  border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500">
+              <span class="text-neutral-700 dark:text-neutral-400  border-none outline-none">${titleId}</span>
+            </div>
+            <input type="search" id="${searchInput}"  class="block p-2.5 w-20 max-w-fit z-20 text-sm text-left font-semibold text-blue-700  focus:outline-none rounded-r-lg bg-neutral-100 dark:bg-neutral-800 border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-blue-200 dark:focus:border-blue-500" placeholder="..." >
           </div>
-          <input type="search" id="${searchInput}"  class="block p-2.5 w-20 max-w-fit z-20 text-sm text-left text-neutral-900 bg-neutral-100 focus:outline-none rounded-r-lg  border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-neutral-800 dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500" placeholder="..." >
         </div>
     `;
 
@@ -2696,8 +2698,8 @@ export class DataObject {
 
   autoClass(){
     this.formClass = {
-      divPadre: `relative overflow-x-auto shadow-md sm:rounded-lg mb-5`,
-      header: `bg-white dark:bg-neutral-800`,
+      divPadre: `relative bg-neutral-100 dark:bg-neutral-800 overflow-x-auto shadow-md sm:rounded-lg mb-5 transition-bg duration-500 antialiased`,
+      header: `bg-transparent`,
       title: `text-lg font-semibold text-left text-neutral-900 dark:text-white`,
       subtitle: `mt-1 text-sm font-normal text-gray-500 dark:text-gray-400`,
       label: `block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400`,
@@ -3946,7 +3948,7 @@ export class DataObject {
     let nameForm = idElem;
 
     form += `<div class="${this.formClass.divPadre}">`;
-    form += `<div class=" bg-white dark:bg-neutral-800">`;
+    form += `<div class="bg-transparent">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'
 
     if ("title" in data || "subtitle" in data || "buttons" in data) {
@@ -4159,7 +4161,7 @@ export class DataObject {
 
     let form = `<div id="${nameModal}_mod" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center ">
     <div class="relative w-full max-w-3xl max-h-full ">
-        <div class="relative bg-white rounded-lg shadow dark:bg-neutral-800  dark:shadow-neutral-300/50">`;
+        <div class="relative bg-neutral-100 dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-300/50 transition-bg duration-500 antialiased">`;
     let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3';
 
     form += `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-neutral-600">`
@@ -4501,14 +4503,14 @@ export class DataArray {
 
   autoClass(){
     this.tableClass = {
-      divPadre: `relative bg-white dark:bg-neutral-800 sm:rounded-lg`,
+      divPadre: `relative bg-neutral-100 dark:bg-neutral-800 rounded-lg overflow-hiden transition-bg duration-500 antialiased`,
       tableContainer: `overflow-x-auto shadow-md`,
       table: `w-full text-sm text-left text-neutral-500 dark:text-neutral-400`,
-      header: `bg-white dark:bg-neutral-800`,
+      header: `bg-transparent dark:bg-neutral-800`,
       title: `text-lg font-semibold text-left text-neutral-900 dark:text-white`,
       btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500`,
-      thead: `bg-white dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600`,
-      tfoot: `bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400`,
+      thead: `bg-transparent dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600`,
+      tfoot: `bg-transparent dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400`,
       pagination: `mt-1 text-neutral-700 py-3 dark:text-neutral-400`,
       paginationBtn: `bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white`,
       paginationBtnDisable: `bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600`,
