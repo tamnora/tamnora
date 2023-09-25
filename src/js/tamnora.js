@@ -973,10 +973,10 @@ export class Tamnora {
     
 
     let salidaHTML = `
-        <div class="relative flex flex-col md:flex-row  mb-3 w-full text-sm text-neutral-900 bg-neutral-100  rounded-lg  border border-neutral-300  dark:bg-neutral-800   dark:border-neutral-600  dark:text-white transition-bg duration-500 antialiased">
+        <div class="relative flex flex-col md:flex-row  mb-3 w-full text-sm text-neutral-900 bg-neutral-100  rounded-lg  border border-neutral-300  dark:bg-neutral-800   dark:border-neutral-800  dark:text-white transition-bg duration-500 antialiased">
           <div id="${containerSearchName}" class="flex grow p-2.5  z-20 justify-start border-b dark:border-neutral-500 md:border-none">
             <span class="text-neutral-800 dark:text-neutral-400 border-none outline-none mr-2">${titleName}</span>
-            <span id="${searchName}"  class="font-semibold text-blue-700  dark:text-blue-200 border-none outline-none" contenteditable="true"></span>
+            <span id="${searchName}"  class="font-semibold text-blue-700  dark:text-blue-500 border-none outline-none" contenteditable="true"></span>
             <span id="${sugerencia}" class=" text-neutral-400  dark:text-neutral-500 "></span>
             <span id="${error}" class="ml-2 text-red-400 font-bold dark:text-red-400 "></span>
             <span id="${cant}" class="ml-2 text-neutral-400  dark:text-neutral-500 "></span>
@@ -985,7 +985,7 @@ export class Tamnora {
             <div class="block p-2.5 w-fit z-20 text-sm text-right text-neutral-900  focus:outline-none  border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500">
               <span class="text-neutral-700 dark:text-neutral-400  border-none outline-none">${titleId}</span>
             </div>
-            <input type="search" id="${searchInput}"  class="block p-2.5 w-20 max-w-fit z-20 text-sm text-left font-semibold text-blue-700  focus:outline-none rounded-r-lg bg-neutral-100 dark:bg-neutral-800 border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-blue-200 dark:focus:border-blue-500" placeholder="..." >
+            <input type="search" id="${searchInput}"  class="block p-2.5 w-20 max-w-fit z-20 text-sm text-left font-semibold text-blue-700  focus:outline-none rounded-r-lg bg-neutral-100 dark:bg-neutral-800 border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-blue-500 dark:focus:border-blue-500" placeholder="..." >
           </div>
         </div>
     `;
@@ -2707,8 +2707,8 @@ export class DataObject {
       select: `bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
       btn: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500`,
       btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500`,
-      submit: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-blue-100 text-blue-900 hover:bg-blue-200 dark:bg-blue-500 dark:text-blue-100 dark:hover:bg-blue-600`,
-      delete: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-red-100 text-red-900 hover:bg-red-200 dark:bg-red-500 dark:text-red-100 dark:hover:bg-red-600`,
+      submit: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-blue-500 text-blue-100 hover:bg-blue-200 dark:bg-blue-600 dark:text-blue-100 dark:hover:bg-blue-700`,
+      delete: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-red-500 text-red-100 hover:bg-red-200 dark:bg-red-600 dark:text-red-100 dark:hover:bg-red-700`,
       darkBlue: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
       darkRed: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
       darkGreen: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
@@ -4503,7 +4503,7 @@ export class DataArray {
 
   autoClass(){
     this.tableClass = {
-      divPadre: `relative bg-neutral-100 dark:bg-neutral-800 rounded-lg overflow-hiden transition-bg duration-500 antialiased`,
+      divPadre: `relative bg-neutral-100 dark:bg-neutral-800 rounded-lg overflow-hiden dark:rounded-lg transition-bg duration-500 antialiased`,
       tableContainer: `overflow-x-auto shadow-md`,
       table: `w-full text-sm text-left text-neutral-500 dark:text-neutral-400`,
       header: `bg-transparent dark:bg-neutral-800`,

@@ -103,7 +103,7 @@ async function verSimpleForm(){
     id_cliente: 'Cod.Cliente', 
     nombre_cliente: 'Cliente', 
     telefono_cliente: 'Teléfono', 
-    mail_cliente: 'Email',
+    email_cliente: 'Email',
     direccion_cliente: 'Dirección',
     date_added: 'Ingreso',
     status_cliente: 'Estado'
