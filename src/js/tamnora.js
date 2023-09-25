@@ -2495,13 +2495,11 @@ export class Tamnora {
 }
 
 export class DataObject {
-  constructor(name = 'newform', colorPrimary = 'neutral', fields = {}) {
+  constructor(name = 'newform', fields = {}) {
     this.camposRegistro = {};
     this.formOptions = {};
     this.data = this.createReactiveProxy(fields.data);
     this.table = '';
-    this.formClass = {};
-    this.colorPrimary = colorPrimary;
     this.key = '';
     this.orderColumns = [];
     this.camposOrden = {}
@@ -2512,6 +2510,33 @@ export class DataObject {
     this.modalName = '';
     this.name = name;
     this.defaultObjeto = {};
+    this.formClass = {
+      divModal: `fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center `,
+      divPadre: `relative bg-neutral-100 dark:bg-neutral-800 overflow-x-auto shadow-md sm:rounded-lg mb-5 transition-bg duration-500 antialiased`,
+      modalContainer: `relative w-full max-w-3xl max-h-full`,
+      header: `flex flex-col md:flex-row  justify-between items-start p-5 border-b rounded-t dark:border-neutral-600`,
+      grid: `grid grid-cols-12 gap-4 p-6`,
+      gridColumns: `col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3`,
+      titleContainer: `flex flex-col mb-3`,
+      title: `text-lg font-semibold text-left text-neutral-900 dark:text-white`,
+      subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400`,
+      label: `block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400`,
+      input: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      select: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      headerColumn: `bg-transparent`,
+      btn: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500`,
+      btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500`,
+      containerButtons: `flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600`,
+      submit: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-blue-500 text-blue-100 hover:bg-blue-200 dark:bg-blue-600 dark:text-blue-100 dark:hover:bg-blue-700`,
+      delete: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-red-500 text-red-100 hover:bg-red-200 dark:bg-red-600 dark:text-red-100 dark:hover:bg-red-700`,
+      darkBlue: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
+      darkRed: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
+      darkGreen: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
+      darkNeutral: `bg-neutral-700 text-white hover:bg-neutral-800 focus:ring-neutral-700`,
+      dark: `bg-neutral-300 text-neutral-800 hover:bg-neutral-100 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 hover:dark:bg-neutral-700 hover:dark:text-white focus:ring-neutral-700`,
+      navactive: `text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`,
+      inactive: `text-neutral-600`,
+    };
     this.functions = {
       closeModal: () => {
         const btnDelete = this.formElement.querySelector('[data-formclick="delete"]');
@@ -2689,34 +2714,34 @@ export class DataObject {
       });
     }
 
-    this.autoClass();
   }
 
   setClass(obj){
     this.formClass = obj;
   }
 
-  autoClass(){
-    this.formClass = {
-      divPadre: `relative bg-neutral-100 dark:bg-neutral-800 overflow-x-auto shadow-md sm:rounded-lg mb-5 transition-bg duration-500 antialiased`,
-      header: `bg-transparent`,
-      title: `text-lg font-semibold text-left text-neutral-900 dark:text-white`,
-      subtitle: `mt-1 text-sm font-normal text-gray-500 dark:text-gray-400`,
-      label: `block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400`,
-      input: `bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
-      select: `bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
-      btn: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500`,
-      btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500`,
-      submit: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-blue-500 text-blue-100 hover:bg-blue-200 dark:bg-blue-600 dark:text-blue-100 dark:hover:bg-blue-700`,
-      delete: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-red-500 text-red-100 hover:bg-red-200 dark:bg-red-600 dark:text-red-100 dark:hover:bg-red-700`,
-      darkBlue: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
-      darkRed: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
-      darkGreen: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
-      darkNeutral: `bg-neutral-700 text-white hover:bg-neutral-800 focus:ring-neutral-700`,
-      dark: `bg-neutral-300 text-neutral-800 hover:bg-neutral-100 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 hover:dark:bg-neutral-700 hover:dark:text-white focus:ring-neutral-700`,
-      navactive: `text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`,
-      inactive: `text-neutral-600`,
-    };
+  getClass(){
+    return this.formClass;
+  }
+
+  setClassItem(item, str){
+    this.formClass[item] = str;
+  }
+
+  getClassItem(item){
+    return this.formClass[item];
+  }
+
+  changeColorClass(color){
+    Object.keys(this.formClass).forEach((tipo) => {
+      let inClass = this.formClass[tipo];
+      let outClass = inClass.replaceAll('neutral', color)
+      this.formClass[tipo] = outClass;
+    })
+  }
+
+  itemClassAdd(item, newClass){
+    this.formClass[item] += ` ${newClass}`
   }
 
   getFunction() {
@@ -3938,6 +3963,7 @@ export class DataObject {
       this.camposRegistro = this.reordenarClaves(this.camposRegistro, this.orderColumns)
     }
 
+
     if (!this.formElement) {
       element = document.querySelector(`#${idElem}`);
       this.formElement = element;
@@ -3947,14 +3973,18 @@ export class DataObject {
     this.formOptions = data;
     let nameForm = idElem;
 
+    if(data.colorForm){
+      this.changeColorClass(data.colorForm);
+    }
+
     form += `<div class="${this.formClass.divPadre}">`;
-    form += `<div class="bg-transparent">`;
-    let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3'
+    
+    let columns = this.formClass.gridColumns;
 
     if ("title" in data || "subtitle" in data || "buttons" in data) {
-      form += `<div class="flex flex-col md:flex-row  justify-between items-start p-5 border-b rounded-t dark:border-neutral-600">`
+      form += `<div class="${this.formClass.header}">`
       if ("title" in data || "subtitle" in data) {
-        form += `<div class="flex flex-col mb-3">`;
+        form += `<div class="${this.formClass.titleContainer}">`;
         if ("title" in data) {
           form += `<h3 class="${this.formClass.title}">${data.title}</h3>`;
         }
@@ -3971,7 +4001,7 @@ export class DataObject {
 
     }
 
-    form += '<form data-action="submit"><div class="p-6">'
+    form += '<form data-action="submit">'
 
 
     if ("columns" in data) {
@@ -3982,7 +4012,7 @@ export class DataObject {
     }
 
 
-    form += '<div class="grid grid-cols-12 gap-4">';
+    form += `<div class="${this.formClass.grid}">`;
     this.forEachField((campo, dato) => {
       let fieldElement = '';
       let dataValue = '';
@@ -4106,10 +4136,10 @@ export class DataObject {
       form += fieldElement;
     });
 
-    form += `</div></div>`;
+    form += `</div>`;
 
     if (data.submit || data.delete) {
-      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">`;
+      form += `<div class="${this.formClass.containerButtons}">`;
 
       if (data.submit) {
         form += ` <button type="submit" class="${this.formClass.submit}">${data.submit}</button>`;
@@ -4121,7 +4151,7 @@ export class DataObject {
 
       form += `</div>`;
     }
-    form += '</form></div>'
+    form += '</form>'
 
     element.innerHTML = form;
     this.bindSubmitEvents(element);
@@ -4159,19 +4189,19 @@ export class DataObject {
     
 
 
-    let form = `<div id="${nameModal}_mod" tabindex="-1" aria-hidden="true" class="fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center ">
-    <div class="relative w-full max-w-3xl max-h-full ">
-        <div class="relative bg-neutral-100 dark:bg-neutral-800 rounded-lg shadow dark:shadow-neutral-300/50 transition-bg duration-500 antialiased">`;
-    let columns = 'col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3';
+    let form = `<div id="${nameModal}_mod" tabindex="-1" aria-hidden="true" class="${this.formClass.divModal}">
+    <div name="cont" class="${this.formClass.modalContainer}">
+        <div name="padre" class="${this.formClass.divPadre}">`;
+    let columns = this.formClass.gridColumns;
 
-    form += `<div class="flex items-start justify-between p-5 border-b rounded-t dark:border-neutral-600">`
-    form += '<div class="flex flex-col ">';
+    form += `<div class="${this.formClass.header}">`
+    form += `<div class="${this.formClass.titleContainer}">`;
     if (data.title) {
-      form += `<h3 class="text-lg font-semibold text-left text-neutral-900  dark:text-white">${data.title}</h3>`;
+      form += `<h3 class="${this.formClass.title}">${data.title}</h3>`;
     }
 
     if ("subtitle" in data) {
-      form += `<p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">${data.subtitle}</p>`;
+      form += `<p class="${this.formClass.subtitle}">${data.subtitle}</p>`;
     }
     if ("buttons" in data) {
       form += `<div>${data.buttons}</div>`;
@@ -4186,7 +4216,7 @@ export class DataObject {
     <span class="sr-only">Close modal</span>
 </button>`
 
-    form += `</div><form data-action="submit" data-inmodal="${nameModal}"><div class="p-6">`;
+    form += `</div><form data-action="submit" data-inmodal="${nameModal}">`;
 
 
     if ("columns" in data) {
@@ -4197,7 +4227,7 @@ export class DataObject {
     }
 
 
-    form += '<div class="grid grid-cols-12 gap-4">';
+    form += `<div class="${this.formClass.grid}">`;
     this.forEachField((campo, dato) => {
       let fieldElement = '';
       let dataValue = '';
@@ -4314,7 +4344,7 @@ export class DataObject {
       form += fieldElement;
     });
 
-    form += `</div></div>`;
+    form += `</div>`;
 
     if (data.submit || data.delete) {
       form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">`;
@@ -4454,14 +4484,13 @@ export class DataObject {
 }
 
 export class DataArray {
-  constructor(name, colorPrimary = 'neutral', initial={fields: [], initialData : []}) {
+  constructor(name, initial={fields: [], initialData : []}) {
     this.from = 1;
     this.recordsPerView = 10;
     this.paginations = true;
     this.name = name || 'newTable';
     this.tableOptions = {};
     this.tableElement = '';
-    this.colorPrimary = colorPrimary;
     this.functions = {};
     this.structure = [];
     this.orderColumns = [];
@@ -4470,7 +4499,6 @@ export class DataArray {
     this.widthPadre = 'w-full';
     this.arrayOrder = [];
     this.defaultRow = {};
-    this.tableClass = {};
     this.dataArray = initial.initialData.map(item => {
       const newItem = {};
       initial.fields.forEach(field => {
@@ -4494,14 +4522,6 @@ export class DataArray {
       return newItem;
     });
 
-    this.autoClass();
-  }
-
-  setClass(obj){
-    this.tableClass = obj;
-  }
-
-  autoClass(){
     this.tableClass = {
       divPadre: `relative bg-neutral-100 dark:bg-neutral-800 rounded-lg overflow-hiden dark:rounded-lg transition-bg duration-500 antialiased`,
       tableContainer: `overflow-x-auto shadow-md`,
@@ -4523,6 +4543,21 @@ export class DataArray {
       tdh: `px-6 py-2 select-none whitespace-nowrap`,
       tdnumber: `px-6 py-4 text-right`,
     };
+
+   
+  }
+
+  setClass(obj){
+    this.tableClass = obj;
+  }
+
+  changeColorClass(color){
+    Object.keys(this.tableClass).forEach((tipo) => {
+      let inClass = this.tableClass[tipo];
+      let outClass = inClass.replaceAll('neutral', color)
+      this.tableClass[tipo] = outClass;
+    })
+
   }
 
   setData(index, fieldName, key, value) {
@@ -5019,6 +5054,10 @@ export class DataArray {
     let hayMas = false;
     let hayMenos = false;
     let arrayTable = 'dataArray'
+
+    if(options.colorTable){
+      this.changeColorClass(options.colorTable);
+    }
 
    
 
