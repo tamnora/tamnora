@@ -89,10 +89,11 @@ async function verSimpleForm(){
     tmn.select('#simpleform').html('<h4 class="text-red-500 dark:text-red-500 text-center">No hay conexión a la base de datos!</h4>')
     return
   }
+  
+
   await simpleForm.addObjectFromRunCode(`-st clientes -wr id_cliente = ${tmn.getData('id_cliente')}`);
 
-  simpleForm.changeColorClass('zinc');
-  simpleForm.itemClassAdd('input', 'font-semibold')
+ 
   simpleForm.orderColumns = ['id_cliente', 'nombre_cliente', 'telefono_cliente', 'email_cliente', 'direccion_cliente', 'tipo', 'date_added', 'status_cliente'];
   simpleForm.setData('tipo', 'type', 'select');
   simpleForm.setData('tipo', 'options', [{ value: 0, label: 'Cliente' }, { value: 1, label: 'Proveedor' }]);
@@ -137,7 +138,6 @@ async function verSaldosAcumulados() {
   }
   await dataTabla.addObjectFromDBSelect(`CALL saldos_acumulados(${tmn.getData('id_cliente')}, ${cant})`);
 
-  dataTabla.changeColorClass('zinc');
   dataTabla.orderColumns = ['tipo_oper', 'id', 'fechahora', 'id_factura', 'importe', 'saldo'];
   dataTabla.widthColumns = ['w-10', 'w-10', 'w-10', 'w-20', 'w-20', 'w-35'];
   dataTabla.setDataKeys('attribute', { importe: 'currency', saldo: 'pesos' })
@@ -194,10 +194,7 @@ async function verSaldosAcumulados() {
       }
     },
     row: {
-      class: {
-        normal: 'bg-neutral-50 dark:bg-neutral-700',
-        alternative: 'bg-neutral-100 dark:bg-neutral-800'
-      },
+      class: 'alternative',
       click: {
         function: 'showMovi',
         field: 'id'
@@ -267,7 +264,7 @@ tmn.setFunction('papitaResult', (data)=>{
   cargarClientes();
   verSaldosAcumulados();
   verSimpleForm();
-  console.log(data)
+
 })
 
 tmn.createSearchInput('papita', 'clientes', 'id_cliente', 'nombre_cliente', 'Cod.Cli:', 'Cliente:');
@@ -276,6 +273,7 @@ cargarClientes();
 verSaldosAcumulados();
 verSimpleForm();
 crearModalForm();
+
 
 
 tmn.onMount(() => {

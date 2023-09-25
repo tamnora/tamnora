@@ -406,261 +406,6 @@ export async function runCode(input) {
 
 }
 
-export function colorList(){
-  const colors = `
-  <div class="grid grid-cols-5">
-      <span class='bg-inherit text-inherit'> inherit</span>
-<span class='bg-current text-current'> current</span>
-<span class='bg-transparent text-transparent'> transparent</span>
-<span class='bg-black text-black'> black</span>
-<span class='bg-white text-white'> white</span>
-<span class='bg-slate-50 text-slate-50'> slate-50</span>
-<span class='bg-slate-100 text-slate-100'> slate-100</span>
-<span class='bg-slate-200 text-slate-200'> slate-200</span>
-<span class='bg-slate-300 text-slate-300'> slate-300</span>
-<span class='bg-slate-400 text-slate-400'> slate-400</span>
-<span class='bg-slate-500 text-slate-500'> slate-500</span>
-<span class='bg-slate-600 text-slate-600'> slate-600</span>
-<span class='bg-slate-700 text-slate-700'> slate-700</span>
-<span class='bg-slate-800 text-slate-800'> slate-800</span>
-<span class='bg-slate-900 text-slate-900'> slate-900</span>
-<span class='bg-slate-950 text-slate-950'> slate-950</span>
-<span class='bg-gray-50 text-gray-50'> gray-50</span>
-<span class='bg-gray-100 text-gray-100'> gray-100</span>
-<span class='bg-gray-200 text-gray-200'> gray-200</span>
-<span class='bg-gray-300 text-gray-300'> gray-300</span>
-<span class='bg-gray-400 text-gray-400'> gray-400</span>
-<span class='bg-gray-500 text-gray-500'> gray-500</span>
-<span class='bg-gray-600 text-gray-600'> gray-600</span>
-<span class='bg-gray-700 text-gray-700'> gray-700</span>
-<span class='bg-gray-800 text-gray-800'> gray-800</span>
-<span class='bg-gray-900 text-gray-900'> gray-900</span>
-<span class='bg-gray-950 text-gray-950'> gray-950</span>
-<span class='bg-zinc-50 text-zinc-50'> zinc-50</span>
-<span class='bg-zinc-100 text-zinc-100'> zinc-100</span>
-<span class='bg-zinc-200 text-zinc-200'> zinc-200</span>
-<span class='bg-zinc-300 text-zinc-300'> zinc-300</span>
-<span class='bg-zinc-400 text-zinc-400'> zinc-400</span>
-<span class='bg-zinc-500 text-zinc-500'> zinc-500</span>
-<span class='bg-zinc-600 text-zinc-600'> zinc-600</span>
-<span class='bg-zinc-700 text-zinc-700'> zinc-700</span>
-<span class='bg-zinc-800 text-zinc-800'> zinc-800</span>
-<span class='bg-zinc-900 text-zinc-900'> zinc-900</span>
-<span class='bg-zinc-950 text-zinc-950'> zinc-950</span>
-<span class='bg-neutral-50 text-neutral-50'> neutral-50</span>
-<span class='bg-neutral-100 text-neutral-100'> neutral-100</span>
-<span class='bg-neutral-200 text-neutral-200'> neutral-200</span>
-<span class='bg-neutral-300 text-neutral-300'> neutral-300</span>
-<span class='bg-neutral-400 text-neutral-400'> neutral-400</span>
-<span class='bg-neutral-500 text-neutral-500'> neutral-500</span>
-<span class='bg-neutral-600 text-neutral-600'> neutral-600</span>
-<span class='bg-neutral-700 text-neutral-700'> neutral-700</span>
-<span class='bg-neutral-800 text-neutral-800'> neutral-800</span>
-<span class='bg-neutral-900 text-neutral-900'> neutral-900</span>
-<span class='bg-neutral-950 text-neutral-950'> neutral-950</span>
-<span class='bg-stone-50 text-stone-50'> stone-50</span>
-<span class='bg-stone-100 text-stone-100'> stone-100</span>
-<span class='bg-stone-200 text-stone-200'> stone-200</span>
-<span class='bg-stone-300 text-stone-300'> stone-300</span>
-<span class='bg-stone-400 text-stone-400'> stone-400</span>
-<span class='bg-stone-500 text-stone-500'> stone-500</span>
-<span class='bg-stone-600 text-stone-600'> stone-600</span>
-<span class='bg-stone-700 text-stone-700'> stone-700</span>
-<span class='bg-stone-800 text-stone-800'> stone-800</span>
-<span class='bg-stone-900 text-stone-900'> stone-900</span>
-<span class='bg-stone-950 text-stone-950'> stone-950</span>
-<span class='bg-red-50 text-red-50'> red-50</span>
-<span class='bg-red-100 text-red-100'> red-100</span>
-<span class='bg-red-200 text-red-200'> red-200</span>
-<span class='bg-red-300 text-red-300'> red-300</span>
-<span class='bg-red-400 text-red-400'> red-400</span>
-<span class='bg-red-500 text-red-500'> red-500</span>
-<span class='bg-red-600 text-red-600'> red-600</span>
-<span class='bg-red-700 text-red-700'> red-700</span>
-<span class='bg-red-800 text-red-800'> red-800</span>
-<span class='bg-red-900 text-red-900'> red-900</span>
-<span class='bg-red-950 text-red-950'> red-950</span>
-<span class='bg-orange-50 text-orange-50'> orange-50</span>
-<span class='bg-orange-100 text-orange-100'> orange-100</span>
-<span class='bg-orange-200 text-orange-200'> orange-200</span>
-<span class='bg-orange-300 text-orange-300'> orange-300</span>
-<span class='bg-orange-400 text-orange-400'> orange-400</span>
-<span class='bg-orange-500 text-orange-500'> orange-500</span>
-<span class='bg-orange-600 text-orange-600'> orange-600</span>
-<span class='bg-orange-700 text-orange-700'> orange-700</span>
-<span class='bg-orange-800 text-orange-800'> orange-800</span>
-<span class='bg-orange-900 text-orange-900'> orange-900</span>
-<span class='bg-orange-950 text-orange-950'> orange-950</span>
-<span class='bg-amber-50 text-amber-50'> amber-50</span>
-<span class='bg-amber-100 text-amber-100'> amber-100</span>
-<span class='bg-amber-200 text-amber-200'> amber-200</span>
-<span class='bg-amber-300 text-amber-300'> amber-300</span>
-<span class='bg-amber-400 text-amber-400'> amber-400</span>
-<span class='bg-amber-500 text-amber-500'> amber-500</span>
-<span class='bg-amber-600 text-amber-600'> amber-600</span>
-<span class='bg-amber-700 text-amber-700'> amber-700</span>
-<span class='bg-amber-800 text-amber-800'> amber-800</span>
-<span class='bg-amber-900 text-amber-900'> amber-900</span>
-<span class='bg-amber-950 text-amber-950'> amber-950</span>
-<span class='bg-yellow-50 text-yellow-50'> yellow-50</span>
-<span class='bg-yellow-100 text-yellow-100'> yellow-100</span>
-<span class='bg-yellow-200 text-yellow-200'> yellow-200</span>
-<span class='bg-yellow-300 text-yellow-300'> yellow-300</span>
-<span class='bg-yellow-400 text-yellow-400'> yellow-400</span>
-<span class='bg-yellow-500 text-yellow-500'> yellow-500</span>
-<span class='bg-yellow-600 text-yellow-600'> yellow-600</span>
-<span class='bg-yellow-700 text-yellow-700'> yellow-700</span>
-<span class='bg-yellow-800 text-yellow-800'> yellow-800</span>
-<span class='bg-yellow-900 text-yellow-900'> yellow-900</span>
-<span class='bg-yellow-950 text-yellow-950'> yellow-950</span>
-<span class='bg-lime-50 text-lime-50'> lime-50</span>
-<span class='bg-lime-100 text-lime-100'> lime-100</span>
-<span class='bg-lime-200 text-lime-200'> lime-200</span>
-<span class='bg-lime-300 text-lime-300'> lime-300</span>
-<span class='bg-lime-400 text-lime-400'> lime-400</span>
-<span class='bg-lime-500 text-lime-500'> lime-500</span>
-<span class='bg-lime-600 text-lime-600'> lime-600</span>
-<span class='bg-lime-700 text-lime-700'> lime-700</span>
-<span class='bg-lime-800 text-lime-800'> lime-800</span>
-<span class='bg-lime-900 text-lime-900'> lime-900</span>
-<span class='bg-lime-950 text-lime-950'> lime-950</span>
-<span class='bg-green-50 text-green-50'> green-50</span>
-<span class='bg-green-100 text-green-100'> green-100</span>
-<span class='bg-green-200 text-green-200'> green-200</span>
-<span class='bg-green-300 text-green-300'> green-300</span>
-<span class='bg-green-400 text-green-400'> green-400</span>
-<span class='bg-green-500 text-green-500'> green-500</span>
-<span class='bg-green-600 text-green-600'> green-600</span>
-<span class='bg-green-700 text-green-700'> green-700</span>
-<span class='bg-green-800 text-green-800'> green-800</span>
-<span class='bg-green-900 text-green-900'> green-900</span>
-<span class='bg-green-950 text-green-950'> green-950</span>
-<span class='bg-emerald-50 text-emerald-50'> emerald-50</span>
-<span class='bg-emerald-100 text-emerald-100'> emerald-100</span>
-<span class='bg-emerald-200 text-emerald-200'> emerald-200</span>
-<span class='bg-emerald-300 text-emerald-300'> emerald-300</span>
-<span class='bg-emerald-400 text-emerald-400'> emerald-400</span>
-<span class='bg-emerald-500 text-emerald-500'> emerald-500</span>
-<span class='bg-emerald-600 text-emerald-600'> emerald-600</span>
-<span class='bg-emerald-700 text-emerald-700'> emerald-700</span>
-<span class='bg-emerald-800 text-emerald-800'> emerald-800</span>
-<span class='bg-emerald-900 text-emerald-900'> emerald-900</span>
-<span class='bg-emerald-950 text-emerald-950'> emerald-950</span>
-<span class='bg-teal-50 text-teal-50'> teal-50</span>
-<span class='bg-teal-100 text-teal-100'> teal-100</span>
-<span class='bg-teal-200 text-teal-200'> teal-200</span>
-<span class='bg-teal-300 text-teal-300'> teal-300</span>
-<span class='bg-teal-400 text-teal-400'> teal-400</span>
-<span class='bg-teal-500 text-teal-500'> teal-500</span>
-<span class='bg-teal-600 text-teal-600'> teal-600</span>
-<span class='bg-teal-700 text-teal-700'> teal-700</span>
-<span class='bg-teal-800 text-teal-800'> teal-800</span>
-<span class='bg-teal-900 text-teal-900'> teal-900</span>
-<span class='bg-teal-950 text-teal-950'> teal-950</span>
-<span class='bg-cyan-50 text-cyan-50'> cyan-50</span>
-<span class='bg-cyan-100 text-cyan-100'> cyan-100</span>
-<span class='bg-cyan-200 text-cyan-200'> cyan-200</span>
-<span class='bg-cyan-300 text-cyan-300'> cyan-300</span>
-<span class='bg-cyan-400 text-cyan-400'> cyan-400</span>
-<span class='bg-cyan-500 text-cyan-500'> cyan-500</span>
-<span class='bg-cyan-600 text-cyan-600'> cyan-600</span>
-<span class='bg-cyan-700 text-cyan-700'> cyan-700</span>
-<span class='bg-cyan-800 text-cyan-800'> cyan-800</span>
-<span class='bg-cyan-900 text-cyan-900'> cyan-900</span>
-<span class='bg-cyan-950 text-cyan-950'> cyan-950</span>
-<span class='bg-sky-50 text-sky-50'> sky-50</span>
-<span class='bg-sky-100 text-sky-100'> sky-100</span>
-<span class='bg-sky-200 text-sky-200'> sky-200</span>
-<span class='bg-sky-300 text-sky-300'> sky-300</span>
-<span class='bg-sky-400 text-sky-400'> sky-400</span>
-<span class='bg-sky-500 text-sky-500'> sky-500</span>
-<span class='bg-sky-600 text-sky-600'> sky-600</span>
-<span class='bg-sky-700 text-sky-700'> sky-700</span>
-<span class='bg-sky-800 text-sky-800'> sky-800</span>
-<span class='bg-sky-900 text-sky-900'> sky-900</span>
-<span class='bg-sky-950 text-sky-950'> sky-950</span>
-<span class='bg-blue-50 text-blue-50'> blue-50</span>
-<span class='bg-blue-100 text-blue-100'> blue-100</span>
-<span class='bg-blue-200 text-blue-200'> blue-200</span>
-<span class='bg-blue-300 text-blue-300'> blue-300</span>
-<span class='bg-blue-400 text-blue-400'> blue-400</span>
-<span class='bg-blue-500 text-blue-500'> blue-500</span>
-<span class='bg-blue-600 text-blue-600'> blue-600</span>
-<span class='bg-blue-700 text-blue-700'> blue-700</span>
-<span class='bg-blue-800 text-blue-800'> blue-800</span>
-<span class='bg-blue-900 text-blue-900'> blue-900</span>
-<span class='bg-blue-950 text-blue-950'> blue-950</span>
-<span class='bg-indigo-50 text-indigo-50'> indigo-50</span>
-<span class='bg-indigo-100 text-indigo-100'> indigo-100</span>
-<span class='bg-indigo-200 text-indigo-200'> indigo-200</span>
-<span class='bg-indigo-300 text-indigo-300'> indigo-300</span>
-<span class='bg-indigo-400 text-indigo-400'> indigo-400</span>
-<span class='bg-indigo-500 text-indigo-500'> indigo-500</span>
-<span class='bg-indigo-600 text-indigo-600'> indigo-600</span>
-<span class='bg-indigo-700 text-indigo-700'> indigo-700</span>
-<span class='bg-indigo-800 text-indigo-800'> indigo-800</span>
-<span class='bg-indigo-900 text-indigo-900'> indigo-900</span>
-<span class='bg-indigo-950 text-indigo-950'> indigo-950</span>
-<span class='bg-violet-50 text-violet-50'> violet-50</span>
-<span class='bg-violet-100 text-violet-100'> violet-100</span>
-<span class='bg-violet-200 text-violet-200'> violet-200</span>
-<span class='bg-violet-300 text-violet-300'> violet-300</span>
-<span class='bg-violet-400 text-violet-400'> violet-400</span>
-<span class='bg-violet-500 text-violet-500'> violet-500</span>
-<span class='bg-violet-600 text-violet-600'> violet-600</span>
-<span class='bg-violet-700 text-violet-700'> violet-700</span>
-<span class='bg-violet-800 text-violet-800'> violet-800</span>
-<span class='bg-violet-900 text-violet-900'> violet-900</span>
-<span class='bg-violet-950 text-violet-950'> violet-950</span>
-<span class='bg-purple-50 text-purple-50'> purple-50</span>
-<span class='bg-purple-100 text-purple-100'> purple-100</span>
-<span class='bg-purple-200 text-purple-200'> purple-200</span>
-<span class='bg-purple-300 text-purple-300'> purple-300</span>
-<span class='bg-purple-400 text-purple-400'> purple-400</span>
-<span class='bg-purple-500 text-purple-500'> purple-500</span>
-<span class='bg-purple-600 text-purple-600'> purple-600</span>
-<span class='bg-purple-700 text-purple-700'> purple-700</span>
-<span class='bg-purple-800 text-purple-800'> purple-800</span>
-<span class='bg-purple-900 text-purple-900'> purple-900</span>
-<span class='bg-purple-950 text-purple-950'> purple-950</span>
-<span class='bg-fuchsia-50 text-fuchsia-50'> fuchsia-50</span>
-<span class='bg-fuchsia-100 text-fuchsia-100'> fuchsia-100</span>
-<span class='bg-fuchsia-200 text-fuchsia-200'> fuchsia-200</span>
-<span class='bg-fuchsia-300 text-fuchsia-300'> fuchsia-300</span>
-<span class='bg-fuchsia-400 text-fuchsia-400'> fuchsia-400</span>
-<span class='bg-fuchsia-500 text-fuchsia-500'> fuchsia-500</span>
-<span class='bg-fuchsia-600 text-fuchsia-600'> fuchsia-600</span>
-<span class='bg-fuchsia-700 text-fuchsia-700'> fuchsia-700</span>
-<span class='bg-fuchsia-800 text-fuchsia-800'> fuchsia-800</span>
-<span class='bg-fuchsia-900 text-fuchsia-900'> fuchsia-900</span>
-<span class='bg-fuchsia-950 text-fuchsia-950'> fuchsia-950</span>
-<span class='bg-pink-50 text-pink-50'> pink-50</span>
-<span class='bg-pink-100 text-pink-100'> pink-100</span>
-<span class='bg-pink-200 text-pink-200'> pink-200</span>
-<span class='bg-pink-300 text-pink-300'> pink-300</span>
-<span class='bg-pink-400 text-pink-400'> pink-400</span>
-<span class='bg-pink-500 text-pink-500'> pink-500</span>
-<span class='bg-pink-600 text-pink-600'> pink-600</span>
-<span class='bg-pink-700 text-pink-700'> pink-700</span>
-<span class='bg-pink-800 text-pink-800'> pink-800</span>
-<span class='bg-pink-900 text-pink-900'> pink-900</span>
-<span class='bg-pink-950 text-pink-950'> pink-950</span>
-<span class='bg-rose-50 text-rose-50'> rose-50</span>
-<span class='bg-rose-100 text-rose-100'> rose-100</span>
-<span class='bg-rose-200 text-rose-200'> rose-200</span>
-<span class='bg-rose-300 text-rose-300'> rose-300</span>
-<span class='bg-rose-400 text-rose-400'> rose-400</span>
-<span class='bg-rose-500 text-rose-500'> rose-500</span>
-<span class='bg-rose-600 text-rose-600'> rose-600</span>
-<span class='bg-rose-700 text-rose-700'> rose-700</span>
-<span class='bg-rose-800 text-rose-800'> rose-800</span>
-<span class='bg-rose-900 text-rose-900'> rose-900</span>
-<span class='bg-rose-950 text-rose-950'> rose-950</span>
-
-      <!-- Aquí puedes continuar con el resto de los colores -->
-    </div>
-  `
-}
 
 export class Tamnora {
   constructor(config = {}) {
@@ -2512,14 +2257,15 @@ export class DataObject {
     this.defaultObjeto = {};
     this.formClass = {
       divModal: `fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center `,
+      btnCloseModal: `text-neutral-400 bg-transparent hover:bg-neutral-200 hover:text-neutral-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-neutral-600 dark:hover:text-white`,
       divPadre: `relative bg-neutral-100 dark:bg-neutral-800 overflow-x-auto shadow-md sm:rounded-lg mb-5 transition-bg duration-500 antialiased`,
       modalContainer: `relative w-full max-w-3xl max-h-full`,
-      header: `flex flex-col md:flex-row  justify-between items-start p-5 border-b rounded-t dark:border-neutral-600`,
+      header: `flex flex-col md:flex-row  justify-between items-center p-5 border-b rounded-t dark:border-neutral-600`,
       grid: `grid grid-cols-12 gap-4 p-6`,
       gridColumns: `col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3`,
-      titleContainer: `flex flex-col mb-3`,
-      title: `text-lg font-semibold text-left text-neutral-900 dark:text-white`,
-      subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400`,
+      titleContainer: `flex flex-col`,
+      title: `text-lg font-semibold text-left text-neutral-900 dark:text-white leading-none`,
+      subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400 leading-tight`,
       label: `block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400`,
       input: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
       select: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
@@ -2740,8 +2486,14 @@ export class DataObject {
     })
   }
 
-  itemClassAdd(item, newClass){
+  setClassItemAdd(item, newClass){
     this.formClass[item] += ` ${newClass}`
+  }
+
+  setClassItemChange(item, theClass, newClass){
+    let inClass =  this.formClass[item];
+    let outClass = inClass.replaceAll(theClass, newClass);
+    this.formClass[item] = outClass;
   }
 
   getFunction() {
@@ -3198,6 +2950,7 @@ export class DataObject {
       }
     }
 
+    
 
     for (const fieldName in dataObject) {
       if (dataObject.hasOwnProperty(fieldName)) {
@@ -3977,19 +3730,19 @@ export class DataObject {
       this.changeColorClass(data.colorForm);
     }
 
-    form += `<div class="${this.formClass.divPadre}">`;
+    form += `<div name="divPadre" class="${this.formClass.divPadre}">`;
     
     let columns = this.formClass.gridColumns;
 
     if ("title" in data || "subtitle" in data || "buttons" in data) {
-      form += `<div class="${this.formClass.header}">`
+      form += `<div name="header" class="${this.formClass.header}">`
       if ("title" in data || "subtitle" in data) {
-        form += `<div class="${this.formClass.titleContainer}">`;
+        form += `<div name="titleContainer" class="${this.formClass.titleContainer}">`;
         if ("title" in data) {
-          form += `<h3 class="${this.formClass.title}">${data.title}</h3>`;
+          form += `<h3 name="title" class="${this.formClass.title}">${data.title}</h3>`;
         }
         if ("subtitle" in data) {
-          form += `<p class="${this.formClass.subtitle}">${data.subtitle}</p>`;
+          form += `<p name="subtitle" class="${this.formClass.subtitle}">${data.subtitle}</p>`;
         }
         form += '</div>';
       }
@@ -4012,7 +3765,7 @@ export class DataObject {
     }
 
 
-    form += `<div class="${this.formClass.grid}">`;
+    form += `<div name="grid" class="${this.formClass.grid}">`;
     this.forEachField((campo, dato) => {
       let fieldElement = '';
       let dataValue = '';
@@ -4189,19 +3942,19 @@ export class DataObject {
     
 
 
-    let form = `<div id="${nameModal}_mod" tabindex="-1" aria-hidden="true" class="${this.formClass.divModal}">
-    <div name="cont" class="${this.formClass.modalContainer}">
-        <div name="padre" class="${this.formClass.divPadre}">`;
+    let form = `<div id="${nameModal}_mod" tabindex="-1" name="divModal" aria-hidden="true" class="${this.formClass.divModal}">
+    <div name="modalContainer" class="${this.formClass.modalContainer}">
+        <div name="divPadre" class="${this.formClass.divPadre}">`;
     let columns = this.formClass.gridColumns;
 
-    form += `<div class="${this.formClass.header}">`
-    form += `<div class="${this.formClass.titleContainer}">`;
+    form += `<div name="header" class="${this.formClass.header}">`
+    form += `<div name="titleContainer" class="${this.formClass.titleContainer}">`;
     if (data.title) {
-      form += `<h3 class="${this.formClass.title}">${data.title}</h3>`;
+      form += `<h3 name="title" class="${this.formClass.title}">${data.title}</h3>`;
     }
 
     if ("subtitle" in data) {
-      form += `<p class="${this.formClass.subtitle}">${data.subtitle}</p>`;
+      form += `<p name="subtitle" class="${this.formClass.subtitle}">${data.subtitle}</p>`;
     }
     if ("buttons" in data) {
       form += `<div>${data.buttons}</div>`;
@@ -4209,7 +3962,7 @@ export class DataObject {
     form += '</div>'
 
 
-    form += `<button data-modal="closeModal,#${nameModal}" type="button" class="text-neutral-400 bg-transparent hover:bg-neutral-200 hover:text-neutral-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-neutral-600 dark:hover:text-white">
+    form += `<button name="btnCloseModal" data-modal="closeModal,#${nameModal}" type="button" class="${this.formClass.btnCloseModal}">
     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
     </svg>
@@ -4227,7 +3980,7 @@ export class DataObject {
     }
 
 
-    form += `<div class="${this.formClass.grid}">`;
+    form += `<div name="grid" class="${this.formClass.grid}">`;
     this.forEachField((campo, dato) => {
       let fieldElement = '';
       let dataValue = '';
@@ -4347,14 +4100,14 @@ export class DataObject {
     form += `</div>`;
 
     if (data.submit || data.delete) {
-      form += `<div class="flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600">`;
+      form += `<div name="containerButtons" class="${this.formClass.containerButtons}">`;
 
       if (data.submit) {
-        form += ` <button type="submit" class="${this.formClass.submit}">${data.submit}</button>`;
+        form += ` <button name="submit" type="submit" class="${this.formClass.submit}">${data.submit}</button>`;
       }
 
       if (data.delete) {
-        form += ` <button type="button" data-formclick="delete" class="${this.formClass.delete}">${data.delete}</button>`;
+        form += ` <button name="delete" type="button" data-formclick="delete" class="${this.formClass.delete}">${data.delete}</button>`;
       }
 
       form += `</div>`;
@@ -4526,8 +4279,10 @@ export class DataArray {
       divPadre: `relative bg-neutral-100 dark:bg-neutral-800 rounded-lg overflow-hiden dark:rounded-lg transition-bg duration-500 antialiased`,
       tableContainer: `overflow-x-auto shadow-md`,
       table: `w-full text-sm text-left text-neutral-500 dark:text-neutral-400`,
-      header: `bg-transparent dark:bg-neutral-800`,
-      title: `text-lg font-semibold text-left text-neutral-900 dark:text-white`,
+      header: `flex flex-col md:flex-row justify-between items-start w-full p-5 bg-transparent dark:bg-neutral-800`,
+      titleContainer: `flex flex-col flex-grow`,
+      title: `text-lg font-semibold text-left text-neutral-900 dark:text-white leading-none`,
+      subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400 leading-tight`,
       btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500`,
       thead: `bg-transparent dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600`,
       tfoot: `bg-transparent dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400`,
@@ -4542,6 +4297,8 @@ export class DataArray {
       trtitle: `text-md font-semibold`,
       tdh: `px-6 py-2 select-none whitespace-nowrap`,
       tdnumber: `px-6 py-4 text-right`,
+      rowNormal: `bg-neutral-50 dark:bg-neutral-700`,
+      rowAlternative: `bg-neutral-100 dark:bg-neutral-800`,
     };
 
    
@@ -4551,14 +4308,39 @@ export class DataArray {
     this.tableClass = obj;
   }
 
+  getClass(){
+    return this.tableClass;
+  }
+
+  setClassItem(item, str){
+    this.tableClass[item] = str;
+  }
+
+  getClassItem(item){
+    return this.tableClass[item];
+  }
+
   changeColorClass(color){
     Object.keys(this.tableClass).forEach((tipo) => {
       let inClass = this.tableClass[tipo];
       let outClass = inClass.replaceAll('neutral', color)
       this.tableClass[tipo] = outClass;
     })
-
   }
+
+  setClassItemAdd(item, newClass){
+    this.tableClass[item] += ` ${newClass}`
+  }
+
+  setClassItemChange(item, theClass, newClass){
+    let inClass =  this.tableClass[item];
+    let outClass = inClass.replaceAll(theClass, newClass);
+    this.tableClass[item] = outClass;
+  }
+
+  
+
+  
 
   setData(index, fieldName, key, value) {
     if (this.dataArray[index] && this.dataArray[index][fieldName]) {
@@ -5074,15 +4856,17 @@ export class DataArray {
     table += `<div class="${this.tableClass.divPadre} ${this.widthPadre}">`;
     
     if ("title" in options || "subtitle" in options || "btnNew" in options || "buttons" in options) {
-      table += `<div class="flex flex-col md:flex-row justify-between items-start w-full py-3 px-5 ${this.tableClass.header}">`;
-      table += `<div class="flex flex-col flex-grow mb-2">`;
-      if ("title" in options) {
-        table += `<h3 class="${this.tableClass.title}">${options.title}</h3>`;
+      table += `<div name="header" class="${this.tableClass.header}">`;
+      if ("title" in options || "subtitle" in options){
+        table += `<div name="titleContainer" class="${this.tableClass.titleContainer}">`;
+        if ("title" in options) {
+          table += `<h3 name="title" class="${this.tableClass.title}">${options.title}</h3>`;
+        }
+        if ("subtitle" in options) {
+          table += `<p name="subtitle" class="${this.tableClass.subtitle}">${options.subtitle}</p>`;
+        }
+        table += `</div>`;
       }
-      if ("subtitle" in options) {
-        table += `<p class="mt-1 text-sm font-normal text-gray-500 dark:text-gray-400">${options.subtitle}</p>`;
-      }
-      table += `</div>`;
       if ("buttons" in options) {
         table += `${options.buttons}`;
       }
@@ -5092,9 +4876,9 @@ export class DataArray {
       table += '</div>';
     }
     
-    table += `<div class="${this.tableClass.tableContainer}  ${this.widthTable}">`;
-    table += `<table class="${this.tableClass.table}">`;
-    table += `<thead class="${this.tableClass.thead}">`;
+    table += `<div name="tableContainer" class="${this.tableClass.tableContainer}  ${this.widthTable}">`;
+    table += `<table name="table" class="${this.tableClass.table}">`;
+    table += `<thead name="thead" class="${this.tableClass.thead}">`;
 
     tableHeader += `<tr class="pp ${this.tableClass.trtitle}">`;
 
@@ -5196,14 +4980,14 @@ export class DataArray {
           }
 
           if ('class' in xRow) {
-            if ('alternative' in xRow.class) {
+            if (xRow.class = 'alternative') {
               if (index % 2 === 0) {
-                table += `<tr ${actionClick} class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
+                table += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowNormal} ${actionClass}">`;
               } else {
-                table += `<tr ${actionClick} class="${this.tableClass.tr} ${xRow.class.alternative} ${actionClass}">`;
+                table += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowAlternative} ${actionClass}">`;
               }
             } else {
-              table += `<tr ${actionClick} class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
+              table += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowNormal} ${actionClass}">`;
             }
           } else {
             table += `<tr ${actionClick} class="${this.tableClass.tr} ${actionClass}">`;
@@ -5544,7 +5328,259 @@ export class DataArray {
   }
 
 
-
+  objectColorTailwind(){
+    const tailwindColors = {
+        'inherit' :  'bg-inherit   text-inherit' , 
+        'current' :  'bg-current   text-current' , 
+        'transparent' :  'bg-transparent   text-transparent' , 
+        'black' :  'bg-black   text-black' , 
+        'white' :  'bg-white   text-white' , 
+        'slate-50' :  'bg-slate-50   text-slate-50' , 
+        'slate-100' :  'bg-slate-100   text-slate-100' , 
+        'slate-200' :  'bg-slate-200   text-slate-200' , 
+        'slate-300' :  'bg-slate-300   text-slate-300' , 
+        'slate-400' :  'bg-slate-400   text-slate-400' , 
+        'slate-500' :  'bg-slate-500   text-slate-500' , 
+        'slate-600' :  'bg-slate-600   text-slate-600' , 
+        'slate-700' :  'bg-slate-700   text-slate-700' , 
+        'slate-800' :  'bg-slate-800   text-slate-800' , 
+        'slate-900' :  'bg-slate-900   text-slate-900' , 
+        'slate-950' :  'bg-slate-950   text-slate-950' , 
+        'gray-50' :  'bg-gray-50   text-gray-50' , 
+        'gray-100' :  'bg-gray-100   text-gray-100' , 
+        'gray-200' :  'bg-gray-200   text-gray-200' , 
+        'gray-300' :  'bg-gray-300   text-gray-300' , 
+        'gray-400' :  'bg-gray-400   text-gray-400' , 
+        'gray-500' :  'bg-gray-500   text-gray-500' , 
+        'gray-600' :  'bg-gray-600   text-gray-600' , 
+        'gray-700' :  'bg-gray-700   text-gray-700' , 
+        'gray-800' :  'bg-gray-800   text-gray-800' , 
+        'gray-900' :  'bg-gray-900   text-gray-900' , 
+        'gray-950' :  'bg-gray-950   text-gray-950' , 
+        'zinc-50' :  'bg-zinc-50   text-zinc-50' , 
+        'zinc-100' :  'bg-zinc-100   text-zinc-100' , 
+        'zinc-200' :  'bg-zinc-200   text-zinc-200' , 
+        'zinc-300' :  'bg-zinc-300   text-zinc-300' , 
+        'zinc-400' :  'bg-zinc-400   text-zinc-400' , 
+        'zinc-500' :  'bg-zinc-500   text-zinc-500' , 
+        'zinc-600' :  'bg-zinc-600   text-zinc-600' , 
+        'zinc-700' :  'bg-zinc-700   text-zinc-700' , 
+        'zinc-800' :  'bg-zinc-800   text-zinc-800' , 
+        'zinc-900' :  'bg-zinc-900   text-zinc-900' , 
+        'zinc-950' :  'bg-zinc-950   text-zinc-950' , 
+        'neutral-50' :  'bg-neutral-50   text-neutral-50' , 
+        'neutral-100' :  'bg-neutral-100   text-neutral-100' , 
+        'neutral-200' :  'bg-neutral-200   text-neutral-200' , 
+        'neutral-300' :  'bg-neutral-300   text-neutral-300' , 
+        'neutral-400' :  'bg-neutral-400   text-neutral-400' , 
+        'neutral-500' :  'bg-neutral-500   text-neutral-500' , 
+        'neutral-600' :  'bg-neutral-600   text-neutral-600' , 
+        'neutral-700' :  'bg-neutral-700   text-neutral-700' , 
+        'neutral-800' :  'bg-neutral-800   text-neutral-800' , 
+        'neutral-900' :  'bg-neutral-900   text-neutral-900' , 
+        'neutral-950' :  'bg-neutral-950   text-neutral-950' , 
+        'stone-50' :  'bg-stone-50   text-stone-50' , 
+        'stone-100' :  'bg-stone-100   text-stone-100' , 
+        'stone-200' :  'bg-stone-200   text-stone-200' , 
+        'stone-300' :  'bg-stone-300   text-stone-300' , 
+        'stone-400' :  'bg-stone-400   text-stone-400' , 
+        'stone-500' :  'bg-stone-500   text-stone-500' , 
+        'stone-600' :  'bg-stone-600   text-stone-600' , 
+        'stone-700' :  'bg-stone-700   text-stone-700' , 
+        'stone-800' :  'bg-stone-800   text-stone-800' , 
+        'stone-900' :  'bg-stone-900   text-stone-900' , 
+        'stone-950' :  'bg-stone-950   text-stone-950' , 
+        'red-50' :  'bg-red-50   text-red-50' , 
+        'red-100' :  'bg-red-100   text-red-100' , 
+        'red-200' :  'bg-red-200   text-red-200' , 
+        'red-300' :  'bg-red-300   text-red-300' , 
+        'red-400' :  'bg-red-400   text-red-400' , 
+        'red-500' :  'bg-red-500   text-red-500' , 
+        'red-600' :  'bg-red-600   text-red-600' , 
+        'red-700' :  'bg-red-700   text-red-700' , 
+        'red-800' :  'bg-red-800   text-red-800' , 
+        'red-900' :  'bg-red-900   text-red-900' , 
+        'red-950' :  'bg-red-950   text-red-950' , 
+        'orange-50' :  'bg-orange-50   text-orange-50' , 
+        'orange-100' :  'bg-orange-100   text-orange-100' , 
+        'orange-200' :  'bg-orange-200   text-orange-200' , 
+        'orange-300' :  'bg-orange-300   text-orange-300' , 
+        'orange-400' :  'bg-orange-400   text-orange-400' , 
+        'orange-500' :  'bg-orange-500   text-orange-500' , 
+        'orange-600' :  'bg-orange-600   text-orange-600' , 
+        'orange-700' :  'bg-orange-700   text-orange-700' , 
+        'orange-800' :  'bg-orange-800   text-orange-800' , 
+        'orange-900' :  'bg-orange-900   text-orange-900' , 
+        'orange-950' :  'bg-orange-950   text-orange-950' , 
+        'amber-50' :  'bg-amber-50   text-amber-50' , 
+        'amber-100' :  'bg-amber-100   text-amber-100' , 
+        'amber-200' :  'bg-amber-200   text-amber-200' , 
+        'amber-300' :  'bg-amber-300   text-amber-300' , 
+        'amber-400' :  'bg-amber-400   text-amber-400' , 
+        'amber-500' :  'bg-amber-500   text-amber-500' , 
+        'amber-600' :  'bg-amber-600   text-amber-600' , 
+        'amber-700' :  'bg-amber-700   text-amber-700' , 
+        'amber-800' :  'bg-amber-800   text-amber-800' , 
+        'amber-900' :  'bg-amber-900   text-amber-900' , 
+        'amber-950' :  'bg-amber-950   text-amber-950' , 
+        'yellow-50' :  'bg-yellow-50   text-yellow-50' , 
+        'yellow-100' :  'bg-yellow-100   text-yellow-100' , 
+        'yellow-200' :  'bg-yellow-200   text-yellow-200' , 
+        'yellow-300' :  'bg-yellow-300   text-yellow-300' , 
+        'yellow-400' :  'bg-yellow-400   text-yellow-400' , 
+        'yellow-500' :  'bg-yellow-500   text-yellow-500' , 
+        'yellow-600' :  'bg-yellow-600   text-yellow-600' , 
+        'yellow-700' :  'bg-yellow-700   text-yellow-700' , 
+        'yellow-800' :  'bg-yellow-800   text-yellow-800' , 
+        'yellow-900' :  'bg-yellow-900   text-yellow-900' , 
+        'yellow-950' :  'bg-yellow-950   text-yellow-950' , 
+        'lime-50' :  'bg-lime-50   text-lime-50' , 
+        'lime-100' :  'bg-lime-100   text-lime-100' , 
+        'lime-200' :  'bg-lime-200   text-lime-200' , 
+        'lime-300' :  'bg-lime-300   text-lime-300' , 
+        'lime-400' :  'bg-lime-400   text-lime-400' , 
+        'lime-500' :  'bg-lime-500   text-lime-500' , 
+        'lime-600' :  'bg-lime-600   text-lime-600' , 
+        'lime-700' :  'bg-lime-700   text-lime-700' , 
+        'lime-800' :  'bg-lime-800   text-lime-800' , 
+        'lime-900' :  'bg-lime-900   text-lime-900' , 
+        'lime-950' :  'bg-lime-950   text-lime-950' , 
+        'green-50' :  'bg-green-50   text-green-50' , 
+        'green-100' :  'bg-green-100   text-green-100' , 
+        'green-200' :  'bg-green-200   text-green-200' , 
+        'green-300' :  'bg-green-300   text-green-300' , 
+        'green-400' :  'bg-green-400   text-green-400' , 
+        'green-500' :  'bg-green-500   text-green-500' , 
+        'green-600' :  'bg-green-600   text-green-600' , 
+        'green-700' :  'bg-green-700   text-green-700' , 
+        'green-800' :  'bg-green-800   text-green-800' , 
+        'green-900' :  'bg-green-900   text-green-900' , 
+        'green-950' :  'bg-green-950   text-green-950' , 
+        'emerald-50' :  'bg-emerald-50   text-emerald-50' , 
+        'emerald-100' :  'bg-emerald-100   text-emerald-100' , 
+        'emerald-200' :  'bg-emerald-200   text-emerald-200' , 
+        'emerald-300' :  'bg-emerald-300   text-emerald-300' , 
+        'emerald-400' :  'bg-emerald-400   text-emerald-400' , 
+        'emerald-500' :  'bg-emerald-500   text-emerald-500' , 
+        'emerald-600' :  'bg-emerald-600   text-emerald-600' , 
+        'emerald-700' :  'bg-emerald-700   text-emerald-700' , 
+        'emerald-800' :  'bg-emerald-800   text-emerald-800' , 
+        'emerald-900' :  'bg-emerald-900   text-emerald-900' , 
+        'emerald-950' :  'bg-emerald-950   text-emerald-950' , 
+        'teal-50' :  'bg-teal-50   text-teal-50' , 
+        'teal-100' :  'bg-teal-100   text-teal-100' , 
+        'teal-200' :  'bg-teal-200   text-teal-200' , 
+        'teal-300' :  'bg-teal-300   text-teal-300' , 
+        'teal-400' :  'bg-teal-400   text-teal-400' , 
+        'teal-500' :  'bg-teal-500   text-teal-500' , 
+        'teal-600' :  'bg-teal-600   text-teal-600' , 
+        'teal-700' :  'bg-teal-700   text-teal-700' , 
+        'teal-800' :  'bg-teal-800   text-teal-800' , 
+        'teal-900' :  'bg-teal-900   text-teal-900' , 
+        'teal-950' :  'bg-teal-950   text-teal-950' , 
+        'cyan-50' :  'bg-cyan-50   text-cyan-50' , 
+        'cyan-100' :  'bg-cyan-100   text-cyan-100' , 
+        'cyan-200' :  'bg-cyan-200   text-cyan-200' , 
+        'cyan-300' :  'bg-cyan-300   text-cyan-300' , 
+        'cyan-400' :  'bg-cyan-400   text-cyan-400' , 
+        'cyan-500' :  'bg-cyan-500   text-cyan-500' , 
+        'cyan-600' :  'bg-cyan-600   text-cyan-600' , 
+        'cyan-700' :  'bg-cyan-700   text-cyan-700' , 
+        'cyan-800' :  'bg-cyan-800   text-cyan-800' , 
+        'cyan-900' :  'bg-cyan-900   text-cyan-900' , 
+        'cyan-950' :  'bg-cyan-950   text-cyan-950' , 
+        'sky-50' :  'bg-sky-50   text-sky-50' , 
+        'sky-100' :  'bg-sky-100   text-sky-100' , 
+        'sky-200' :  'bg-sky-200   text-sky-200' , 
+        'sky-300' :  'bg-sky-300   text-sky-300' , 
+        'sky-400' :  'bg-sky-400   text-sky-400' , 
+        'sky-500' :  'bg-sky-500   text-sky-500' , 
+        'sky-600' :  'bg-sky-600   text-sky-600' , 
+        'sky-700' :  'bg-sky-700   text-sky-700' , 
+        'sky-800' :  'bg-sky-800   text-sky-800' , 
+        'sky-900' :  'bg-sky-900   text-sky-900' , 
+        'sky-950' :  'bg-sky-950   text-sky-950' , 
+        'blue-50' :  'bg-blue-50   text-blue-50' , 
+        'blue-100' :  'bg-blue-100   text-blue-100' , 
+        'blue-200' :  'bg-blue-200   text-blue-200' , 
+        'blue-300' :  'bg-blue-300   text-blue-300' , 
+        'blue-400' :  'bg-blue-400   text-blue-400' , 
+        'blue-500' :  'bg-blue-500   text-blue-500' , 
+        'blue-600' :  'bg-blue-600   text-blue-600' , 
+        'blue-700' :  'bg-blue-700   text-blue-700' , 
+        'blue-800' :  'bg-blue-800   text-blue-800' , 
+        'blue-900' :  'bg-blue-900   text-blue-900' , 
+        'blue-950' :  'bg-blue-950   text-blue-950' , 
+        'indigo-50' :  'bg-indigo-50   text-indigo-50' , 
+        'indigo-100' :  'bg-indigo-100   text-indigo-100' , 
+        'indigo-200' :  'bg-indigo-200   text-indigo-200' , 
+        'indigo-300' :  'bg-indigo-300   text-indigo-300' , 
+        'indigo-400' :  'bg-indigo-400   text-indigo-400' , 
+        'indigo-500' :  'bg-indigo-500   text-indigo-500' , 
+        'indigo-600' :  'bg-indigo-600   text-indigo-600' , 
+        'indigo-700' :  'bg-indigo-700   text-indigo-700' , 
+        'indigo-800' :  'bg-indigo-800   text-indigo-800' , 
+        'indigo-900' :  'bg-indigo-900   text-indigo-900' , 
+        'indigo-950' :  'bg-indigo-950   text-indigo-950' , 
+        'violet-50' :  'bg-violet-50   text-violet-50' , 
+        'violet-100' :  'bg-violet-100   text-violet-100' , 
+        'violet-200' :  'bg-violet-200   text-violet-200' , 
+        'violet-300' :  'bg-violet-300   text-violet-300' , 
+        'violet-400' :  'bg-violet-400   text-violet-400' , 
+        'violet-500' :  'bg-violet-500   text-violet-500' , 
+        'violet-600' :  'bg-violet-600   text-violet-600' , 
+        'violet-700' :  'bg-violet-700   text-violet-700' , 
+        'violet-800' :  'bg-violet-800   text-violet-800' , 
+        'violet-900' :  'bg-violet-900   text-violet-900' , 
+        'violet-950' :  'bg-violet-950   text-violet-950' , 
+        'purple-50' :  'bg-purple-50   text-purple-50' , 
+        'purple-100' :  'bg-purple-100   text-purple-100' , 
+        'purple-200' :  'bg-purple-200   text-purple-200' , 
+        'purple-300' :  'bg-purple-300   text-purple-300' , 
+        'purple-400' :  'bg-purple-400   text-purple-400' , 
+        'purple-500' :  'bg-purple-500   text-purple-500' , 
+        'purple-600' :  'bg-purple-600   text-purple-600' , 
+        'purple-700' :  'bg-purple-700   text-purple-700' , 
+        'purple-800' :  'bg-purple-800   text-purple-800' , 
+        'purple-900' :  'bg-purple-900   text-purple-900' , 
+        'purple-950' :  'bg-purple-950   text-purple-950' , 
+        'fuchsia-50' :  'bg-fuchsia-50   text-fuchsia-50' , 
+        'fuchsia-100' :  'bg-fuchsia-100   text-fuchsia-100' , 
+        'fuchsia-200' :  'bg-fuchsia-200   text-fuchsia-200' , 
+        'fuchsia-300' :  'bg-fuchsia-300   text-fuchsia-300' , 
+        'fuchsia-400' :  'bg-fuchsia-400   text-fuchsia-400' , 
+        'fuchsia-500' :  'bg-fuchsia-500   text-fuchsia-500' , 
+        'fuchsia-600' :  'bg-fuchsia-600   text-fuchsia-600' , 
+        'fuchsia-700' :  'bg-fuchsia-700   text-fuchsia-700' , 
+        'fuchsia-800' :  'bg-fuchsia-800   text-fuchsia-800' , 
+        'fuchsia-900' :  'bg-fuchsia-900   text-fuchsia-900' , 
+        'fuchsia-950' :  'bg-fuchsia-950   text-fuchsia-950' , 
+        'pink-50' :  'bg-pink-50   text-pink-50' , 
+        'pink-100' :  'bg-pink-100   text-pink-100' , 
+        'pink-200' :  'bg-pink-200   text-pink-200' , 
+        'pink-300' :  'bg-pink-300   text-pink-300' , 
+        'pink-400' :  'bg-pink-400   text-pink-400' , 
+        'pink-500' :  'bg-pink-500   text-pink-500' , 
+        'pink-600' :  'bg-pink-600   text-pink-600' , 
+        'pink-700' :  'bg-pink-700   text-pink-700' , 
+        'pink-800' :  'bg-pink-800   text-pink-800' , 
+        'pink-900' :  'bg-pink-900   text-pink-900' , 
+        'pink-950' :  'bg-pink-950   text-pink-950' , 
+        'rose-50' :  'bg-rose-50   text-rose-50' , 
+        'rose-100' :  'bg-rose-100   text-rose-100' , 
+        'rose-200' :  'bg-rose-200   text-rose-200' , 
+        'rose-300' :  'bg-rose-300   text-rose-300' , 
+        'rose-400' :  'bg-rose-400   text-rose-400' , 
+        'rose-500' :  'bg-rose-500   text-rose-500' , 
+        'rose-600' :  'bg-rose-600   text-rose-600' , 
+        'rose-700' :  'bg-rose-700   text-rose-700' , 
+        'rose-800' :  'bg-rose-800   text-rose-800' , 
+        'rose-900' :  'bg-rose-900   text-rose-900' , 
+        'rose-950' :  'bg-rose-950   text-rose-950' , 
+        }
+      return tailwindColors;
+    }
+  
 
 }
 

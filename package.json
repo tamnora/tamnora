@@ -4,7 +4,7 @@
   "version": "0.0.1",
   "type": "module",
   "scripts": {
-    "dev": "concurrently \"vite\" \"npx tailwindcss -i ./input.css -o ./src/css/style.css --watch\"",
+    "dev": "concurrently \"npx tailwindcss -i ./input.css -o ./src/css/style.css --watch\" \"vite\"",
     "build": "rimraf ./dist && vite build",
     "preview": "vite preview"
   },
