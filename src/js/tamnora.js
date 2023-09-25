@@ -406,7 +406,6 @@ export async function runCode(input) {
 
 }
 
-
 export class Tamnora {
   constructor(config = {}) {
     this.data = this.createReactiveProxy(config.data);
@@ -700,7 +699,7 @@ export class Tamnora {
     this.functions[name] = fn
   }
 
-  async createSearchInput(nameIdElement, table, id, name, titleId = 'ID:', titleName = 'Buscar Nombre:'){
+  async createSearchInput(nameIdElement, table, id, name, titleId = 'ID:', titleName = 'Buscar:'){
     const searchName = `${nameIdElement}_searchName`;
     const containerSearchName = `${nameIdElement}_conten_search`;
     const searchInput = `${nameIdElement}_searchInput`;
@@ -719,9 +718,9 @@ export class Tamnora {
 
     let salidaHTML = `
         <div class="relative flex flex-col md:flex-row  mb-3 w-full text-sm text-neutral-900 bg-neutral-100  rounded-lg  border border-neutral-300  dark:bg-neutral-800   dark:border-neutral-800  dark:text-white transition-bg duration-500 antialiased">
-          <div id="${containerSearchName}" class="flex grow p-2.5  z-20 justify-start border-b dark:border-neutral-500 md:border-none">
+          <div id="${containerSearchName}" class="flex grow p-2.5  z-20 justify-start border-b dark:border-neutral-500 md:border-none cursor-pointer">
             <span class="text-neutral-800 dark:text-neutral-400 border-none outline-none mr-2">${titleName}</span>
-            <span id="${searchName}"  class="font-semibold text-blue-700  dark:text-blue-500 border-none outline-none" contenteditable="true"></span>
+            <span id="${searchName}"  class="font-semibold text-blue-700  dark:text-blue-500 border-none outline-none " contenteditable="true"></span>
             <span id="${sugerencia}" class=" text-neutral-400  dark:text-neutral-500 "></span>
             <span id="${error}" class="ml-2 text-red-400 font-bold dark:text-red-400 "></span>
             <span id="${cant}" class="ml-2 text-neutral-400  dark:text-neutral-500 "></span>
@@ -730,7 +729,7 @@ export class Tamnora {
             <div class="block p-2.5 w-fit z-20 text-sm text-right text-neutral-900  focus:outline-none  border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500">
               <span class="text-neutral-700 dark:text-neutral-400  border-none outline-none">${titleId}</span>
             </div>
-            <input type="search" id="${searchInput}"  class="block p-2.5 w-20 max-w-fit z-20 text-sm text-left font-semibold text-blue-700  focus:outline-none rounded-r-lg bg-neutral-100 dark:bg-neutral-800 border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-blue-500 dark:focus:border-blue-500" placeholder="..." >
+            <input type="search" id="${searchInput}"  class="block p-2.5 w-20 max-w-fit z-20 text-sm text-left font-semibold text-blue-700  focus:outline-none rounded-r-lg bg-neutral-100 dark:bg-neutral-800 border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-blue-500 dark:focus:border-blue-500 cursor-pointer" placeholder="..." >
           </div>
         </div>
     `;
