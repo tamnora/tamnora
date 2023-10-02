@@ -16,6 +16,7 @@ tmn.setData('itab', 0);
 tmn.setData('id_cliente', 0)
 tmn.setData('nombre_cliente', '')
 
+
 tmn.select('#simpleform').html(`
 <div role="status" class="animate-pulse mt-4 mb-20">
     <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 max-w-[640px] mb-2.5 mx-auto"></div>
@@ -73,6 +74,22 @@ tmn.select('#tabla').html(`
 
 
 
+dataTabla.setValue('contador', 2);
+
+dataTabla.setFunction('restar', ()=>{
+  let valor =  dataTabla.getValue('contador');
+  valor--;
+  console.log(valor)
+  dataTabla.setValue('contador', valor)
+})
+
+dataTabla.setFunction('sumar', ()=>{
+  let valor =  dataTabla.getValue('contador');
+  valor++;
+  console.log(valor)
+  dataTabla.setValue('contador', valor)
+})
+
 async function cargarClientes() {
   const strClientes = await runCode('-sl id_cliente, nombre_cliente -fr clientes -wr tipo = 0 -ob nombre_cliente');
   if(!strClientes.resp){
@@ -123,8 +140,7 @@ async function verSimpleForm(){
     options.subtitle = `${tmn.getData('nombre_cliente')} (Cod. Cliente: ${tmn.getData('id_cliente')})`
   } 
  
-  console.log(simpleForm.getDataAll())
- 
+  
   simpleForm.createForm(options);
 }
 
@@ -149,11 +165,12 @@ async function verSaldosAcumulados() {
       <button type="button" data-action="newMovi, 0" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-l-lg hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
         Nuevo Movimiento
       </button>
-      <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border-t border-b border-neutral-200 hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
-        Ver Cuenta
+      <button type="button" data-action="restar" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border-t border-b border-neutral-200 hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
+        <
       </button>
-      <button type="button" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border border-neutral-200 rounded-r-md hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
-        Informe
+      <span data-value="contador" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border-t border-b border-neutral-200  dark:bg-neutral-700 dark:border-neutral-600 dark:text-white">0</span>
+      <button type="button" data-action="sumar" class="px-4 py-2 text-sm focus:outline-none font-medium text-neutral-900 bg-white border-t border-b border-neutral-200 rounded-r-md hover:bg-neutral-100 hover:text-blue-700 focus:z-10  focus:text-blue-700 dark:bg-neutral-700 dark:border-neutral-600 dark:text-white dark:hover:text-white dark:hover:bg-neutral-600  dark:focus:text-blue-200">
+        >
       </button>
     </div>
     `;
@@ -267,7 +284,8 @@ tmn.setFunction('papitaResult', (data)=>{
 
 })
 
-tmn.createSearchInput('papita', 'clientes', 'id_cliente', 'nombre_cliente', 'Cod.Cli:', 'Cliente:');
+tmn.createSearchInput('papita', 'clientes', 'id_cliente', 'nombre_cliente','', 'Cod.Cli:', 'Cliente:');
+
 
 cargarClientes();
 verSaldosAcumulados();
