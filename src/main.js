@@ -8,13 +8,13 @@ const simpleForm = new DataObject('simpleform')
 tmn.themeColorLight = '#db5945';
 tmn.themeColorDark = '#713228';
 
-tmn.setData('idBuscado', '');
-tmn.setData('dataClientes', []);
+tmn.setValue('idBuscado', '');
+tmn.setValue('dataClientes', []);
 
-tmn.setData('cant', 10);
-tmn.setData('itab', 0);
-tmn.setData('id_cliente', 0)
-tmn.setData('nombre_cliente', '')
+tmn.setValue('cant', 10);
+tmn.setValue('itab', 0);
+tmn.setValue('id_cliente', 0)
+tmn.setValue('nombre_cliente', '')
 
 
 tmn.select('#simpleform').html(`
@@ -93,7 +93,7 @@ dataTabla.setFunction('sumar', ()=>{
 async function cargarClientes() {
   const strClientes = await runCode('-sl id_cliente, nombre_cliente -fr clientes -wr tipo = 0 -ob nombre_cliente');
   if(!strClientes.resp){
-    tmn.setData('dataClientes', strClientes)
+    tmn.setValue('dataClientes', strClientes)
   } else {
     console.error(strClientes.msgError)
   }
@@ -108,7 +108,7 @@ async function verSimpleForm(){
   }
   
 
-  await simpleForm.addObjectFromRunCode(`-st clientes -wr id_cliente = ${tmn.getData('id_cliente')}`);
+  await simpleForm.addObjectFromRunCode(`-st clientes -wr id_cliente = ${tmn.getValue('id_cliente')}`);
 
  
   simpleForm.orderColumns = ['id_cliente', 'nombre_cliente', 'telefono_cliente', 'email_cliente', 'direccion_cliente', 'tipo', 'date_added', 'status_cliente'];
@@ -136,8 +136,8 @@ async function verSimpleForm(){
     submit: 'Guardar'
   }
 
-  if(tmn.getData('id_cliente') > 0){
-    options.subtitle = `${tmn.getData('nombre_cliente')} (Cod. Cliente: ${tmn.getData('id_cliente')})`
+  if(tmn.getValue('id_cliente') > 0){
+    options.subtitle = `${tmn.getValue('nombre_cliente')} (Cod. Cliente: ${tmn.getValue('id_cliente')})`
   } 
  
   
@@ -145,14 +145,14 @@ async function verSimpleForm(){
 }
 
 async function verSaldosAcumulados() {
-  let cant = tmn.getData('cant') || 5;
+  let cant = tmn.getValue('cant') || 5;
   let conex = await dataTabla.setStructure('movimientos');
   console.log('hay conexion', conex)
   if(!conex){
     tmn.select('#tabla').html('<h4 class="text-red-500 dark:text-red-500 text-center">No hay conexión a la base de datos!</h4>');
     return 
   }
-  await dataTabla.addObjectFromDBSelect(`CALL saldos_acumulados(${tmn.getData('id_cliente')}, ${cant})`);
+  await dataTabla.addObjectFromDBSelect(`CALL saldos_acumulados(${tmn.getValue('id_cliente')}, ${cant})`);
 
   dataTabla.orderColumns = ['tipo_oper', 'id', 'fechahora', 'id_factura', 'importe', 'saldo'];
   dataTabla.widthColumns = ['w-10', 'w-10', 'w-10', 'w-20', 'w-20', 'w-35'];
@@ -219,8 +219,8 @@ async function verSaldosAcumulados() {
     }
   }
 
-  if(tmn.getData('id_cliente') > 0){
-    options.subtitle = `${tmn.getData('nombre_cliente')} (Cod. Cliente: ${tmn.getData('id_cliente')})`
+  if(tmn.getValue('id_cliente') > 0){
+    options.subtitle = `${tmn.getValue('nombre_cliente')} (Cod. Cliente: ${tmn.getValue('id_cliente')})`
   } 
 
   dataTabla.createTable(options);
@@ -234,7 +234,7 @@ async function verSaldosAcumulados() {
   })
 
   dataTabla.setFunction('newMovi', async (ref) => {
-    formModal.setDataDefault('id_cliente', 'value', tmn.getData('id_cliente'));
+    formModal.setDataDefault('id_cliente', 'value', tmn.getValue('id_cliente'));
     formModal.setDataDefault('fechahora', 'introDate', true)
     formModal.setData('tipo_oper', 'elegirOpcion', true)
     formModal.updateDataInFormForNew();
@@ -250,7 +250,7 @@ async function crearModalForm(){
   await formModal.addObjectFromRunCode(`-st movimientos -lt 1`, true);
 
   const optionsClientes = [];
-  tmn.getData('dataClientes').forEach(cliente => {
+  tmn.getValue('dataClientes').forEach(cliente => {
     optionsClientes.push({ value: cliente.id_cliente, label: cliente.nombre_cliente })
   })
 
@@ -258,7 +258,7 @@ async function crearModalForm(){
   formModal.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
   formModal.setData('id_cliente', 'name', 'cliente' );
   formModal.setData('id_cliente', 'type', 'select');
-  formModal.setData('id_cliente', 'value', tmn.getData('id_cliente'));
+  formModal.setData('id_cliente', 'value', tmn.getValue('id_cliente'));
   formModal.setData('id_cliente', 'options', optionsClientes);
   formModal.setData('id_cliente', 'required', true);
 
@@ -276,8 +276,8 @@ async function crearModalForm(){
 }
 
 tmn.setFunction('papitaResult', (data)=>{
-  tmn.setData('id_cliente', data.id);
-  tmn.setData('nombre_cliente', data.name)
+  tmn.setValue('id_cliente', data.id);
+  tmn.setValue('nombre_cliente', data.name)
   cargarClientes();
   verSaldosAcumulados();
   verSimpleForm();

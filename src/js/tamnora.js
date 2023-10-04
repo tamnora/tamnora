@@ -176,7 +176,7 @@ export function prepararSQL(tabla, json) {
     // alert(`Valores ingresados: ${formValues.join(", ")}`);
     let comprobation = Object.values(json).filter((field) => {
       if (field.required == true) {
-        if (!field.value) {
+        if (field.value === '' || field.value === null) {
           camposIncompletos += field.placeholder + ', ';
           return field.name;
         }
@@ -451,32 +451,32 @@ export class Tamnora {
     this.data = this.createReactiveProxy(config.data);
     this._componentHTML = config.componentHTML || {};
     this.def = {};
-    this.colorPrimary = 'neutral';
+    this.colorPrimary = 'zinc';
     this._styleClasses = config.styleClasses || {
-      label: `block pl-1 text-sm font-medium text-neutral-900 dark:text-neutral-400`,
-      navlink: `block py-2 pl-3 pr-4 text-neutral-900 rounded hover:bg-neutral-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-neutral-700 dark:hover:text-white md:dark:hover:bg-transparent`,
-      input: `bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
-      select: `bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      label: `block pl-1 text-sm font-medium text-zinc-900 dark:text-zinc-400`,
+      navlink: `block py-2 pl-3 pr-4 text-zinc-900 rounded hover:bg-zinc-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-zinc-700 dark:hover:text-white md:dark:hover:bg-transparent`,
+      input: `bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-zinc-800 dark:border-zinc-700 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      select: `bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:outline-none  focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-zinc-800 dark:border-zinc-700 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
       btn: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500`,
-      btn2: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 focus:ring-4 focus:ring-neutral-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 dark:focus:ring-neutral-700 transition-bg duration-500`,
+      btn2: `text-zinc-900 bg-white border border-zinc-300 focus:outline-none hover:bg-zinc-100 focus:ring-4 focus:ring-zinc-200 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-600 dark:hover:bg-zinc-700 dark:hover:border-zinc-600 dark:focus:ring-zinc-700 transition-bg duration-500`,
       btnSmall: `text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 transition-bg duration-500`,
       btnSimple: `text-gray-900 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 font-semibold rounded-lg text-sm px-3 py-2 mr-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 transition-bg duration-500`,
-      table: `w-full text-sm text-left text-neutral-500 dark:text-neutral-400`,
-      thead: `bg-white dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400`,
-      th: `px-6 py-3 select-none text-xs text-neutral-700 uppercase dark:text-neutral-400`,
-      tr: `border-b border-neutral-200 dark:border-neutral-700`,
+      table: `w-full text-sm text-left text-zinc-500 dark:text-zinc-400`,
+      thead: `bg-white dark:bg-zinc-800 text-zinc-700  dark:text-zinc-400`,
+      th: `px-6 py-3 select-none text-xs text-zinc-700 uppercase dark:text-zinc-400`,
+      tr: `border-b border-zinc-200 dark:border-zinc-700`,
       td: `px-6 py-3 select-none`,
       tdclick: `px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400`,
       trh: `text-md font-semibold`,
       tdh: `px-6 py-2 select-none `,
       tdnumber: `px-6 py-4 text-right`,
-      darkBlue: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
-      darkRed: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
-      darkGreen: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
-      darkNeutral: `bg-neutral-700 text-white hover:bg-neutral-800 focus:ring-neutral-700`,
-      dark: `bg-neutral-300 text-neutral-800 hover:bg-neutral-100 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 hover:dark:bg-neutral-700 hover:dark:text-white focus:ring-neutral-700`,
+      btnPrimary: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
+      btnDanger: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
+      btnSuccess: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
+      btnSecondary: `bg-zinc-700 text-white hover:bg-zinc-800 focus:ring-zinc-700`,
+      dark: `bg-zinc-300 text-zinc-800 hover:bg-zinc-100 hover:text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100 hover:dark:bg-zinc-700 hover:dark:text-white focus:ring-zinc-700`,
       navactive: `text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`,
-      inactive: `text-neutral-600`,
+      inactive: `text-zinc-600`,
     };
     this.functions = {};
     this.templates = {};
@@ -571,7 +571,7 @@ export class Tamnora {
     }
   }
 
-  getData(camino) {
+  getValue(camino) {
     const propiedades = camino.split('!');
     let valorActual = this.data;
 
@@ -585,7 +585,7 @@ export class Tamnora {
     return valorActual;
   }
 
-  getDataFormat(camino, format) {
+  getValueFormat(camino, format) {
     const propiedades = camino.split('!');
     let valorActual = this.data;
 
@@ -602,7 +602,7 @@ export class Tamnora {
     return valorActual;
   }
 
-  existData(camino) {
+  existValue(camino) {
     const propiedades = camino.split('!');
     let valorActual = this.data;
     let existe = false;
@@ -630,7 +630,7 @@ export class Tamnora {
     return valorActual;
   }
 
-  setData(name, datos, menos) {
+  setValue(name, datos, menos) {
     if (typeof datos == 'object') {
       if (menos) {
         Object.keys(datos).forEach((key) => {
@@ -653,7 +653,7 @@ export class Tamnora {
     }
   }
 
-  setDataRoute(camino, nuevoValor) {
+  setValueRoute(camino, nuevoValor) {
     const propiedades = camino.split('!');
     let valorActual = this.data;
 
@@ -690,7 +690,7 @@ export class Tamnora {
   }
 
 
-  pushData(name, obj, format = false) {
+  pushValue(name, obj, format = false) {
     const newdata = this.data[obj];
     this.data[name].push(newdata);
     if (this.def[obj] && format) {
@@ -707,7 +707,7 @@ export class Tamnora {
     }
   }
 
-  cleanData(obj, format = false) {
+  cleanValue(obj, format = false) {
     if (this.def[obj] && format) {
       setTimeout(() => {
         if (typeof this.data[obj] == 'object') {
@@ -756,24 +756,24 @@ export class Tamnora {
     
     const sqlt = `-sl ${id} as id, ${name} as name -fr ${table} ${wr} -ob ${name}`;
     const records = await runCode(sqlt);
-    this.setData(data, records)
-    this.setData(nameIdElement, {id: 0, name:''})
+    this.setValue(data, records)
+    this.setValue(nameIdElement, {id: 0, name:''})
     
 
     let salidaHTML = `
-        <div class="relative flex flex-col md:flex-row  mb-3 w-full text-sm text-neutral-900 bg-neutral-100  rounded-lg  border border-neutral-300  dark:bg-neutral-800   dark:border-neutral-800  dark:text-white transition-bg duration-500 antialiased">
-          <div id="${containerSearchName}" class="flex grow p-2.5  z-20 justify-start border-b dark:border-neutral-500 md:border-none cursor-pointer">
-            <span class="text-neutral-800 dark:text-neutral-400 border-none outline-none mr-2">${titleName}</span>
+        <div class="relative flex flex-col md:flex-row  mb-3 w-full text-sm text-zinc-900 bg-zinc-100  rounded-lg  border border-zinc-300  dark:bg-zinc-800   dark:border-zinc-800  dark:text-white transition-bg duration-500 antialiased">
+          <div id="${containerSearchName}" class="flex grow p-2.5  z-20 justify-start border-b dark:border-zinc-500 md:border-none cursor-pointer">
+            <span class="text-zinc-800 dark:text-zinc-400 border-none outline-none mr-2">${titleName}</span>
             <span id="${searchName}" spellcheck="false"  class="font-semibold text-blue-700  dark:text-blue-500 border-none outline-none " contenteditable="true"></span>
-            <span id="${sugerencia}" class=" text-neutral-400  dark:text-neutral-500 "></span>
+            <span id="${sugerencia}" class=" text-zinc-400  dark:text-zinc-500 "></span>
             <span id="${error}" class="ml-2 text-red-400 font-bold dark:text-red-400 "></span>
-            <span id="${cant}" class="ml-2 text-neutral-400  dark:text-neutral-500 "></span>
+            <span id="${cant}" class="ml-2 text-zinc-400  dark:text-zinc-500 "></span>
           </div>
           <div class="flex">
-            <div class="block p-2.5 w-fit z-20 text-sm text-right text-neutral-900  focus:outline-none  border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-white dark:focus:border-blue-500">
-              <span class="text-neutral-700 dark:text-neutral-400  border-none outline-none">${titleId}</span>
+            <div class="block p-2.5 w-fit z-20 text-sm text-right text-zinc-900  focus:outline-none  border-none border-zinc-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-zinc-700  dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-white dark:focus:border-blue-500">
+              <span class="text-zinc-700 dark:text-zinc-400  border-none outline-none">${titleId}</span>
             </div>
-            <input type="search" id="${searchInput}"  class="block p-2.5 w-20 max-w-fit z-20 text-sm text-left font-semibold text-blue-700  focus:outline-none rounded-r-lg bg-neutral-100 dark:bg-neutral-800 border-none border-neutral-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-neutral-700  dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-blue-500 dark:focus:border-blue-500 cursor-pointer" placeholder="..." >
+            <input type="search" id="${searchInput}"  class="block p-2.5 w-20 max-w-fit z-20 text-sm text-left font-semibold text-blue-700  focus:outline-none rounded-r-lg bg-zinc-100 dark:bg-zinc-800 border-none border-zinc-300 focus:ring-blue-500 focus:border-blue-500  dark:border-l-zinc-700  dark:border-zinc-600 dark:placeholder-zinc-400 dark:text-blue-500 dark:focus:border-blue-500 cursor-pointer" placeholder="..." >
           </div>
         </div>
     `;
@@ -794,7 +794,7 @@ export class Tamnora {
       let value = elem.target.value;
       let result = '';
       if (value.length > 0) {
-        const matchingClient = this.getData(data).find((v) => {
+        const matchingClient = this.getValue(data).find((v) => {
           return (v.id == value)
         });
     
@@ -803,26 +803,26 @@ export class Tamnora {
           eleSearchName.innerHTML = result;
           eleSugerencia.innerHTML = '';
           eleError.innerHTML = '';
-          this.setData(nameIdElement, {id: value, name: result})
+          this.setValue(nameIdElement, {id: value, name: result})
         } else {
           eleSearchName.innerHTML = '';
           eleSugerencia.innerHTML = `${result}`;
           eleError.innerHTML = ' -> El ID no existe!';
-          this.setData(nameIdElement, {id: 0, name:''})
+          this.setValue(nameIdElement, {id: 0, name:''})
         }
       } else {
         eleSearchName.innerHTML = '';
         eleSugerencia.innerHTML = '';
         eleError.innerHTML = ' - No hay valor!';
-        this.setData(nameIdElement, {id: 0, name:''})
+        this.setValue(nameIdElement, {id: 0, name:''})
       }
       if(this.functions[`${nameIdElement}Result`]){
-        let resultData = this.getData(nameIdElement);
+        let resultData = this.getValue(nameIdElement);
         this.functions[`${nameIdElement}Result`](resultData);
       } else {
         console.error(`la funcion ${nameIdElement}Result no existe en tamnora!`);
       }
-      //console.log(this.getData(nameIdElement))
+      //console.log(this.getValue(nameIdElement))
     })
     
     
@@ -837,7 +837,7 @@ export class Tamnora {
       let result = '';
     
       if (value.length > 0) {
-        const matchingClient = this.getData(data).find((v) => {
+        const matchingClient = this.getValue(data).find((v) => {
           let compara = v.name.replace(/\s+/g, '_');
           return (compara.toLowerCase().startsWith(value))
         }
@@ -868,10 +868,10 @@ export class Tamnora {
       value = value.replace(/\s+/g, '_');
       let result;
       let resId, resName;
-      let index = this.getData('itab');
+      let index = this.getValue('itab');
     
       if (value.length > 0) {
-        const matchingClient = this.getData(data).filter(v => {
+        const matchingClient = this.getValue(data).filter(v => {
           let compara = v.name.replace(/\s+/g, '_');
           return (compara.toLowerCase().startsWith(value))
         });
@@ -881,10 +881,10 @@ export class Tamnora {
           if (event.keyCode == 9) {
             if (index < matchingClient.length - 1) {
               index++
-              this.setData('itab', index);
+              this.setValue('itab', index);
             } else {
               index = 0;
-              this.setData('itab', index);
+              this.setValue('itab', index);
             }
             console.log(matchingClient.length)
             result = matchingClient[index].name.substring(value.length);
@@ -906,7 +906,7 @@ export class Tamnora {
               eleCant.innerHTML = '';
               eleSearchName.focus()
               this.setCaretToEnd(eleSearchName)
-              this.setData(nameIdElement, {id: resId, name: resName})
+              this.setValue(nameIdElement, {id: resId, name: resName})
               // verSimpleForm();
             } else {
               console.error('No hay coincidencias');
@@ -919,13 +919,13 @@ export class Tamnora {
               eleSearchName.focus();
               this.setCaretToEnd(eleSearchName);
               
-              this.setData(nameIdElement, {id: 0, name:''})
+              this.setValue(nameIdElement, {id: 0, name:''})
               // verSaldosAcumulados();
               // verSimpleForm();
             }
 
             if(this.functions[`${nameIdElement}Result`]){
-              let resultData = this.getData(nameIdElement);
+              let resultData = this.getValue(nameIdElement);
               this.functions[`${nameIdElement}Result`](resultData);
             } else {
               console.error(`la funcion ${nameIdElement}Result no existe en tamnora!`);
@@ -936,10 +936,10 @@ export class Tamnora {
         eleSugerencia.innerHTML = '';
         eleError.innerHTML = '';
         eleCant.innerHTML = '';
-        this.setData(nameIdElement, {id: 0, name:''})
+        this.setValue(nameIdElement, {id: 0, name:''})
       }
 
-      //console.log(this.getData(nameIdElement));
+      //console.log(this.getValue(nameIdElement));
   }})
 
 
@@ -2067,7 +2067,7 @@ export class Tamnora {
     }
     element.target.value = newValue;
 
-    this.setDataRoute(element.target.dataset.value, newValue);
+    this.setValueRoute(element.target.dataset.value, newValue);
   }
 
   formatNumber(str, dec = 2, leng = 'es', mixto = false) {
@@ -2318,32 +2318,32 @@ export class DataObject {
     this.name = name;
     this.defaultObjeto = {};
     this.formClass = {
-      divModal: `fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center `,
-      btnCloseModal: `text-neutral-400 bg-transparent hover:bg-neutral-200 hover:text-neutral-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-neutral-600 dark:hover:text-white`,
-      divPadre: `relative bg-neutral-100 dark:bg-neutral-800 overflow-x-auto shadow-md sm:rounded-lg mb-5 transition-bg duration-500 antialiased`,
+      divModal: `fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-zinc-900/50 dark:bg-zinc-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center `,
+      btnCloseModal: `text-zinc-400 bg-transparent hover:bg-zinc-200 hover:text-zinc-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-zinc-600 dark:hover:text-white`,
+      divPadre: `relative bg-zinc-100 dark:bg-zinc-800 overflow-x-auto shadow-md sm:rounded-lg mb-5 transition-bg duration-500 antialiased`,
       modalContainer: `relative w-full max-w-3xl max-h-full`,
-      header: `flex flex-col md:flex-row  justify-between items-center p-5 border-b rounded-t dark:border-neutral-600`,
+      header: `flex flex-col md:flex-row  justify-between items-center p-5 border-b rounded-t dark:border-zinc-600`,
       grid: `grid grid-cols-12 gap-4 p-6`,
       gridColumns: `col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3`,
       titleContainer: `flex flex-col`,
-      title: `text-lg font-semibold text-left text-neutral-900 dark:text-white leading-none`,
-      subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400 leading-tight`,
-      label: `block pl-1 text-sm font-medium text-neutral-500 dark:text-neutral-500`,
-      input: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
-      select: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      title: `text-lg font-semibold text-left text-zinc-900 dark:text-white leading-none`,
+      subtitle: `mt-1 text-sm font-normal text-zinc-500 dark:text-zinc-400 leading-tight`,
+      label: `block pl-1 text-sm font-medium text-zinc-500 dark:text-zinc-500`,
+      input: `bg-white border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-700 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
+      select: `bg-white border border-zinc-300 text-zinc-900 text-sm rounded-lg focus:outline-none focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-zinc-700 dark:border-zinc-700 dark:placeholder-zinc-400 dark:text-white dark:focus:ring-blue-700 dark:focus:border-blue-700`,
       headerColumn: `bg-transparent`,
       btn: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500`,
-      btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500`,
-      containerButtons: `flex items-center justify-start p-6 space-x-2 border-t border-neutral-200 rounded-b dark:border-neutral-600`,
+      btnSmall: `text-zinc-900 bg-white border border-zinc-300 focus:outline-none hover:bg-zinc-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-600 dark:hover:bg-zinc-700 dark:hover:border-zinc-600 transition-bg duration-500`,
+      containerButtons: `flex items-center justify-start p-6 space-x-2 border-t border-zinc-200 rounded-b dark:border-zinc-600`,
       submit: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-blue-500 text-blue-100 hover:bg-blue-200 dark:bg-blue-600 dark:text-blue-100 dark:hover:bg-blue-700`,
       delete: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none transition-bg duration-500 inline-flex items-center bg-red-500 text-red-100 hover:bg-red-200 dark:bg-red-600 dark:text-red-100 dark:hover:bg-red-700`,
       darkBlue: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
       darkRed: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
       darkGreen: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
-      darkNeutral: `bg-neutral-700 text-white hover:bg-neutral-800 focus:ring-neutral-700`,
-      dark: `bg-neutral-300 text-neutral-800 hover:bg-neutral-100 hover:text-neutral-900 dark:bg-neutral-800 dark:text-neutral-100 hover:dark:bg-neutral-700 hover:dark:text-white focus:ring-neutral-700`,
+      darkzinc: `bg-zinc-700 text-white hover:bg-zinc-800 focus:ring-zinc-700`,
+      dark: `bg-zinc-300 text-zinc-800 hover:bg-zinc-100 hover:text-zinc-900 dark:bg-zinc-800 dark:text-zinc-100 hover:dark:bg-zinc-700 hover:dark:text-white focus:ring-zinc-700`,
       navactive: `text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`,
-      inactive: `text-neutral-600`,
+      inactive: `text-zinc-600`,
     };
     this.functions = {
       closeModal: () => {
@@ -2545,7 +2545,7 @@ export class DataObject {
   changeColorClass(color){
     Object.keys(this.formClass).forEach((tipo) => {
       let inClass = this.formClass[tipo];
-      let outClass = inClass.replaceAll('neutral', color)
+      let outClass = inClass.replaceAll('zinc', color)
       this.formClass[tipo] = outClass;
     })
   }
@@ -4402,29 +4402,29 @@ export class DataArray {
     });
 
     this.tableClass = {
-      divPadre: `relative bg-neutral-100 dark:bg-neutral-800 rounded-lg overflow-hiden dark:rounded-lg transition-bg duration-500 antialiased`,
+      divPadre: `relative bg-zinc-100 dark:bg-zinc-800 rounded-lg overflow-hiden dark:rounded-lg transition-bg duration-500 antialiased`,
       tableContainer: `overflow-x-auto shadow-md`,
-      table: `w-full text-sm text-left text-neutral-500 dark:text-neutral-400`,
-      header: `flex flex-col md:flex-row justify-between items-start w-full p-5 bg-transparent dark:bg-neutral-800`,
+      table: `w-full text-sm text-left text-zinc-500 dark:text-zinc-400`,
+      header: `flex flex-col md:flex-row justify-between items-start w-full p-5 bg-transparent dark:bg-zinc-800`,
       titleContainer: `flex flex-col flex-grow`,
-      title: `text-lg font-semibold text-left text-neutral-900 dark:text-white leading-none`,
-      subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400 leading-tight`,
-      btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600 transition-bg duration-500`,
-      thead: `bg-transparent dark:bg-neutral-800 text-neutral-700 dark:text-neutral-400 border-b border-neutral-300 dark:border-neutral-600`,
-      tfoot: `bg-transparent dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400`,
-      pagination: `mt-1 text-neutral-700 py-3 dark:text-neutral-400`,
-      paginationBtn: `bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white`,
-      paginationBtnDisable: `bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700 dark:text-neutral-600`,
-      th: `px-6 py-2 select-none text-xs text-neutral-600 uppercase dark:text-neutral-400 whitespace-nowrap`,
-      tr: `border-b border-neutral-200 dark:border-neutral-700`,
+      title: `text-lg font-semibold text-left text-zinc-900 dark:text-white leading-none`,
+      subtitle: `mt-1 text-sm font-normal text-zinc-500 dark:text-zinc-400 leading-tight`,
+      btnSmall: `text-zinc-900 bg-white border border-zinc-300 focus:outline-none hover:bg-zinc-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-zinc-800 dark:text-white dark:border-zinc-600 dark:hover:bg-zinc-700 dark:hover:border-zinc-600 transition-bg duration-500`,
+      thead: `bg-transparent dark:bg-zinc-800 text-zinc-700 dark:text-zinc-400 border-b border-zinc-300 dark:border-zinc-600`,
+      tfoot: `bg-transparent dark:bg-zinc-800 text-zinc-700  dark:text-zinc-400`,
+      pagination: `mt-1 text-zinc-700 py-3 dark:text-zinc-400`,
+      paginationBtn: `bg-zinc-100 text-zinc-700 hover:bg-zinc-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400 dark:hover:bg-zinc-700 dark:hover:text-white`,
+      paginationBtnDisable: `bg-zinc-100 text-zinc-400  dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-600`,
+      th: `px-6 py-2 select-none text-xs text-zinc-600 uppercase dark:text-zinc-400 whitespace-nowrap`,
+      tr: `border-b border-zinc-200 dark:border-zinc-700`,
       td: `px-6 py-3 select-none whitespace-nowrap`,
       tdclick: `px-6 py-3 select-none cursor-pointer font-semibold hover:text-green-400`,
       trh: `text-md font-semibold whitespace-nowrap`,
       trtitle: `text-md font-semibold`,
       tdh: `px-6 py-2 select-none whitespace-nowrap`,
       tdnumber: `px-6 py-4 text-right`,
-      rowNormal: `bg-neutral-50 dark:bg-neutral-700`,
-      rowAlternative: `bg-neutral-100 dark:bg-neutral-800`,
+      rowNormal: `bg-zinc-50 dark:bg-zinc-700`,
+      rowAlternative: `bg-zinc-100 dark:bg-zinc-800`,
     };
 
    
@@ -4815,7 +4815,7 @@ export class DataArray {
   changeColorClass(color){
     Object.keys(this.tableClass).forEach((tipo) => {
       let inClass = this.tableClass[tipo];
-      let outClass = inClass.replaceAll('neutral', color)
+      let outClass = inClass.replaceAll('zinc', color)
       this.tableClass[tipo] = outClass;
     })
   }
@@ -5673,8 +5673,8 @@ export class DataArray {
 
       table += `<div class="flex flex-col items-center ${this.tableClass.pagination}">
 			<!-- Help text -->
-			<span class="text-sm text-neutral-700 dark:text-neutral-400">
-					Registro <span class="font-semibold text-neutral-900 dark:text-white">${desde}</span> al <span class="font-semibold text-neutral-900 dark:text-white">${hasta}</span> (total: <span class="font-semibold text-neutral-900 dark:text-white">${count}</span> registros)
+			<span class="text-sm text-zinc-700 dark:text-zinc-400">
+					Registro <span class="font-semibold text-zinc-900 dark:text-white">${desde}</span> al <span class="font-semibold text-zinc-900 dark:text-white">${hasta}</span> (total: <span class="font-semibold text-zinc-900 dark:text-white">${count}</span> registros)
 			</span>
 			<div class="inline-flex mt-2 xs:mt-0">
 				<!-- Buttons -->
@@ -6036,4 +6036,3 @@ formatDate(valor = '', separador = '-') {
   
 
 }
-
