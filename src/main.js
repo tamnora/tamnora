@@ -1,5 +1,5 @@
 import { DataArray, DataObject, Tamnora, structure, runCode, dbSelect } from './js/tamnora'
-import { navbar } from './components/prueba.tmn';
+import { navbar } from './components/navbar.tmn';
 
 const tmn = new Tamnora;
 const dataTabla = new DataArray('tabla');
@@ -73,7 +73,9 @@ tmn.select('#tabla').html(`
 
 `)
 
-tmn.select('#nana').html(navbar())
+tmn.select('#navbar').html(navbar('Tamnora js'))
+
+tmn.setComponentHTML
 
 dataTabla.setValue('contador', 2);
 
