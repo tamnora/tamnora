@@ -1,0 +1,15 @@
+const navbar = () => {
+    return `
+        <nav>
+            <ul class="flex text-white">
+                <li>cualquier cosa</li>
+                <li>cualquier cosa</li>
+                <li>cualquier cosa</li>
+                <li>cualquier cosa</li>
+            </ul>
+        </nav>
+    `
+    
+}
+
+export {navbar}

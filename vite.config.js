@@ -30,5 +30,10 @@ export default defineConfig({
       input
     },
   },
+  resolve: {
+    alias: {
+      '.tmn': '.js',
+    },
+  },
 })
 
