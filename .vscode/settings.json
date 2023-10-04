@@ -1,0 +1,16 @@
+{
+  "vsicons.associations.files": { 
+    "icon": "tamnora", "extensions": "*.tmn", "format": "svg" 
+  },
+  "material-icon-theme.files.associations": {
+    "*.tmn": "React"
+  },
+    "editor.tabSize": 2,
+    "editor.wordWrap": "on",
+    "files.associations": {
+      "*.tmn": "javascript"
+    },
+    
+  "editor.cursorBlinking": "expand",
+  "editor.linkedEditing": true
+  }
