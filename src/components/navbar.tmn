@@ -2,17 +2,15 @@ const navbar = (title) => {
     return /*html*/`
     <nav class="bg-neutral-200 dark:bg-neutral-800 transition-bg duration-500 antialiased">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center justify-between w-full">
-                <div class="w-full text-neutral-800 dark:text-white">${title}</div>
-                <div class="w-full flex items-center gap-3">
-                    
+            <div class="flex items-center justify-between ">
+                <div class="flex items-center justify-between w-full h-16">
+                    <div class="w-full text-neutral-800 dark:text-white">${title}</div>
+                    <div class="flex items-center justify-end gap-2">
                         <a href="/" data-navactive="1" data-tail="navlink">Home</a>
                         <a href="/otro/" data-navactive="2" data-tail="navlink">Contacto</a>
-                        <button data-tail="btn dark" data-click="functionNavbar">Acciones</button>
-                        <button data-tail="btn dark" data-theme></button>
-                
-                </div>
+                        <button data-tail="btn btndark" data-click="functionNavbar">Acciones</button>
+                        <button data-tail="btn btndark" data-theme></button>
+                    </div>
                 </div>
             </div>
         </div>
