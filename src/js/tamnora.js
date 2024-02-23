@@ -2215,7 +2215,7 @@ export class Tamnora {
 
     forms.forEach((form) => {
       const functionName = form.getAttribute('data-action');
-
+     
       form.addEventListener('submit', (event) => {
         event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
         this.executeFunctionByName(functionName);
@@ -5712,6 +5712,25 @@ export class DataArray {
 
   async addObjectFromRunCode(sq) {
     let rstData = await runCode(sq);
+    //console.log(rstData)
+    if (!rstData[0].resp) {
+      if (!rstData[0].Ninguno) {
+        this.removeAll();
+        this.from = 1;
+        this.setDefaultRow(rstData[0]);
+        rstData.forEach(reg => {
+          this.addObject(reg)
+        });
+      } else {
+        this.loadDefaultRow();
+      }
+    } else {
+      console.error(rstData[0].msgError)
+    }
+  }
+
+  addObjectFromArray(arr) {
+    let rstData = arr;
     //console.log(rstData)
     if (!rstData[0].resp) {
       if (!rstData[0].Ninguno) {
