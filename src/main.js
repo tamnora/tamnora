@@ -162,6 +162,8 @@ async function verSaldosAcumulados() {
   dataTabla.widthColumns = ['w-10', 'w-10', 'w-10', 'w-20', 'w-20', 'w-35'];
   dataTabla.setDataKeys('attribute', { importe: 'currency', saldo: 'pesos' })
   dataTabla.setDataKeys('name', { id_factura: 'Remito' })
+  dataTabla.searchValue = '03';
+  dataTabla.searchColumns= ['id_factura'];
   
   
   let buttons = `

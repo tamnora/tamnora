@@ -4696,236 +4696,6 @@ export class DataObject {
 
   }
 
-//   createFormModal(data = {}) {
-//     let element;
-//     const idElem = this.name;
-
-
-//     if (this.orderColumns.length > 0) {
-//       this.camposRegistro = this.reordenarClaves(this.camposRegistro, this.orderColumns)
-//     }
-
-//     if (!this.formElement) {
-//       element = document.querySelector(`#${idElem}`);
-//       this.formElement = element;
-//     } else {
-//       element = this.formElement;
-//     }
-//     this.formOptions = data;
-//     this.nameModal = idElem;
-//     let nameModal = idElem;
-
-//     if (data.show == true) {
-//       element.classList.add('flex');
-//     } else {
-//       element.classList.add('hidden');
-//     }
-
-
-
-
-//     let form = `<div id="${nameModal}_mod" tabindex="-1" name="divModal" aria-hidden="true" class="${this.formClass.divModal}">
-//     <div name="modalContainer" class="${this.formClass.modalContainer}">
-//         <div name="divPadre" class="${this.formClass.divPadre}">`;
-//     let columns = this.formClass.gridColumns;
-
-//     form += `<div name="header" class="${this.formClass.header}">`
-//     form += `<div name="titleContainer" class="${this.formClass.titleContainer}">`;
-//     if (data.title) {
-//       form += `<h3 name="title" class="${this.formClass.title}">${data.title}</h3>`;
-//     }
-
-//     if ("subtitle" in data) {
-//       form += `<p name="subtitle" class="${this.formClass.subtitle}">${data.subtitle}</p>`;
-//     }
-//     if ("buttons" in data) {
-//       form += `<div>${data.buttons}</div>`;
-//     }
-//     form += '</div>'
-
-
-//     form += `<button name="btnCloseModal" data-modal="closeModal,#${nameModal}" type="button" class="${this.formClass.btnCloseModal}">
-//     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-//         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-//     </svg>
-//     <span class="sr-only">Close modal</span>
-// </button>`
-
-//     form += `</div><form data-action="submit" data-inmodal="${nameModal}">`;
-
-
-//     if ("columns" in data) {
-//       columns = `col-span-12 sm:col-span-${data.columns.sm ?? 6} 
-//       md:col-span-${data.columns.md ?? 4} 
-//       lg:col-span-${data.columns.lg ?? 3}`
-
-//     }
-
-
-//     form += `<div name="grid" class="${this.formClass.grid}">`;
-//     this.forEachField((campo, dato) => {
-//       let fieldElement = '';
-//       let dataValue = '';
-//       let colspan = '';
-//       let esrequired = '';
-//       let textRequired = '';
-//       let pattern = '';
-//       let onChange = '';
-//       let xClass = '';
-//       let dataUppercase = '';
-
-//       if (data.bind) {
-//         dataValue = `data-form="${data.bind}!${campo}"`;
-//       } else {
-//         dataValue = `data-form="${this.name}!${campo}"`;
-//       }
-
-//       if (dato.required == true) {
-//         esrequired = 'required';
-//         textRequired = `<span class='text-red-500 text-xs'>(req)</span>`
-//       }
-
-//       if (dato.pattern != '') {
-//         pattern = `pattern="${dato.pattern}"`;
-//       }
-
-//       if (dato.change != '') {
-//         onChange = `data-onchange="${dato.change}"`;
-//       }
-
-
-//       if (dato.class != '') {
-//         xClass = dato.class;
-//         if (xClass.includes('uppercase')) {
-//           dataUppercase = 'data-UpperCase="true"';
-//         }
-//       }
-
-
-//       if ('column' in dato) {
-//         if (dato.column != '') {
-//           colspan = `${dato.column}`
-//         } else {
-//           colspan = columns
-//         }
-//       } else {
-//         colspan = columns
-//       }
-
-
-//       if (dato.hidden == true) {
-//         colspan += ' hidden';
-//       }
-
-//       if (dato.type === 'select') {
-//         let haySelected = false;
-//         let options = dato.options.map(option => {
-//           if (option.value == dato.value || option.value == dato.defaultValue) {
-//             if (dato.elegirOpcion == true) {
-//               return `<option value="${option.value}">${option.label}</option>`
-//             } else {
-//               haySelected = true;
-//               return `<option value="${option.value}" selected>${option.label}</option>`
-//             }
-//           } else {
-//             return `<option value="${option.value}">${option.label}</option>`
-//           }
-//         }).join('');
-
-//         if (!haySelected) {
-//           options = `<option value="" disabled selected >Elegir...</option>${options}`
-//           if (!dato.required) {
-//             esrequired = 'required';
-//             textRequired = `<span class='text-red-500 text-xs'>(req)</span>`
-//           }
-//         }
-
-//         fieldElement = `
-//         <div class="${colspan}">
-//           <label for="${nameModal}_${campo}" class="${this.formClass.label}">${dato.name}</label>
-//           <select id="${nameModal}_${campo}" ${dataValue} ${onChange} class="${this.formClass.select} ${xClass}" ${esrequired}>
-//             ${options}
-//           </select>
-//         </div>`;
-//       } else if (dato.type === 'datalist') {
-//         const options = dato.options.map(option => {
-//           if ((option.value == dato.value && dato.elegirOpcion == false) || option.value == dato.defaultValue) {
-//             return `<option value="${option.value}" selected>${option.label}</option>`
-//           } else {
-//             return `<option value="${option.value}">${option.label}</option>`
-//           }
-//         }).join('');
-
-//         fieldElement = `
-//         <div class="${colspan}">
-//         <label for="${nameModal}_${campo}" class="${this.formClass.label}">${dato.name}</label>
-//         <input type="text" autocomplete="off" list="lista-${campo}" data-change="currency" id="${nameModal}_${campo}" ${dataValue} ${esrequired} ${pattern} ${onChange} value="${dato.value}" ${dato.attribute} class="${this.formClass.input} ${xClass}">
-//           <datalist id="lista-${campo}">
-//             ${options}
-//           </datalist>
-//         </div>`;
-//       } else if (dato.type === 'checkbox') {
-//         fieldElement = `
-//           <div class="${colspan}">
-//             <input type="checkbox" id="${nameModal}_${campo}" ${dataValue} ${onChange} ${esrequired} class="${this.formClass.checkbox}" ${dato.value ? 'checked' : ''}>
-//             <label class="${this.formClass.labelCheckbox}" for="${nameModal}_${campo}">${dato.name}</label>
-//           </div>
-//         `;
-//       } else if (dato.type === 'textarea') {
-//         fieldElement = `
-//           <div class="${colspan}">
-//             <label for="${nameForm}_${campo}" class="${this.formClass.label}">${dato.name}</label>
-//             <textarea id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${onChange} ${pattern} ${dato.attribute} class="${this.formClass.textarea} ${xClass}">${dato.value}</textarea>
-//           </div>
-//         `;
-//       } else if (dato.type === 'currency') {
-//         fieldElement = `
-//           <div class="${colspan}">
-//             <label for="${nameModal}_${campo}" class="${this.formClass.label}">${dato.name}</label>
-//             <input type="text" autocomplete="off" data-change="currency" id="${nameModal}_${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${this.formClass.input} ${xClass}">
-//           </div>
-//         `;
-//       } else {
-
-//         fieldElement = `
-//           <div class="${colspan}">
-//             <label for="${nameModal}_${campo}" class="${this.formClass.label}">${dato.name}</label>
-//             <input type="${dato.type}" autocomplete="off" id="${nameModal}_${campo}" ${dataValue} ${dataUppercase} ${onChange} ${esrequired} ${pattern} value="${dato.value}" ${dato.attribute} class="${dato.attribute == 'readonly' ? this.formClass.inputDisable : this.formClass.input} ${xClass}">
-//           </div>
-//         `;
-//       }
-
-//       form += fieldElement;
-//     });
-
-//     form += `</div>`;
-
-//     if (data.submit || data.delete) {
-//       form += `<div name="containerButtons" class="${this.formClass.containerButtons}">`;
-
-//       if (data.submit) {
-//         form += ` <button name="submit" type="submit" class="${this.formClass.submit}">${data.submit}</button>`;
-//       }
-
-//       if (data.delete) {
-//         form += ` <button name="delete" type="button" data-formclick="delete" class="${this.formClass.delete}">${data.delete}</button>`;
-//       }
-
-//       form += `</div>`;
-//     }
-//     form += `</form></div></div></div>`
-
-//     element.innerHTML = '';
-//     element.innerHTML = form;
-//     this.bindSubmitEvents(element);
-//     this.bindClickModal(element);
-//     this.bindClickEvent(element)
-//     this.bindElementsWithDataValues(element);
-//     this.bindChangeEvents(element);
-//     this.bindFormClickEvent(element);
-//     return form;
-
-//   }
 
   // Vincula los eventos submit del formulario con sus functions personalizadas
   bindSubmitEvents(componentDiv) {
@@ -6051,24 +5821,42 @@ export class DataArray {
 
   buscarYResaltar(componentDiv) {
     // Obtén la tabla
-    const busqueda = this.searchValue;
+    const busqueda = this.searchValue.toLowerCase();
     const tabla = componentDiv.querySelector('tbody');
 
     // Recorre las filas de la tabla
     for (var i = 0; i < tabla.rows.length; i++) {
-      // Recorre las celdas de cada fila
-      for (var j = 0; j < tabla.rows[i].cells.length; j++) {
-        // Si el texto de la celda contiene la búsqueda
-        let name = tabla.rows[i].cells[j].getAttribute('name');
-        if(this.searchColumns.includes(name)){
-          if (tabla.rows[i].cells[j].innerHTML.includes(busqueda)) {
-            // Encierra el texto en un span con la clase 'text-sky-500'
-            tabla.rows[i].cells[j].innerHTML = tabla.rows[i].cells[j].innerHTML.replace(busqueda, '<strong class="text-sky-600 font-semibold">' + busqueda + '</strong>');
-          }
+        // Recorre las celdas de cada fila
+        for (var j = 0; j < tabla.rows[i].cells.length; j++) {
+            // Si el texto de la celda contiene la búsqueda
+            let name = tabla.rows[i].cells[j].getAttribute('name');
+            let originalText = tabla.rows[i].cells[j].textContent.trim(); // Mantener el texto original
+            let value = originalText.toLowerCase();
+            if (this.searchColumns.includes(name)) {
+                if (value.includes(busqueda)) {
+                    // Crear un elemento <span> con la clase y estilos deseados
+                    let highlightedSpan = document.createElement('span');
+                    highlightedSpan.classList.add('text-sky-600', 'font-semibold');
+                    // Encerrar el texto de búsqueda dentro del <span> creado
+                    let startIndex = value.indexOf(busqueda);
+                    let endIndex = startIndex + busqueda.length;
+                    let prefix = originalText.substring(0, startIndex); // Usar el texto original
+                    let match = originalText.substring(startIndex, endIndex); // Usar el texto original
+                    let suffix = originalText.substring(endIndex); // Usar el texto original
+                    let prefixTextNode = document.createTextNode(prefix);
+                    let matchTextNode = document.createTextNode(match);
+                    let suffixTextNode = document.createTextNode(suffix);
+                    highlightedSpan.appendChild(matchTextNode);
+                    // Reemplazar el contenido de la celda con el nuevo nodo
+                    tabla.rows[i].cells[j].textContent = ''; // Limpiar el contenido de la celda
+                    tabla.rows[i].cells[j].appendChild(prefixTextNode);
+                    tabla.rows[i].cells[j].appendChild(highlightedSpan);
+                    tabla.rows[i].cells[j].appendChild(suffixTextNode);
+                }
+            }
         }
-      }
     }
-  }
+}
 
   createTable(options = {}) {
     const name = this.name;
@@ -6146,17 +5934,23 @@ export class DataArray {
 
 
     Object.keys(this[arrayTable][0]).forEach(item => {
-      let tipo = this.detectDataType(this[arrayTable][0][item].value);
+      let objectItem = this[arrayTable][0][item];
+      let tipo = this.detectDataType(objectItem.value);
       let xheader = {};
       let xfooter = {};
       let classTitleColumn = '';
+      let ColSearch = '';
       let xfield, xname, xattribute, xhidden;
 
-      xattribute = this[arrayTable][0][item].attribute ? this[arrayTable][0][item].attribute : '';
-      xhidden = this[arrayTable][0][item].hidden ? 'hidden' : '';
+      xattribute = objectItem.attribute ? objectItem.attribute : '';
+      xhidden = objectItem.hidden ? 'hidden' : '';
 
 
-      xname = this[arrayTable][0][item].name;
+      xname = objectItem.name;
+
+      if(this.searchColumns.includes(item)){
+        ColSearch = '&#9679; '
+      }
 
       if ("header" in options) {
         xheader = options.header[item] ? options.header[item] : {};
@@ -6202,9 +5996,9 @@ export class DataArray {
       }
 
       if (tipo == 'number') {
-        tableHeader += `<th scope="col" ${xattribute} ${xhidden} class="${this.tableClass.th} ${classTitleColumn}">${xname}</th>`;
+        tableHeader += `<th scope="col" ${xattribute} ${xhidden} class="${this.tableClass.th} ${classTitleColumn}">${ColSearch}${xname}</th>`;
       } else {
-        tableHeader += `<th scope="col" ${xattribute} ${xhidden} class="${this.tableClass.th} ${classTitleColumn}">${xname}</th>`;
+        tableHeader += `<th scope="col" ${xattribute} ${xhidden} class="${this.tableClass.th} ${classTitleColumn}">${ColSearch}${xname}</th>`;
       }
     })
 
