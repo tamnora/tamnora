@@ -6,8 +6,8 @@ const navbar = (title) => {
                 <div class="flex items-center justify-between w-full h-16">
                     <div class="w-full text-neutral-800 dark:text-white">${title}</div>
                     <div class="flex items-center justify-end gap-2">
-                        <a href="/" data-navactive="1" data-tail="navlink">Home</a>
-                        <a href="/otro/" data-navactive="2" data-tail="navlink">Contacto</a>
+                        <a href="./" data-navactive="1" data-tail="navlink">Home</a>
+                        <a href="./otro/index.html" data-navactive="2" data-tail="navlink">Panel</a>
                         <button data-tail="btn btndark" data-click="functionNavbar">Acciones</button>
                         <button data-tail="btn btndark" data-theme></button>
                     </div>

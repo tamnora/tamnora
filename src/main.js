@@ -158,6 +158,7 @@ async function verSaldosAcumulados() {
   await dataTabla.addObjectFromDBSelect(`CALL saldos_acumulados(${tmn.getValue('id_cliente')}, ${cant})`);
 
   dataTabla.orderColumns = ['tipo_oper', 'id', 'fechahora', 'id_factura', 'importe', 'saldo'];
+  dataTabla.searchColumns = ['tipo_oper', 'id', 'fechahora'];
   dataTabla.widthColumns = ['w-10', 'w-10', 'w-10', 'w-20', 'w-20', 'w-35'];
   dataTabla.setDataKeys('attribute', { importe: 'currency', saldo: 'pesos' })
   dataTabla.setDataKeys('name', { id_factura: 'Remito' })
@@ -214,13 +215,15 @@ async function verSaldosAcumulados() {
       }
     },
     row: {
-      class: 'alternative',
+      alternative: true,
       click: {
         function: 'showMovi',
         field: 'id'
       }
     }
   }
+
+  
 
   if(tmn.getValue('id_cliente') > 0){
     options.subtitle = `${tmn.getValue('nombre_cliente')} (Cod. Cliente: ${tmn.getValue('id_cliente')})`
@@ -239,6 +242,7 @@ async function verSaldosAcumulados() {
   dataTabla.setFunction('newMovi', async (ref) => {
     formModal.setDataDefault('id_cliente', 'value', tmn.getValue('id_cliente'));
     formModal.setDataDefault('fechahora', 'introDate', true)
+    // formModal.setData('id_cliente', 'elegirOpcion', false)
     formModal.setData('tipo_oper', 'elegirOpcion', true)
     formModal.updateDataInFormForNew();
     formModal.functions.openModal();
@@ -250,13 +254,17 @@ async function crearModalForm(){
   let conex = await formModal.setStructure('movimientos', 'id');
   console.log('hay conexion', conex)
   if(!conex) return
+  formModal.removeAll()
   await formModal.addObjectFromRunCode(`-st movimientos -lt 1`, true);
+  formModal.type = 'modal';
+  
 
   const optionsClientes = [];
   tmn.getValue('dataClientes').forEach(cliente => {
     optionsClientes.push({ value: cliente.id_cliente, label: cliente.nombre_cliente })
   })
 
+  formModal.setData('id', 'attribute', 'readonly');
   formModal.setData('tipo_oper', 'type', 'select');
   formModal.setData('tipo_oper', 'options', [{ value: 0, label: 'Venta' }, { value: 1, label: 'Cobro' }]);
   formModal.setData('id_cliente', 'name', 'cliente' );
@@ -264,17 +272,20 @@ async function crearModalForm(){
   formModal.setData('id_cliente', 'value', tmn.getValue('id_cliente'));
   formModal.setData('id_cliente', 'options', optionsClientes);
   formModal.setData('id_cliente', 'required', true);
+  formModal.setData('concepto', 'type', 'textarea')
+  formModal.setDataKeys('column', { id: 'col-span-2', id_cliente: 'col-span-10', id_factura: 'col-span-6', fechahora: 'col-span-6', tipo_oper: 'col-span-6', importe: 'col-span-6', concepto: 'col-span-12' });
 
   formModal.setFunction('reload', verSaldosAcumulados);
+  formModal.labelCapitalize();
 
   const options = {
-    title: 'Editar Movimiento',
+    title: 'Editar Movimiento Prueba',
     submit: 'Guardar!',
     delete: 'Eliminar!',
-    columns:{md:6, lg:6}
   }
 
-  formModal.createFormModal(options);
+ 
+  formModal.createForm(options);
   
 }
 
