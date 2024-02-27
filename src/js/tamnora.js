@@ -4760,14 +4760,19 @@ export class DataObject {
         // Verificamos si la tecla presionada es "Enter" (código 13)
         if (event.keyCode === 13) {
           // Prevenimos la acción predeterminada (envío del formulario)
-          event.preventDefault();
+          // event.preventDefault();
 
           // Obtenemos el elemento activo (el que tiene el foco)
           const elementoActivo = document.activeElement;
+          console.log(elementoActivo.type)
 
           if (elementoActivo.type == 'submit') {
+            event.preventDefault();
             elementoActivo.click();
+          } else if (elementoActivo.type == 'textarea') {
+            
           } else {
+            event.preventDefault();
             // Obtenemos la lista de elementos del formulario
             // const elementosFormulario = form.elements;
             const elementosFormulario = Array.from(form.elements).filter(elemento => !elemento.readOnly);
@@ -6148,7 +6153,6 @@ export class DataArray {
               mywidth = this.widthColumns[iri];
             }
 
-
             if (xattribute == 'currency') {
               valor = formatNumberArray(value)[2];
             }
@@ -6705,13 +6709,6 @@ export class DataArray {
       console.error(`La función '${functionName}' no está definida en la DataArray.`);
     }
   }
-
-  
-
-
-
- 
-
 
 
 }

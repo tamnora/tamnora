@@ -16,10 +16,14 @@ laTabla.setFunction('accionBuscar',()=>{
   let valorBuscado = laTabla.getValue('buscando');
   let cursos = dataFetch;
 
-  laTabla.searchValue = valorBuscado;
+  laTabla.searchValue = ''
+
+  if(valorBuscado){
+    laTabla.searchValue = valorBuscado;
     cursos = dataFetch.filter(objeto => {
       return objeto.titulo.toLowerCase().includes(valorBuscado.toLowerCase());
     });
+  }
   
   laTabla.addObjectFromArray(cursos);
   laTabla.updateTable();
@@ -64,6 +68,11 @@ function cargarTabla(){
   let btnNuevo = tmn.createButton({title: 'Nuevo', dataClick: 'nuevoRegistro,0'})
   
   let buttons = `${inputSearch}${btnNuevo}`;
+  laTabla.addObjectFromArray(cursos);
+  laTabla.orderColumns = ['curso_id', 'titulo', 'precio'];
+  laTabla.setDataKeys('attribute', { precio: 'pesos' })
+
+  console.log(laTabla.getDataAllKeys('attribute'));
 
   const options = {
     title: 'Movimientos del cliente',
@@ -79,9 +88,9 @@ function cargarTabla(){
   }
 
  
-    laTabla.addObjectFromArray(cursos);
-    laTabla.orderColumns = ['curso_id', 'titulo']
     laTabla.createTable(options)
+
+
 
     laTabla.setFunction('showMovi', (data)=>{
       console.log(data)
@@ -98,11 +107,22 @@ async function cargarFormulario(){
   console.log(id)
   const mode = id == 0? true : false;
   await elForm.setStructure('cursos', 'curso_id')
-  await elForm.addObjectFromRunCode(`-sl curso_id, titulo, precio -fr cursos -wr curso_id = ${id}`, mode)
+  elForm.removeAll()
+  await elForm.addObjectFromRunCode(`-sl curso_id, titulo, precio, resumen, descripcion -fr cursos -wr curso_id = ${id}`, mode)
+  elForm.type = 'modal'
 
-  elForm.orderColumns = ['curso_id', 'titulo', 'precio']
+  elForm.orderColumns = ['curso_id', 'titulo', 'precio', 'resumen', 'descripcion']
+  elForm.setDataKeys('type', {descripcion: 'textarea'});
+  elForm.setDataKeys('column', { curso_id: 'col-span-2', titulo: 'col-span-10', precio: 'col-span-6', resumen: 'col-span-6', descripcion: 'col-span-12' });
+  elForm.setFunction('reload', async ()=>{
+    await traerDatos().then(data => {
+      dataFetch = data[0].cursos
+      laTabla.functions.accionBuscar();
+    })
+  });
 
-  console.log(elForm.getDataAll())
+  elForm.labelCapitalize();
+ 
 
   const options = {
     title: 'Editar Movimiento Prueba',
@@ -111,9 +131,10 @@ async function cargarFormulario(){
   }
 
   elForm.createForm(options)
+  elForm.functions.openModal();
 }
 
-structure('b', 'campusvi_cursos').then(val =>{
+structure('t', 'cursos').then(val =>{
   console.log(val)
 })
 
