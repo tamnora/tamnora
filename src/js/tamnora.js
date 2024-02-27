@@ -1,5 +1,5 @@
-const SERVER = import.meta.env.VITE_SERVER_DEV;
-const TYPE_SERVER = 'php';
+const SERVER = import.meta.env.VITE_SERVER_NODE;
+const TYPE_SERVER = 'node';
 
 
 let informe = { primero: 'nada', segundo: 'nada' };
@@ -236,10 +236,10 @@ export function defaultClass() {
     btnAtras: `flex items-center ps-2 py-2 pe-4 gap-1 w-fit text-sm focus:outline-none font-medium text-neutral-500 rounded-md hover:text-neutral-600 focus:text-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800/50 border dark:border-neutral-700/50  bg-black/5 hover:bg-black/10 dark:bg-white/5`,
     btnBack:`flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-neutral-500 to-neutral-600 dark:from-neutral-700 dark:to-neutral-800 shadow-lg shadow-neutral-500/30 hover:shadow-neutral-500/50 dark:shadow-lg dark:shadow-neutral-700/80 border-b border-neutral-400 dark:border-neutral-600 active:translate-y-0.5  transition-all duration-100 scale-95 hover:scale-100 text-center me-2 mb-2`,
     btnSystem: `flex items-center px-3 py-1 gap-1 w-fit text-sm focus:outline-none font-medium text-neutral-500 rounded-md hover:text-neutral-600 focus:text-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800/50 border dark:border-neutral-700/50  bg-black/5 hover:bg-black/10 dark:bg-white/5`,
-    btnEmerald:`flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/40 hover:shadow-sky-600/60 dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100  scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center me-2 mb-2`,
-    btnSky: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50  dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100 active:bg-sky-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center me-2 mb-2`,
-    btnRed: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-600/30 hover:shadow-red-600/50  dark:from-red-600 dark:to-red-700 active:translate-y-0.5 transition-all duration-100 active:bg-red-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-red-800/80 text-center me-2 mb-2`,
-    btnNeutral: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-neutral-700 dark:text-white bg-gradient-to-r from-neutral-50 to-neutral-100 dark:from-neutral-700 dark:to-neutral-800 shadow-lg shadow-neutral-400/30 hover:shadow-neutral-400/50 dark:shadow-lg dark:shadow-neutral-700/80 border-b border-neutral-50 dark:border-neutral-700 active:translate-y-0.5  transition-all duration-100 scale-95 hover:scale-100 text-center me-2 mb-2`,
+    btnEmerald:`flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/40 hover:shadow-sky-600/60 dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100  scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center me-2`,
+    btnSky: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50  dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100 active:bg-sky-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center me-2`,
+    btnRed: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-600/30 hover:shadow-red-600/50  dark:from-red-600 dark:to-red-700 active:translate-y-0.5 transition-all duration-100 active:bg-red-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-red-800/80 text-center me-2`,
+    btnNeutral: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-neutral-700 dark:text-white bg-gradient-to-r from-neutral-50 to-neutral-100 dark:from-neutral-700 dark:to-neutral-800 shadow-sms shadow-neutral-400/30 hover:shadow-neutral-400/50 dark:shadow-lg dark:shadow-neutral-700/80 border-b border-neutral-50 dark:border-neutral-700 active:translate-y-0.5  transition-all duration-100 scale-95 hover:scale-100 text-center me-2`,
     form: {
       divModal: `fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center `,
       btnCloseModal: `text-neutral-400 bg-transparent hover:bg-red-200 hover:text-red-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-red-600 dark:hover:text-white`,
@@ -272,10 +272,11 @@ export function defaultClass() {
     },
     table: {
       divPadre: `relative bg-transparent overflow-hidden animated fadeIn`,
-      tableContainer: `overflow-x-auto rounded-lg border dark:border-neutral-700/50 `,
+      tableContainer: `overflow-x-auto rounded-lg border border-neutral-400/30 dark:border-neutral-700/50 `,
       table: `w-full text-sm text-left text-neutral-500 dark:text-neutral-400`,
-      header: `flex justify-between items-center w-full bg-transparent mb-6`,
-      titleContainer: `flex flex-col flex-grow`,
+      header: `flex justify-between items-center w-full bg-transparent mb-6 gap-3`,
+      titleContainer: `flex flex-col w-full`,
+      buttonsContainer: `flex justify-end items-center`,
       title: `text-lg font-medium text-left text-neutral-600 dark:text-neutral-200 leading-none`,
       subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-300 leading-tight`,
       btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600  `,
@@ -327,7 +328,7 @@ export function prepararSQL(tabla, json, selectID = '') {
       for (const key in json) {
         //console.log(key, json[key].value)
         if (json[key].noData == false) {
-          if (json[key].key == 'PRI') {
+          if (json[key].key == 'PRI' || json[key].key == 'pri') {
             typeInput = json[key].type;
             hayKey = true;
             let valueKey = json[key].value;
@@ -465,6 +466,7 @@ export async function dbSelect(type, sql) {
     }
 
     const result = await resp.json();
+    
     const newResult = result.map((obj) => {
       // return convertirClavesAMinusculas(obj)
       return convertirClavesAMinusculasYFormatoFecha(obj)
@@ -474,9 +476,9 @@ export async function dbSelect(type, sql) {
     return newResult;
 
   } catch (error) {
-    // console.log(error)
-    // console.log(informe)
-    // console.log(datos)
+    console.log(error)
+    console.log(informe)
+    console.log(datos)
     const err = [{ resp: 'error', msgError: 'Error en la conexión a la base de datos.' }];
     return err;
   }
@@ -569,6 +571,7 @@ export async function runCode(input) {
     { str: 'right', cod: '-rg' },
     { str: 'update', cod: '-up' },
     { str: 'delete', cod: '-dl' },
+    { str: 'delete from', cod: '-df' },
     { str: 'insert into', cod: '-in' },
     { str: 'values', cod: '-va' },
     { str: 'set', cod: '-se' },
@@ -588,7 +591,8 @@ export async function runCode(input) {
     { str: 'group', cod: '-gr' },
     { str: 'having', cod: '-hv' },
     { str: 'limit', cod: '-lt' },
-    { str: 'like', cod: '-lk' }
+    { str: 'like', cod: '-lk' },
+    { str: ' ', cod: '-__' }
   ];
 
   let inicharter = input.toLowerCase();
@@ -2868,6 +2872,7 @@ export class Tamnora {
     if(!options.title) options.title = 'Nuevo Botón';
     if(!options.className) options.className = 'btnNeutral';
     if(!options.position) options.position = 'left';
+    if(!options.dataClick) options.dataClick = 'dataClick';
 
     let myBtn = `<button type="button" `;
 
@@ -2887,6 +2892,32 @@ export class Tamnora {
     }
     myBtn += `</button>`;
     return myBtn;
+  }
+
+  createSearch(options = {}){
+    if(!options.value) options.value = 'buscando';
+    if(!options.change) options.change = 'accionBuscar';
+    if(!options.inputClass) options.inputClass = 'bg-neutral-100 text-neutral-600 focus:border-sky-400 dark:bg-neutral-900 dark:text-neutral-300 dark:border-neutral-800';
+    if(!options.iconClass) options.iconClass = 'text-neutral-500 dark:text-neutral-400';
+
+    let comp = `
+    <div class="relative" >
+    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none ${options.iconClass}">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+        <path fillRule="evenodd" d="M9 3.5a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11ZM2 9a7 7 0 1 1 12.452 4.391l3.328 3.329a.75.75 0 1 1-1.06 1.06l-3.329-3.328A7 7 0 0 1 2 9Z" clipRule="evenodd" />
+      </svg>
+    </div>
+    <input
+      type="search" 
+      name="search"
+      autoComplete="off"
+      data-value="${options.value}"
+      data-change = "${options.change}"
+      class="block w-80 py-2 px-3 ps-10 text-sm font-normal border rounded-lg outline-none shadow-sm ${options.inputClass}" 
+      placeholder='Buscar...' />
+  </div>
+    `
+    return comp
   }
 
 
@@ -2967,12 +2998,14 @@ export class DataObject {
             this.setDataFromModel(this.data[datt]);
             const paraSQL = this.getDataAll();
             const send = prepararSQL(this.table, paraSQL, this.id);
-            console.log(send)
             const validation = this.validations();
+            console.log(send)
   
             if(validation){
               if (send.status == 1) {
+                console.log('Paso la validación')
                 dbSelect(send.tipo, send.sql).then(val => {
+                  console.log(val)
                   if (val[0].resp == 1) {
                     resolve(val[0]);
                   } else {
@@ -3672,6 +3705,7 @@ export class DataObject {
     if (inType == 'decimal') outType = 'currency';
     if (inType == 'text') outType = 'text';
     if (inType == 'longtext') outType = 'text';
+    if (inType == 'bigint') outType = 'number';
 
 
     if (!outType) {
@@ -3836,6 +3870,7 @@ export class DataObject {
 
   async addObjectFromRunCode(sq, clean = false) {
     let rstData = await runCode(sq);
+    console.log(rstData)
     if (!rstData[0].resp) {
       this.setValue(this.name, {});
       this.removeAll();
@@ -5881,7 +5916,6 @@ export class DataArray {
     const name = this.name;
     let element;
 
-
     if (!this.tableElement) {
       element = document.querySelector(`#${name}`);
       this.tableElement = element;
@@ -5929,7 +5963,7 @@ export class DataArray {
         table += `</div>`;
       }
       if ("buttons" in options) {
-        table += `${options.buttons}`;
+        table += `<div class="${this.tableClass.buttonsContainer}  ${this.widthTable}" >${options.buttons}</div>`;
       }
       if ("btnNew" in options) {
         table += `<button type="button" data-action="seleccionado,0,0" class="${this.tableClass.btnSmall}">${options.btnNew}</button>`;
@@ -6035,11 +6069,7 @@ export class DataArray {
         xattribute = this[arrayTable][0][item].attribute ? this[arrayTable][0][item].attribute : '';
         xhidden = this[arrayTable][0][item].hidden ? 'hidden' : '';
   
-  
         xvalue = '';
-  
-       
-        
   
         if ("firstRow" in options) {
           if (options.firstRow[item]) {
@@ -6322,6 +6352,240 @@ export class DataArray {
     return table;
   }
 
+  updateTable(){
+    const name = this.name;
+    let element;
+
+    if (!this.tableElement) {
+      element = document.querySelector(`#${name}`);
+      this.tableElement = element;
+    } else {
+      element = this.tableElement;
+    }
+
+    let options = this.tableOptions;
+    let rowGenerate = ``;
+    let count = 0;
+    let desde = 0;
+    let hasta = 0;
+    let recordsPerView = 10;
+    let field = {};
+    let xRow = {};
+    let hayMas = false;
+    let hayMenos = false;
+    let arrayTable = 'dataArray'
+
+    if (options.colorTable) {
+      this.changeColorClass(options.colorTable);
+    }
+
+    if ("row" in options) {
+      xRow = options.row;
+    }
+
+    desde = this.from > 0 ? this.from : 1;
+    recordsPerView = this.recordsPerView;
+    hasta = desde + this.recordsPerView - 1;
+
+    if (this.orderColumns.length > 0) {
+      this.arrayOrder = this.dataArray.map((objeto) =>
+        this.reordenarClaves(objeto, this.orderColumns)
+      );
+      arrayTable = 'arrayOrder';
+    }
+   
+    const tbody = element.querySelector('tbody');
+    
+    tbody.innerHTML = '';
+
+    this[arrayTable].forEach((items, index) => {
+      count++;
+      if (this.paginations) {
+        if ((index + 1) < desde) {
+          hayMenos = true;
+        } else if ((index + 1) >= desde && (index + 1) <= hasta) {
+          let actionClick = '';
+          let actionClass = '';
+          let trNewClass = '';
+
+          if ('click' in xRow) {
+            if (xRow.click.function && xRow.click.field) {
+              if (items[xRow.click.field]) {
+                actionClick = `data-action="${xRow.click.function},${index},${items[xRow.click.field].value}" `;
+                actionClass = this.tableClass.trhover;
+              } else {
+                console.error('row.click.field: ', `No existe columna ${xRow.click.field} en ${name}`);
+              }
+            } else {
+              console.error('row.click.function', xRow.click.function);
+              console.error('row.click.field', xRow.click.field);
+            }
+          }
+
+          if ('change' in xRow) {
+            trNewClass = xRow.change({ items, index });
+          }
+
+          if ('alternative' in xRow) {
+            if (xRow.alternative == true) {
+              if (index % 2 === 0) {
+               rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowNormal} ${actionClass} ${trNewClass}">`;
+              } else {
+               rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowAlternative} ${actionClass} ${trNewClass}">`;
+              }
+            } else {
+             rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowNormal} ${actionClass} ${trNewClass}">`;
+            }
+          } else {
+           rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${actionClass}">`;
+          }
+
+          Object.keys(items).forEach((item, iri) => {
+            let xattribute = this[arrayTable][index][item].attribute ? this[arrayTable][index][item].attribute : '';
+            let xhidden = this[arrayTable][index][item].hidden ? 'hidden' : '';
+            let value = items[item].value;
+            let tipo = this.detectDataType(value);
+            let valor = this.formatValueByDataType(value);
+            let dataClick = '';
+            let newClass = '';
+            let mywidth = ''
+            let xfield, xvalue;
+
+            if ("field" in options) {
+              xfield = options.field[item] ? options.field[item] : '';
+            } else {
+              xfield = '';
+            }
+            field[item] = xfield;
+
+            if (this.widthColumns.length > 0) {
+              mywidth = this.widthColumns[iri];
+            }
+
+
+            if (xattribute == 'currency') {
+              valor = formatNumberArray(value)[2];
+            }
+
+            if (xattribute == 'pesos') {
+              valor = pesos(value);
+            }
+
+            if (field[item] && 'change' in field[item]) {
+              valor = field[item].change({ items, valor, index });
+            }
+
+            if (field[item] && 'click' in field[item]) {
+              dataClick = `data-action="${field[item].click}, ${index}, ${value}"`;
+            } else {
+              dataClick = ``;
+            }
+
+            if (field[item].type) {
+              tipo = field[item].type
+              valor = this.formatValueByDataType(value, tipo);
+            }
+
+            if (field[item].class) {
+              newClass = mywidth + ' ' + field[item].class;
+            } else {
+              if (tipo == 'number') {
+                newClass = mywidth + ' text-right'
+              } else {
+                newClass = mywidth;
+              }
+            }
+
+           rowGenerate += `<td ${xattribute} ${xhidden} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+            
+
+          })
+         rowGenerate += `</tr>`;
+        } else if ((index + 1) > hasta) {
+          hayMas = true;
+        }
+      } else {
+        let actionClick = '';
+        let actionClass = '';
+        if ('click' in xRow) {
+          if (xRow.click.function && xRow.click.field) {
+            actionClick = `data-action="${xRow.click.function},${index},${items[xRow.click.field].value}" `;
+            actionClass = 'cursor-pointer';
+          } else {
+            console.error('row.click.function', xRow.click.function);
+            console.error('row.click.field', xRow.click.field);
+          }
+        }
+
+        if ('class' in xRow) {
+          if ('alternative' in xRow.class) {
+            if (index % 2 === 0) {
+             rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
+            } else {
+             rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.alternative} ${actionClass}">`;
+            }
+          } else {
+           rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
+          }
+        } else {
+         rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${actionClass}">`;
+        }
+
+        Object.keys(items).forEach((item) => {
+          let xattribute = this[arrayTable][index][item].attribute ? this[arrayTable][index][item].attribute : '';
+          let value = items[item].value;
+          let tipo = this.detectDataType(value);
+          let valor = this.formatValueByDataType(value);
+          let dataClick = '';
+          let newClass = '';
+
+          if (field[item].change) {
+            let resu = field[item].change({ items, valor, index });
+            console.log(resu)
+            valor = resu;
+          }
+
+          if (field[item].click) {
+            dataClick = `data-action="${field[item].click}, ${index}, ${value}" `;
+          } else {
+            dataClick = ``;
+          }
+
+          if (field[item].class) {
+            newClass = field[item].class;
+          } else {
+            if (tipo == 'number') {
+              newClass = 'text-right'
+            } else {
+              newClass = '';
+            }
+          }
+
+          if (tipo == 'number') {
+           rowGenerate += `<td ${xattribute} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+          } else if (tipo == 'date' || tipo == 'datetime-local') {
+           rowGenerate += `<td ${xattribute} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+          } else {
+           rowGenerate += `<td ${xattribute} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+          }
+
+        })
+       rowGenerate += `</tr>`;
+       
+      }
+      
+    });
+
+   
+    tbody.innerHTML = rowGenerate;
+    this.bindClickPaginations(element);
+    this.bindActionEvents(element)
+    this.bindClickEvents(element);
+    this.bindElementsWithDataValues(element);
+    this.bindChangeEvents(element);
+    this.buscarYResaltar(element);
+  }
+
   bindChangeEvents(componentDiv) {
     let elementsWithChange;
     let elementsWithOnChange;
@@ -6430,7 +6694,6 @@ export class DataArray {
       }
     });
   }
-
 
 
   // Ejecuta una función pasando el nombre como string
