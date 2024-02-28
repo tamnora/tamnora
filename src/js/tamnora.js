@@ -1,5 +1,5 @@
-const SERVER = import.meta.env.VITE_SERVER_NODE;
-const TYPE_SERVER = 'node';
+const SERVER = import.meta.env.VITE_SERVER_DEV;
+const TYPE_SERVER = 'php';
 
 
 let informe = { primero: 'nada', segundo: 'nada' };
@@ -4875,6 +4875,7 @@ export class DataArray {
     this.tableOptions = {};
     this.tableElement = '';
     this.functions = {};
+    this.loader = false;
     this.structure = [];
     this.searchValue = '';
     this.searchColumns = [];
@@ -5551,6 +5552,19 @@ export class DataArray {
     return newArray
   }
 
+  getCountAtPositionZero() {
+    if(this.orderColumns.length > 0){
+      return this.orderColumns.length
+    } else {
+      if (this.dataArray.length > 0) {
+          const firstPositionObject = this.dataArray[0];
+          return Object.keys(firstPositionObject).length;
+      } else {
+          return 0; // Si no hay objetos en la posición 0, retornamos 0
+      }
+    }
+}
+
   typeToType(inType = 'text') {
     let outType;
     if (inType == 'int') outType = 'number';
@@ -5878,9 +5892,89 @@ export class DataArray {
     return [];
   }
 
+  loadingBody() {
+    const name = this.name;
+    let tabla;
+
+    if (!this.tableElement) {
+      tabla = document.querySelector(`#${name}`);
+    } else {
+      tabla = this.tableElement;
+    }
+
+    const body = tabla.querySelector('tbody');
+    const rows = this.recordsPerView;
+    const cols = this.getCountAtPositionZero();
+    let bodyLoading = ''
+    body.innerHTML = "";
+
+    for (let i = 0; i < rows; i++) {
+      if (i % 2 === 0) {
+        bodyLoading += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-200/50 dark:hover:bg-neutral-700 hover:text-neutral-700 dark:hover:text-neutral-200">`; 
+      } else {
+        bodyLoading += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800/50 hover:bg-neutral-200/50 dark:hover:bg-neutral-700 hover:text-neutral-700 dark:hover:text-neutral-200">`; 
+      }
+
+      for (let j = 0; j < cols; j++) {
+        bodyLoading += `<td class="px-4 py-3 select-none whitespace-nowrap w-10 text-semibold">
+          <div class="select-none w-32 h-3 bg-gray-200 rounded-full dark:bg-gray-700 animate-pulse"></div>
+        </td>`
+      }
+      bodyLoading += `</tr>`;
+    }
+    
+    body.innerHTML = bodyLoading;
+    
+  }
+
+  loadingTable(rows = 2, cols = 5) {
+    const name = this.name;
+    let tabla, divContainer;
+
+    if(this.loader){
+      if (!this.tableElement) {
+        divContainer = document.querySelector(`#${name}`);
+      } else {
+        divContainer = this.tableElement;
+      }
+  
+      tabla = `<table name="table" class="w-full text-sm text-left text-neutral-500 dark:text-neutral-400">
+      <thead name="thead" class="bg-neutral-400/30 text-neutral-500 dark:text-neutral-600 border-b border-neutral-300 dark:bg-neutral-900/30 dark:border-neutral-600">
+      <tr class="text-md font-semibold">`;
+  
+      for (let j = 0; j < cols; j++) {
+        tabla += `<th scope="col" class="px-4 py-3 select-none text-xs text-neutral-500 uppercase dark:text-neutral-500 whitespace-nowrap text-left">
+          <div class="select-none w-32 h-3 bg-gray-100 rounded-full dark:bg-gray-700 "></div>
+        </th>`
+      }
+  
+      tabla += `</tr></thead>
+      <tbody>`
+  
+      for (let i = 0; i < rows; i++) {
+        if (i % 2 === 0) {
+          tabla += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 ">`; 
+        } else {
+          tabla += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800/50 ">`; 
+        }
+  
+        for (let j = 0; j < cols; j++) {
+          tabla += `<td class="px-4 py-3 select-none whitespace-nowrap w-10 text-semibold">
+            <div class="select-none w-32 h-3 bg-gray-200 rounded-full dark:bg-gray-700 animate-pulse"></div>
+          </td>`
+        }
+        tabla += `</tr>`;
+      }
+      
+      tabla += `</tbody> </table>`
+      divContainer.innerHTML = tabla;
+    }
+  }
+
+
   buscarYResaltar(componentDiv) {
     // Obtén la tabla
-    const busqueda = this.searchValue.toLowerCase();
+    let busqueda = this.searchValue ? this.searchValue.toLowerCase() : '';
     const tabla = componentDiv.querySelector('tbody');
 
     // Recorre las filas de la tabla

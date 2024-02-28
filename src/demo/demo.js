@@ -7,6 +7,7 @@ const elForm = tmn.newForm('formulario');
 let dataFetch = [];
 
 laTabla.setValue('buscado', 'casa');
+
 tmn.setValue('idSelected', 0);
 
 tmn.select('#navbar').html(navbar('Tamnora js'))
@@ -72,7 +73,7 @@ function cargarTabla(){
   laTabla.orderColumns = ['curso_id', 'titulo', 'precio'];
   laTabla.setDataKeys('attribute', { precio: 'pesos' })
 
-  console.log(laTabla.getDataAllKeys('attribute'));
+  console.log(laTabla.getDataAll());
 
   const options = {
     title: 'Movimientos del cliente',

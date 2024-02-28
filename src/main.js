@@ -6,6 +6,9 @@ const dataTabla = new DataArray('tabla');
 const formModal = new DataObject('modalForm')
 const simpleForm = new DataObject('simpleform')
 
+dataTabla.loader = true;
+dataTabla.loadingTable();
+
 tmn.themeColorLight = '#db5945';
 tmn.themeColorDark = '#713228';
 
@@ -30,52 +33,13 @@ tmn.select('#simpleform').html(`
 </div>
 `)
 
-tmn.select('#tabla').html(`
 
-<div role="status" class="w-full p-4 space-y-4 border border-gray-200 divide-y divide-gray-200 rounded shadow animate-pulse dark:divide-gray-700 md:p-6 dark:border-gray-700">
-    <div class="flex items-center justify-between">
-        <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-        </div>
-        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-    </div>
-    <div class="flex items-center justify-between pt-4">
-        <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-        </div>
-        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-    </div>
-    <div class="flex items-center justify-between pt-4">
-        <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-        </div>
-        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-    </div>
-    <div class="flex items-center justify-between pt-4">
-        <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-        </div>
-        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-    </div>
-    <div class="flex items-center justify-between pt-4">
-        <div>
-            <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-600 w-24 mb-2.5"></div>
-            <div class="w-32 h-2 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-        </div>
-        <div class="h-2.5 bg-gray-300 rounded-full dark:bg-gray-700 w-12"></div>
-    </div>
-    <span class="sr-only">Loading...</span>
-</div>
-
-`)
 
 tmn.select('#navbar').html(navbar('Tamnora js'))
 
 tmn.setComponentHTML
+
+
 
 dataTabla.setValue('contador', 2);
 
@@ -156,7 +120,7 @@ async function verSaldosAcumulados() {
     return 
   }
   await dataTabla.addObjectFromDBSelect(`CALL saldos_acumulados(${tmn.getValue('id_cliente')}, ${cant})`);
-
+  
   dataTabla.orderColumns = ['tipo_oper', 'id', 'fechahora', 'id_factura', 'importe', 'saldo'];
   dataTabla.searchColumns = ['tipo_oper', 'id', 'fechahora'];
   dataTabla.widthColumns = ['w-10', 'w-10', 'w-10', 'w-20', 'w-20', 'w-35'];
@@ -164,6 +128,8 @@ async function verSaldosAcumulados() {
   dataTabla.setDataKeys('name', { id_factura: 'Remito' })
   dataTabla.searchValue = '03';
   dataTabla.searchColumns= ['id_factura'];
+  
+  
   
   
   let buttons = `
@@ -292,6 +258,7 @@ async function crearModalForm(){
 }
 
 tmn.setFunction('papitaResult', (data)=>{
+  dataTabla.loadingBody()
   tmn.setValue('id_cliente', data.id);
   tmn.setValue('nombre_cliente', data.name)
   cargarClientes();
