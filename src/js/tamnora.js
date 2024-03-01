@@ -1,5 +1,5 @@
-const SERVER = import.meta.env.VITE_SERVER_DEV;
-const TYPE_SERVER = 'php';
+const SERVER = import.meta.env.VITE_SERVER_NODE;
+const TYPE_SERVER = 'node';
 
 
 let informe = { primero: 'nada', segundo: 'nada' };
@@ -103,9 +103,21 @@ function codeTSQL(frase) {
     { buscar: 'limit', cambiarPor: '-timil' }
   ];
 
+
   frase = frase.replace(';', ' ');
   // Primero, reemplazamos todos los saltos de línea y tabulaciones por un espacio en blanco
-  frase = frase.replace(/(\r\n|\n|\r|\t)/gm, ' ');
+  frase = frase.replace(/(\r|\t)/gm, ' ');
+
+  // frase = frase.replace(/(\n)/gm, '\\n');
+  frase = frase.replace(/('[^']*')|(\n)/gm, (match, p1) => {
+    if (p1) {
+      // Si es un texto entre comillas simples, reemplázalo por '\n'
+      return p1.replace(/\n/g, '\\n');
+    } else {
+      // Si es un salto de línea, reemplázalo por un espacio
+      return ' ';
+    }
+  });
   // Luego, reemplazamos cualquier secuencia de espacios en blanco por un solo espacio
   frase = frase.replace(/\s+/g, ' ');
   let arrayFrase = frase.split(' ');
@@ -234,9 +246,9 @@ export function defaultClass() {
     navactive: `text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`,
     inactive: `text-neutral-600`,
     btnAtras: `flex items-center ps-2 py-2 pe-4 gap-1 w-fit text-sm focus:outline-none font-medium text-neutral-500 rounded-md hover:text-neutral-600 focus:text-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800/50 border dark:border-neutral-700/50  bg-black/5 hover:bg-black/10 dark:bg-white/5`,
-    btnBack:`flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-neutral-500 to-neutral-600 dark:from-neutral-700 dark:to-neutral-800 shadow-lg shadow-neutral-500/30 hover:shadow-neutral-500/50 dark:shadow-lg dark:shadow-neutral-700/80 border-b border-neutral-400 dark:border-neutral-600 active:translate-y-0.5  transition-all duration-100 scale-95 hover:scale-100 text-center me-2 mb-2`,
+    btnBack: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-neutral-500 to-neutral-600 dark:from-neutral-700 dark:to-neutral-800 shadow-lg shadow-neutral-500/30 hover:shadow-neutral-500/50 dark:shadow-lg dark:shadow-neutral-700/80 border-b border-neutral-400 dark:border-neutral-600 active:translate-y-0.5  transition-all duration-100 scale-95 hover:scale-100 text-center me-2 mb-2`,
     btnSystem: `flex items-center px-3 py-1 gap-1 w-fit text-sm focus:outline-none font-medium text-neutral-500 rounded-md hover:text-neutral-600 focus:text-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800/50 border dark:border-neutral-700/50  bg-black/5 hover:bg-black/10 dark:bg-white/5`,
-    btnEmerald:`flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/40 hover:shadow-sky-600/60 dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100  scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center me-2`,
+    btnEmerald: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/40 hover:shadow-sky-600/60 dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100  scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center me-2`,
     btnSky: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50  dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100 active:bg-sky-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center me-2`,
     btnRed: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-600/30 hover:shadow-red-600/50  dark:from-red-600 dark:to-red-700 active:translate-y-0.5 transition-all duration-100 active:bg-red-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-red-800/80 text-center me-2`,
     btnNeutral: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-neutral-700 dark:text-white bg-gradient-to-r from-neutral-50 to-neutral-100 dark:from-neutral-700 dark:to-neutral-800 shadow-sms shadow-neutral-400/30 hover:shadow-neutral-400/50 dark:shadow-lg dark:shadow-neutral-700/80 border-b border-neutral-50 dark:border-neutral-700 active:translate-y-0.5  transition-all duration-100 scale-95 hover:scale-100 text-center me-2`,
@@ -253,7 +265,7 @@ export function defaultClass() {
       subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400 leading-tight`,
       label: `flex items-center gap-1 pl-1 text-sm font-medium text-neutral-500 dark:text-neutral-500`,
       input: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 dark:bg-neutral-700/50 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-sky-700 dark:focus:border-sky-700`,
-      textarea: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 dark:bg-neutral-700/50 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-sky-700 dark:focus:border-sky-700`,
+      textarea: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 dark:bg-neutral-700/50 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-sky-700 dark:focus:border-sky-700 whitespace-pre-line`,
       inputDisable: `bg-neutral-100 border border-neutral-300 text-neutral-400 text-sm rounded-lg focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-neutral-500 dark:focus:ring-yellow-700 dark:focus:border-yellow-700`,
       select: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 dark:bg-neutral-700/50 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-sky-700 dark:focus:border-sky-700`,
       headerColumn: `bg-transparent`,
@@ -333,7 +345,7 @@ export function prepararSQL(tabla, json, selectID = '') {
             hayKey = true;
             let valueKey = json[key].value;
 
-            if(selectID != null){
+            if (selectID != null) {
               console.log(selectID, valueKey)
               if (typeInput == 'integer' || typeInput == 'number') {
                 if (json[key].value > 0) {
@@ -345,7 +357,7 @@ export function prepararSQL(tabla, json, selectID = '') {
                 elValor = `${json[key].value}`;
               }
 
-              if(elValor){
+              if (elValor) {
                 dataForSave[key] = elValor;
               }
 
@@ -362,7 +374,7 @@ export function prepararSQL(tabla, json, selectID = '') {
               where = `${key} = '${valueKey}'`;
               keyPrimary = valueKey;
             }
-            console.log('valueKey', valueKey)
+
             tipoSQL = valueKey == 0 ? 'insert' : 'update';
           } else {
             typeInput = json[key].type;
@@ -386,7 +398,11 @@ export function prepararSQL(tabla, json, selectID = '') {
               if (json[key].value !== '') {
                 elValor = parseFloat(json[key].value);
               } else {
-                elValor = null;
+                if (json[key].value == 0) {
+                  elValor = 0;
+                } else {
+                  elValor = null;
+                }
               }
             } else if (typeInput == 'select') {
               if (json[key].value !== '') {
@@ -405,10 +421,10 @@ export function prepararSQL(tabla, json, selectID = '') {
             }
             dataForSave[key] = elValor;
           }
-        } 
+        }
       }
 
-      console.log('Primer Paso',dataForSave);
+      //console.log('Primer Paso',dataForSave);
       informe.primero = dataForSave;
       sql = createQuerySQL(tipoSQL, {
         t: tabla,
@@ -416,7 +432,7 @@ export function prepararSQL(tabla, json, selectID = '') {
         d: dataForSave
       });
 
-      console.log('Segundo Paso', sql);
+      //console.log('Segundo Paso', sql);
       informe.segundo = sql
       respuesta = {
         status: 1,
@@ -466,7 +482,7 @@ export async function dbSelect(type, sql) {
     }
 
     const result = await resp.json();
-    
+
     const newResult = result.map((obj) => {
       // return convertirClavesAMinusculas(obj)
       return convertirClavesAMinusculasYFormatoFecha(obj)
@@ -614,6 +630,7 @@ export async function runCode(input) {
   }
 
   input = input.replace(/\s+-/g, '-').replace(/-\s+/g, '-');
+
   if (opcion) {
     data = await dbSelect(opcion, input);
     return data;
@@ -660,7 +677,7 @@ export function formatNumberArray(str, dec = 2) {
     }
   });
 
-  
+
   if (dec > 0) {
     numeroFinal = parseFloat(numeroFinal).toFixed(dec);
   } else {
@@ -682,7 +699,7 @@ export function formatNumberArray(str, dec = 2) {
     parseFloat(numeroFinal)
   );
 
-  if(arrayNumero.length > 1){
+  if (arrayNumero.length > 1) {
     resultado[3] = parteEntera;
     resultado[4] = parteDecimal;
   } else {
@@ -690,23 +707,23 @@ export function formatNumberArray(str, dec = 2) {
     resultado[4] = '';
   }
   resultado[5] = numeroReal;
-  
+
 
   return resultado;
 }
 
-export function formatNumber(str, options = {dec: 2, leng : 'es', symb: '', type: 'number'}) {
+export function formatNumber(str, options = { dec: 2, leng: 'es', symb: '', type: 'number' }) {
   if (!str) {
     str = '0.00t';
   } else {
     str = str + 't';
   }
 
-  if(!options.dec) options.dec = 2;
-  if(!options.leng) options.leng = 'es';
-  if(!options.symb) options.symb = '';
-  if(!options.cero) options.cero = '';
-  if(!options.type) options.type = 'currency';
+  if (!options.dec) options.dec = 2;
+  if (!options.leng) options.leng = 'es';
+  if (!options.symb) options.symb = '';
+  if (!options.cero) options.cero = '';
+  if (!options.type) options.type = 'currency';
 
   let negativo = str.startsWith('-', 0);
   let numero = str.replace(/[^0-9.,]/g, '');
@@ -749,33 +766,33 @@ export function formatNumber(str, options = {dec: 2, leng : 'es', symb: '', type
   }
 
   if (options.cero != '') {
-    if(resultado == '0,00' || resultado == '0.00' || resultado == '0'){
+    if (resultado == '0,00' || resultado == '0.00' || resultado == '0') {
       resultado = options.cero;
     }
-  } 
+  }
 
   if (options.symb != '') {
     resultado = `${options.symb} ${resultado}`;
-  } 
+  }
 
   if (negativo) {
     resultado = `-${resultado}`
     numeroReal = `-${numero}`;
   }
 
-  if(options.type == 'currency'){
+  if (options.type == 'currency') {
     return resultado;
-  }else if(options.type == 'number'){
+  } else if (options.type == 'number') {
     return numeroReal;
-  }else if(options.type == 'integer'){
+  } else if (options.type == 'integer') {
     return parteEntera;
-  }else if(options.type == 'decimal'){
+  } else if (options.type == 'decimal') {
     return parteDecimal;
   } else {
     return numeroReal;
   }
 
- 
+
 }
 
 export function formatDate(valor = null, separador = '-') {
@@ -822,14 +839,14 @@ export function formatDate(valor = null, separador = '-') {
   if (typeof valor == 'string') {
     if (valor.match(exp)) {
       myDate = new Date(valor);
-    } else if(valor.match(exp2)){
+    } else if (valor.match(exp2)) {
       myDate = new Date(`${valor} 00:00:00`);
     } else {
       return 'El valor es incorrecto';
     }
   }
 
-  
+
 
   if (typeof valor == 'object') {
     myDate = valor;
@@ -922,17 +939,17 @@ export async function initKeyData(table, key, value) {
 }
 
 export function pesos(numero, decimales, signo = '$') {
-  let numeroString = formatNumber(numero,{dec:decimales, symb: signo, type:'currency', cero:'-'})
+  let numeroString = formatNumber(numero, { dec: decimales, symb: signo, type: 'currency', cero: '-' })
   return `${numeroString}`;
 }
 
 export function currency(numero) {
-  let numeroString = formatNumber(numero,{dec:2, type:'currency', cero:'-'})
+  let numeroString = formatNumber(numero, { dec: 2, type: 'currency', cero: '-' })
   return `${numeroString}`;
 }
 
 export function numberEn(numero) {
-  let numeroString = formatNumber(numero,{dec:2, leng: 'en',  type:'currency', cero:'-'})
+  let numeroString = formatNumber(numero, { dec: 2, leng: 'en', type: 'currency', cero: '-' })
   return `${numeroString}`;
 }
 
@@ -1002,7 +1019,7 @@ export class Tamnora {
     return this.form[name];
   }
 
-  newTable(name){
+  newTable(name) {
     this.table[name] = new DataArray(name, this); // Pasando una referencia a Tamnora
     return this.table[name];
   }
@@ -1097,7 +1114,7 @@ export class Tamnora {
       if (valorActual.hasOwnProperty(propiedad)) {
         valorActual = valorActual[propiedad];
         if (format == 'pesos') {
-          valorActual = formatNumber(valorActual,{symb:'$', type:'currency'})
+          valorActual = formatNumber(valorActual, { symb: '$', type: 'currency' })
         }
       } else {
         return undefined; // Si la propiedad no existe, retornamos undefined
@@ -1271,7 +1288,7 @@ export class Tamnora {
     const name = config.name ?? '';
     const placeholder = config.placeholder ?? '...';
     const sarta = config.sarta ?? false;
-    
+
 
 
     if (!container) {
@@ -1309,18 +1326,18 @@ export class Tamnora {
     if (inputElement) {
       inputElement.addEventListener('change', (event) => {
         const searchTerm = event.target.value.toLowerCase();
-    
+
         const objEncontrado = arrayObject.find(obj => {
           const valueToSearch = obj[buscarEnKey];
-          if(searchTerm){
-            if(sarta){
+          if (searchTerm) {
+            if (sarta) {
               return (valueToSearch && typeof valueToSearch === 'string' && valueToSearch.toLowerCase().includes(searchTerm));
             } else {
               return (valueToSearch && typeof valueToSearch === 'string' && valueToSearch.toLowerCase() == searchTerm);
             }
           }
         });
-    
+
         if (objEncontrado) {
           this.applyStyles(inputElement, successClasses);
           callback(objEncontrado, true);
@@ -1547,7 +1564,6 @@ export class Tamnora {
 
   }
 
-  // Actualiza los elementos vinculados a un atributo data-value cuando el dato cambia
   updateElementsWithDataValue(dataKey, value) {
     const elementsWithDataValue = document.querySelectorAll(`[data-value="${dataKey}"]`);
     elementsWithDataValue.forEach((element) => {
@@ -1566,6 +1582,8 @@ export class Tamnora {
           element.value = value ?? '';
         } else if (element.tagName === 'INPUT') {
           element.value = value ?? '';
+        } else if (element.tagName === 'TEXTAREA') {
+          element.textContent = value ?? ''; // Establecer el contenido del textarea
         } else {
           element.textContent = value ?? '';
         }
@@ -1576,12 +1594,15 @@ export class Tamnora {
           element.value = value ?? '';
         } else if (element.type === 'checkbox') {
           element.checked = value ?? false;
+        } else if (element.tagName === 'TEXTAREA') {
+          element.textContent = value ?? ''; // Establecer el contenido del textarea
         } else {
           element.textContent = value;
         }
       }
     });
   }
+
 
   // Vincula los eventos click definidos en atributos data-click a functions
   bindClickEvents(componentDiv) {
@@ -2219,7 +2240,7 @@ export class Tamnora {
 
     forms.forEach((form) => {
       const functionName = form.getAttribute('data-action');
-     
+
       form.addEventListener('submit', (event) => {
         event.preventDefault(); // Prevenir el comportamiento por defecto del formulario
         this.executeFunctionByName(functionName);
@@ -2780,7 +2801,7 @@ export class Tamnora {
   // }
 
   currency(value, element) {
-    let newValue = formatNumber(value, {type: 'currency', leng: 'en'});
+    let newValue = formatNumber(value, { type: 'currency', leng: 'en' });
     if (newValue == 'NaN') {
       newValue = 0;
     }
@@ -2789,10 +2810,10 @@ export class Tamnora {
     this.setValueRoute(element.target.dataset.value, newValue);
   }
 
- 
+
 
   pesos(numero, decimales, signo = '') {
-    let numeroString = formatNumber(numero,{dec:decimales, symb: signo, type:'currency'})
+    let numeroString = formatNumber(numero, { dec: decimales, symb: signo, type: 'currency' })
     return `${numeroString}`;
   }
 
@@ -2842,7 +2863,7 @@ export class Tamnora {
     return todayObj >= startDateObj && todayObj <= endDateObj;
   }
 
-  
+
 
   async dLookup(columna, tabla, condicion) {
     const resp = await runCode(`-sl ${columna} -fr ${tabla} -wr ${condicion}`);
@@ -2868,37 +2889,37 @@ export class Tamnora {
     return str;
   }
 
-  createButton(options = {}){
-    if(!options.title) options.title = 'Nuevo Botón';
-    if(!options.className) options.className = 'btnNeutral';
-    if(!options.position) options.position = 'left';
-    if(!options.dataClick) options.dataClick = 'dataClick';
+  createButton(options = {}) {
+    if (!options.title) options.title = 'Nuevo Botón';
+    if (!options.className) options.className = 'btnNeutral';
+    if (!options.position) options.position = 'left';
+    if (!options.dataClick) options.dataClick = 'dataClick';
 
     let myBtn = `<button type="button" `;
 
-    if(options.dataClick){
+    if (options.dataClick) {
       myBtn += ` data-click="${options.dataClick}"`;
     }
     myBtn += ` class="${this.class[options.className]}">`;
-    
-    if(options.icon){
-      if(options.position == 'left'){
+
+    if (options.icon) {
+      if (options.position == 'left') {
         myBtn += `${options.icon} ${options.title}`;
       } else {
         myBtn += `${options.title} ${options.icon}`;
       }
     } else {
-        myBtn += `${options.title}`;
+      myBtn += `${options.title}`;
     }
     myBtn += `</button>`;
     return myBtn;
   }
 
-  createSearch(options = {}){
-    if(!options.value) options.value = 'buscando';
-    if(!options.change) options.change = 'accionBuscar';
-    if(!options.inputClass) options.inputClass = 'bg-neutral-100 text-neutral-600 focus:border-sky-400 dark:bg-neutral-900 dark:text-neutral-300 dark:border-neutral-800';
-    if(!options.iconClass) options.iconClass = 'text-neutral-500 dark:text-neutral-400';
+  createSearch(options = {}) {
+    if (!options.value) options.value = 'buscando';
+    if (!options.change) options.change = 'accionBuscar';
+    if (!options.inputClass) options.inputClass = 'bg-neutral-100 text-neutral-600 focus:border-sky-400 dark:bg-neutral-900 dark:text-neutral-300 dark:border-neutral-800';
+    if (!options.iconClass) options.iconClass = 'text-neutral-500 dark:text-neutral-400';
 
     let comp = `
     <div class="relative" >
@@ -2966,11 +2987,11 @@ export class DataObject {
         let resultEvalute = true;
         this.setDataFromModel(this.data[this.name]);
         for (const fieldName in this.camposRegistro) {
-          if(this.camposRegistro[fieldName].validate){
+          if (this.camposRegistro[fieldName].validate) {
             let value = this.camposRegistro[fieldName].value;
             let campo = this.camposRegistro[fieldName].name;
             let validate = this.camposRegistro[fieldName].validate;
-            if(!eval(validate)){
+            if (!eval(validate)) {
               resultEvalute = false;
               const input = globalThis.document.getElementById(`${this.name}_${fieldName}`);
               input.focus();
@@ -2981,7 +3002,7 @@ export class DataObject {
           }
         }
 
-        if(resultEvalute){
+        if (resultEvalute) {
           let defaultTitle = event.submitter.innerHTML;
           event.submitter.disabled = true;
           event.submitter.innerHTML = `
@@ -2991,7 +3012,7 @@ export class DataObject {
       </svg>
       Procesando...
           `
-  
+
           // Define una promesa dentro del evento submit
           const promesa = new Promise((resolve, reject) => {
             const datt = this.name;
@@ -2999,13 +3020,10 @@ export class DataObject {
             const paraSQL = this.getDataAll();
             const send = prepararSQL(this.table, paraSQL, this.id);
             const validation = this.validations();
-            console.log(send)
-  
-            if(validation){
+
+            if (validation) {
               if (send.status == 1) {
-                console.log('Paso la validación')
                 dbSelect(send.tipo, send.sql).then(val => {
-                  console.log(val)
                   if (val[0].resp == 1) {
                     resolve(val[0]);
                   } else {
@@ -3018,9 +3036,9 @@ export class DataObject {
             } else {
               reject('No paso la validación!')
             }
-  
+
           });
-  
+
           // Maneja la promesa
           promesa
             .then((respuesta) => {
@@ -3037,7 +3055,7 @@ export class DataObject {
               if (this.resetOnSubmit) {
                 this.resetValues();
               }
-  
+
             })
             .catch((error) => {
               console.error("Error al enviar el formulario:", error);
@@ -3057,7 +3075,7 @@ export class DataObject {
 
         if (this.key != '') {
           key = this.key;
-          if(this.id){
+          if (this.id) {
             val = this.id;
           } else {
             val = this.getValue(`${datt}!${this.key}`);
@@ -3214,7 +3232,7 @@ export class DataObject {
     }
   }
 
- 
+
 
   getStructure() {
     return this.structure
@@ -3510,14 +3528,14 @@ export class DataObject {
     }
   }
 
-  validations(){
+  validations() {
     let resultado = true;
     for (const fieldName in this.camposRegistro) {
-      if(this.camposRegistro[fieldName].validate){
+      if (this.camposRegistro[fieldName].validate) {
         let value = this.camposRegistro[fieldName].value;
         let name = this.camposRegistro[fieldName].name;
         let validate = this.camposRegistro[fieldName].validate;
-        if(!eval(validate)){
+        if (!eval(validate)) {
           resultado = false;
           console.log(`El campo ${name} no pasa la validación`)
         }
@@ -3635,10 +3653,10 @@ export class DataObject {
         this.camposRegistro[fieldName].value = value;
       }
 
-     
+
 
       //this.updateElementsWithDataValue(`${name}!${fieldName}`, value)
-       this.createForm(this.formOptions)
+      this.createForm(this.formOptions)
     }
   }
 
@@ -3648,7 +3666,7 @@ export class DataObject {
       const introDate = this.defaultDataObjeto[fieldName].introDate;
       let value = this.defaultDataObjeto[fieldName].value;
 
-      
+
 
       if (introDate == true) {
         let myDate = new Date();
@@ -3823,7 +3841,7 @@ export class DataObject {
     this.camposRegistro = newObject;
     this.defaultDataObjeto = newObjectDefault;
 
-   
+
 
   }
 
@@ -3870,7 +3888,6 @@ export class DataObject {
 
   async addObjectFromRunCode(sq, clean = false) {
     let rstData = await runCode(sq);
-    console.log(rstData)
     if (!rstData[0].resp) {
       this.setValue(this.name, {});
       this.removeAll();
@@ -3918,20 +3935,20 @@ export class DataObject {
     if (dataObj) {
       this.setValue(this.name, {});
       this.removeAll();
-      
-      this.addObject(dataObj, [], clean);
-        this.forEachField((campo, dato) => {
-          this.setValueRoute(`${this.name}!${campo}`, dato.value);
-        })
 
-      if(objectNameValue){
+      this.addObject(dataObj, [], clean);
+      this.forEachField((campo, dato) => {
+        this.setValueRoute(`${this.name}!${campo}`, dato.value);
+      })
+
+      if (objectNameValue) {
         Object.keys(objectNameValue).forEach((val) => {
           if (this.camposRegistro[val]) {
             this.camposRegistro[val]['type'] = objectNameValue[val];
           }
         })
       }
-      
+
     } else {
       console.error(rstData[0].msgError)
     }
@@ -3988,7 +4005,7 @@ export class DataObject {
       if (valorActual.hasOwnProperty(propiedad)) {
         valorActual = valorActual[propiedad];
         if (format == 'pesos') {
-          valorActual = formatNumber(valorActual,{symb: '$', type:'currency'});
+          valorActual = formatNumber(valorActual, { symb: '$', type: 'currency' });
         }
       } else {
         return undefined; // Si la propiedad no existe, retornamos undefined
@@ -4175,6 +4192,8 @@ export class DataObject {
           element.value = value ?? '';
         } else if (element.tagName === 'INPUT') {
           element.value = value ?? '';
+        } else if (element.tagName === 'TEXTAREA') {
+          element.textContent = value ?? '';
         } else {
           element.textContent = value ?? '';
         }
@@ -4185,6 +4204,8 @@ export class DataObject {
           element.value = value ?? '';
         } else if (element.type === 'checkbox') {
           element.checked = value ?? false;
+        } else if (element.tagName === 'TEXTAREA') {
+          element.textContent = value ?? '';
         } else {
           element.textContent = value;
         }
@@ -4247,7 +4268,7 @@ export class DataObject {
           element.addEventListener('change', (event) => {
             this.data[dataObj][dataProp] = event.target.value;
           });
-        } else if(element.tagName === 'TEXTAREA'){
+        } else if (element.tagName === 'TEXTAREA') {
           const dataObj = dataKey.split('!')[0];
           this.data[dataObj][dataProp] = element.value;
 
@@ -4425,7 +4446,7 @@ export class DataObject {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
-  labelCapitalize(){
+  labelCapitalize() {
     this.forEachField((field, key) => this.setData(field, 'name', this.capitalize(key.name)))
   }
 
@@ -4473,9 +4494,9 @@ export class DataObject {
       this.changeColorClass(data.colorForm);
     }
 
-    if(this.type == 'modal'){
+    if (this.type == 'modal') {
       this.nameModal = idElem;
-      
+
       if (data.show == true) {
         element.classList.add('flex');
       } else {
@@ -4486,29 +4507,29 @@ export class DataObject {
       <div name="modalContainer" class="${this.formClass.modalContainer}">
           <div name="divPadre" class="${this.formClass.divPadre}">`;
 
-          form += `<div name="header" class="${this.formClass.header}">`
-          form += `<div name="titleContainer" class="${this.formClass.titleContainer}">`;
-          if (data.title) {
-            form += `<h3 name="title" class="${this.formClass.title}">${data.title}</h3>`;
-          }
-      
-          if ("subtitle" in data) {
-            form += `<p name="subtitle" class="${this.formClass.subtitle}">${data.subtitle}</p>`;
-          }
-          if ("buttons" in data) {
-            form += `<div>${data.buttons}</div>`;
-          }
-          form += '</div>'
-      
-      
-          form += `<button name="btnCloseModal" data-modal="closeModal,#${this.modalName}" type="button" class="${this.formClass.btnCloseModal}">
+      form += `<div name="header" class="${this.formClass.header}">`
+      form += `<div name="titleContainer" class="${this.formClass.titleContainer}">`;
+      if (data.title) {
+        form += `<h3 name="title" class="${this.formClass.title}">${data.title}</h3>`;
+      }
+
+      if ("subtitle" in data) {
+        form += `<p name="subtitle" class="${this.formClass.subtitle}">${data.subtitle}</p>`;
+      }
+      if ("buttons" in data) {
+        form += `<div>${data.buttons}</div>`;
+      }
+      form += '</div>'
+
+
+      form += `<button name="btnCloseModal" data-modal="closeModal,#${this.modalName}" type="button" class="${this.formClass.btnCloseModal}">
           <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
           </svg>
           <span class="sr-only">Close modal</span>
       </button>`
-      
-          form += `</div><form data-action="submit" data-inmodal="${this.nameModal}">`;
+
+      form += `</div><form data-action="submit" data-inmodal="${this.nameModal}">`;
 
     } else {
       form += `<div name="divPadre" class="${this.formClass.divPadre}">`;
@@ -4525,14 +4546,14 @@ export class DataObject {
           }
           form += '</div>';
         }
-  
+
         if ("buttons" in data) {
           form += `${data.buttons}`;
         }
         form += '</div>'
-  
+
       }
-  
+
       form += `<form id="form_${nameForm}" data-action="submit">`
     }
 
@@ -4599,14 +4620,14 @@ export class DataObject {
         colspan += ' hidden';
       }
 
-      if(dato.attribute == 'readonly'){
+      if (dato.attribute == 'readonly') {
         attributes = 'readonly tabindex="-1"';
-        attributeClass =  this.formClass.inputDisable;
-      } else if(dato.attribute == 'locked'){
-        attributeClass =  this.formClass.input;
+        attributeClass = this.formClass.inputDisable;
+      } else if (dato.attribute == 'locked') {
+        attributeClass = this.formClass.input;
         attributes = 'readonly tabindex="-1"';
       } else {
-        attributeClass =  this.formClass.input;
+        attributeClass = this.formClass.input;
         attributes = '';
       }
 
@@ -4709,12 +4730,12 @@ export class DataObject {
       form += `</div>`;
     }
 
-    if(this.type == 'modal'){
+    if (this.type == 'modal') {
       form += `</form></div></div></div>`
     } else {
       form += '</form>'
     }
-    
+
 
     element.innerHTML = form;
     this.bindSubmitEvents(element);
@@ -4723,7 +4744,7 @@ export class DataObject {
     this.bindClickModal(element);
     this.bindElementsWithDataValues(element);
     this.bindChangeEvents(element);
-    if(this.focus){
+    if (this.focus) {
       let elemnetFocus = document.querySelector(`#${nameForm}_${this.focus}`);
       elemnetFocus.focus();
     }
@@ -4764,19 +4785,20 @@ export class DataObject {
 
           // Obtenemos el elemento activo (el que tiene el foco)
           const elementoActivo = document.activeElement;
-          console.log(elementoActivo.type)
 
           if (elementoActivo.type == 'submit') {
             event.preventDefault();
             elementoActivo.click();
           } else if (elementoActivo.type == 'textarea') {
-            
+            // let textus = elementoActivo.value;
+            // textus = textus.replace(/\n/g, '\\n');
+            // console.log(textus)
           } else {
             event.preventDefault();
             // Obtenemos la lista de elementos del formulario
             // const elementosFormulario = form.elements;
             const elementosFormulario = Array.from(form.elements).filter(elemento => !elemento.readOnly);
-           
+
 
             // Buscamos el índice del elemento activo en la lista
             const indiceElementoActivo = Array.prototype.indexOf.call(elementosFormulario, elementoActivo);
@@ -4957,7 +4979,7 @@ export class DataArray {
       if (valorActual.hasOwnProperty(propiedad)) {
         valorActual = valorActual[propiedad];
         if (format == 'pesos') {
-          valorActual = formatNumber(valorActual,{symb: '$', type:'currency'});
+          valorActual = formatNumber(valorActual, { symb: '$', type: 'currency' });
         }
       } else {
         return undefined; // Si la propiedad no existe, retornamos undefined
@@ -5361,7 +5383,7 @@ export class DataArray {
 
     if (ejecute) {
       let struc = await structure('t', table);
-      
+
       if (!struc[0].resp) {
         let defaultRow = {}
         const newObject = {};
@@ -5540,12 +5562,12 @@ export class DataArray {
     return this.dataArray;
   }
 
-  getDataAllKeys(key){
+  getDataAllKeys(key) {
     const newArray = [];
     this.dataArray.forEach((obj, index) => {
       let newObject = {}
       Object.keys(obj).forEach(data => {
-         newObject[data] = this.dataArray[index][data][key];
+        newObject[data] = this.dataArray[index][data][key];
       })
       newArray.push(newObject)
     })
@@ -5553,17 +5575,17 @@ export class DataArray {
   }
 
   getCountAtPositionZero() {
-    if(this.orderColumns.length > 0){
+    if (this.orderColumns.length > 0) {
       return this.orderColumns.length
     } else {
       if (this.dataArray.length > 0) {
-          const firstPositionObject = this.dataArray[0];
-          return Object.keys(firstPositionObject).length;
+        const firstPositionObject = this.dataArray[0];
+        return Object.keys(firstPositionObject).length;
       } else {
-          return 0; // Si no hay objetos en la posición 0, retornamos 0
+        return 0; // Si no hay objetos en la posición 0, retornamos 0
       }
     }
-}
+  }
 
   typeToType(inType = 'text') {
     let outType;
@@ -5785,20 +5807,25 @@ export class DataArray {
 
   addObjectFromArray(arr) {
     let rstData = arr;
-    //console.log(rstData)
-    if (!rstData[0].resp) {
-      if (!rstData[0].Ninguno) {
-        this.removeAll();
-        this.from = 1;
-        this.setDefaultRow(rstData[0]);
-        rstData.forEach(reg => {
-          this.addObject(reg)
-        });
+
+    if (rstData.length > 0) {
+      if (!rstData[0].resp) {
+        if (!rstData[0].Ninguno) {
+          this.removeAll();
+          this.from = 1;
+          this.setDefaultRow(rstData[0]);
+          rstData.forEach(reg => {
+            this.addObject(reg)
+          });
+        } else {
+          this.loadDefaultRow();
+        }
       } else {
-        this.loadDefaultRow();
+        console.error(rstData[0].msgError)
       }
     } else {
-      console.error(rstData[0].msgError)
+      console.error('Not rstData');
+      this.loadDefaultRow();
     }
   }
 
@@ -5834,17 +5861,17 @@ export class DataArray {
         return formatNumber(value);
       case "number-cero":
         // Formatear número (decimal) con estilo numérico español
-        return formatNumber(value, {type: 'currency', cero: '-', decimales: 0});
+        return formatNumber(value, { type: 'currency', cero: '-', decimales: 0 });
       case "currency":
         // Formatear número (decimal) con estilo numérico español
-        return formatNumber(value, {type: 'currency'});
+        return formatNumber(value, { type: 'currency' });
       case "currency-cero":
         // Formatear número (decimal) con estilo numérico español
-        return formatNumber(value, {type: 'currency', cero: '-'});
+        return formatNumber(value, { type: 'currency', cero: '-' });
       case "pesos":
         // Formatear número (decimal) con estilo numérico español
         // return parseFloat(value).toLocaleString('es-ES', { maximumFractionDigits: 2 });
-        return formatNumber(value, {type: 'currency', symb: '$'});
+        return formatNumber(value, { type: 'currency', symb: '$' });
       case "datetime-local":
         // Formatear fecha y hora
         const datetime = new Date(value);
@@ -5910,9 +5937,9 @@ export class DataArray {
 
     for (let i = 0; i < rows; i++) {
       if (i % 2 === 0) {
-        bodyLoading += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-200/50 dark:hover:bg-neutral-700 hover:text-neutral-700 dark:hover:text-neutral-200">`; 
+        bodyLoading += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 hover:bg-neutral-200/50 dark:hover:bg-neutral-700 hover:text-neutral-700 dark:hover:text-neutral-200">`;
       } else {
-        bodyLoading += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800/50 hover:bg-neutral-200/50 dark:hover:bg-neutral-700 hover:text-neutral-700 dark:hover:text-neutral-200">`; 
+        bodyLoading += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800/50 hover:bg-neutral-200/50 dark:hover:bg-neutral-700 hover:text-neutral-700 dark:hover:text-neutral-200">`;
       }
 
       for (let j = 0; j < cols; j++) {
@@ -5922,42 +5949,42 @@ export class DataArray {
       }
       bodyLoading += `</tr>`;
     }
-    
+
     body.innerHTML = bodyLoading;
-    
+
   }
 
   loadingTable(rows = 2, cols = 5) {
     const name = this.name;
     let tabla, divContainer;
 
-    if(this.loader){
+    if (this.loader) {
       if (!this.tableElement) {
         divContainer = document.querySelector(`#${name}`);
       } else {
         divContainer = this.tableElement;
       }
-  
+
       tabla = `<table name="table" class="w-full text-sm text-left text-neutral-500 dark:text-neutral-400">
       <thead name="thead" class="bg-neutral-400/30 text-neutral-500 dark:text-neutral-600 border-b border-neutral-300 dark:bg-neutral-900/30 dark:border-neutral-600">
       <tr class="text-md font-semibold">`;
-  
+
       for (let j = 0; j < cols; j++) {
         tabla += `<th scope="col" class="px-4 py-3 select-none text-xs text-neutral-500 uppercase dark:text-neutral-500 whitespace-nowrap text-left">
           <div class="select-none w-32 h-3 bg-gray-100 rounded-full dark:bg-gray-700 "></div>
         </th>`
       }
-  
+
       tabla += `</tr></thead>
       <tbody>`
-  
+
       for (let i = 0; i < rows; i++) {
         if (i % 2 === 0) {
-          tabla += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 ">`; 
+          tabla += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-50 dark:bg-neutral-800 ">`;
         } else {
-          tabla += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800/50 ">`; 
+          tabla += `<tr class="border-t border-neutral-200 dark:border-neutral-700 bg-neutral-100 dark:bg-neutral-800/50 ">`;
         }
-  
+
         for (let j = 0; j < cols; j++) {
           tabla += `<td class="px-4 py-3 select-none whitespace-nowrap w-10 text-semibold">
             <div class="select-none w-32 h-3 bg-gray-200 rounded-full dark:bg-gray-700 animate-pulse"></div>
@@ -5965,7 +5992,7 @@ export class DataArray {
         }
         tabla += `</tr>`;
       }
-      
+
       tabla += `</tbody> </table>`
       divContainer.innerHTML = tabla;
     }
@@ -5979,37 +6006,37 @@ export class DataArray {
 
     // Recorre las filas de la tabla
     for (var i = 0; i < tabla.rows.length; i++) {
-        // Recorre las celdas de cada fila
-        for (var j = 0; j < tabla.rows[i].cells.length; j++) {
-            // Si el texto de la celda contiene la búsqueda
-            let name = tabla.rows[i].cells[j].getAttribute('name');
-            let originalText = tabla.rows[i].cells[j].textContent.trim(); // Mantener el texto original
-            let value = originalText.toLowerCase();
-            if (this.searchColumns.includes(name)) {
-                if (value.includes(busqueda)) {
-                    // Crear un elemento <span> con la clase y estilos deseados
-                    let highlightedSpan = document.createElement('span');
-                    highlightedSpan.classList.add('text-sky-600', 'font-semibold');
-                    // Encerrar el texto de búsqueda dentro del <span> creado
-                    let startIndex = value.indexOf(busqueda);
-                    let endIndex = startIndex + busqueda.length;
-                    let prefix = originalText.substring(0, startIndex); // Usar el texto original
-                    let match = originalText.substring(startIndex, endIndex); // Usar el texto original
-                    let suffix = originalText.substring(endIndex); // Usar el texto original
-                    let prefixTextNode = document.createTextNode(prefix);
-                    let matchTextNode = document.createTextNode(match);
-                    let suffixTextNode = document.createTextNode(suffix);
-                    highlightedSpan.appendChild(matchTextNode);
-                    // Reemplazar el contenido de la celda con el nuevo nodo
-                    tabla.rows[i].cells[j].textContent = ''; // Limpiar el contenido de la celda
-                    tabla.rows[i].cells[j].appendChild(prefixTextNode);
-                    tabla.rows[i].cells[j].appendChild(highlightedSpan);
-                    tabla.rows[i].cells[j].appendChild(suffixTextNode);
-                }
-            }
+      // Recorre las celdas de cada fila
+      for (var j = 0; j < tabla.rows[i].cells.length; j++) {
+        // Si el texto de la celda contiene la búsqueda
+        let name = tabla.rows[i].cells[j].getAttribute('name');
+        let originalText = tabla.rows[i].cells[j].textContent.trim(); // Mantener el texto original
+        let value = originalText.toLowerCase();
+        if (this.searchColumns.includes(name)) {
+          if (value.includes(busqueda)) {
+            // Crear un elemento <span> con la clase y estilos deseados
+            let highlightedSpan = document.createElement('span');
+            highlightedSpan.classList.add('text-sky-600', 'font-semibold');
+            // Encerrar el texto de búsqueda dentro del <span> creado
+            let startIndex = value.indexOf(busqueda);
+            let endIndex = startIndex + busqueda.length;
+            let prefix = originalText.substring(0, startIndex); // Usar el texto original
+            let match = originalText.substring(startIndex, endIndex); // Usar el texto original
+            let suffix = originalText.substring(endIndex); // Usar el texto original
+            let prefixTextNode = document.createTextNode(prefix);
+            let matchTextNode = document.createTextNode(match);
+            let suffixTextNode = document.createTextNode(suffix);
+            highlightedSpan.appendChild(matchTextNode);
+            // Reemplazar el contenido de la celda con el nuevo nodo
+            tabla.rows[i].cells[j].textContent = ''; // Limpiar el contenido de la celda
+            tabla.rows[i].cells[j].appendChild(prefixTextNode);
+            tabla.rows[i].cells[j].appendChild(highlightedSpan);
+            tabla.rows[i].cells[j].appendChild(suffixTextNode);
+          }
         }
+      }
     }
-}
+  }
 
   createTable(options = {}) {
     const name = this.name;
@@ -6100,7 +6127,7 @@ export class DataArray {
 
       xname = objectItem.name;
 
-      if(this.searchColumns.includes(item)){
+      if (this.searchColumns.includes(item)) {
         ColSearch = '&#9679; '
       }
 
@@ -6158,18 +6185,18 @@ export class DataArray {
     table += tableHeader;
     table += `</thead><tbody>`;
 
-    if("firstRow" in options){
+    if ("firstRow" in options) {
       table += `<tr>`;
       Object.keys(this[arrayTable][0]).forEach(item => {
         let tipo = this.detectDataType(this[arrayTable][0][item].value);
         let classTitleColumn = '';
         let xfield, xvalue, xattribute, xhidden;
-  
+
         xattribute = this[arrayTable][0][item].attribute ? this[arrayTable][0][item].attribute : '';
         xhidden = this[arrayTable][0][item].hidden ? 'hidden' : '';
-  
+
         xvalue = '';
-  
+
         if ("firstRow" in options) {
           if (options.firstRow[item]) {
             if ('class' in options.firstRow[item]) {
@@ -6180,12 +6207,12 @@ export class DataArray {
             }
           }
         }
-  
-        
-          table += `<td scope="col" ${xattribute} ${xhidden} class="${this.tableClass.td} ${classTitleColumn}">${xvalue}</td>`;
-        
-        
-       
+
+
+        table += `<td scope="col" ${xattribute} ${xhidden} class="${this.tableClass.td} ${classTitleColumn}">${xvalue}</td>`;
+
+
+
       })
 
       table += `</tr>`;
@@ -6281,7 +6308,7 @@ export class DataArray {
             }
 
             table += `<td ${xattribute} ${xhidden} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
-            
+
 
           })
           table += `</tr>`;
@@ -6360,8 +6387,8 @@ export class DataArray {
     });
 
     table += `</tbody>`;
-    
-    if(hayMas == false){
+
+    if (hayMas == false) {
       table += `<tfoot class="${this.tableClass.tfoot}"><tr class="text-md font-semibold">`
       footer.forEach(ref => {
         let valor = this.formatValueByDataType(ref.value);
@@ -6412,7 +6439,7 @@ export class DataArray {
 
       }
 
-      
+
 
       table += `<div class="${this.tableClass.pagination}">
 			<!-- Help text -->
@@ -6450,7 +6477,7 @@ export class DataArray {
     return table;
   }
 
-  updateTable(){
+  updateTable() {
     const name = this.name;
     let element;
 
@@ -6491,9 +6518,9 @@ export class DataArray {
       );
       arrayTable = 'arrayOrder';
     }
-   
+
     const tbody = element.querySelector('tbody');
-    
+
     tbody.innerHTML = '';
 
     this[arrayTable].forEach((items, index) => {
@@ -6527,15 +6554,15 @@ export class DataArray {
           if ('alternative' in xRow) {
             if (xRow.alternative == true) {
               if (index % 2 === 0) {
-               rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowNormal} ${actionClass} ${trNewClass}">`;
+                rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowNormal} ${actionClass} ${trNewClass}">`;
               } else {
-               rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowAlternative} ${actionClass} ${trNewClass}">`;
+                rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowAlternative} ${actionClass} ${trNewClass}">`;
               }
             } else {
-             rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowNormal} ${actionClass} ${trNewClass}">`;
+              rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${this.tableClass.rowNormal} ${actionClass} ${trNewClass}">`;
             }
           } else {
-           rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${actionClass}">`;
+            rowGenerate += `<tr ${actionClick} class="${this.tableClass.tr} ${actionClass}">`;
           }
 
           Object.keys(items).forEach((item, iri) => {
@@ -6594,11 +6621,11 @@ export class DataArray {
               }
             }
 
-           rowGenerate += `<td ${xattribute} ${xhidden} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
-            
+            rowGenerate += `<td ${xattribute} ${xhidden} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+
 
           })
-         rowGenerate += `</tr>`;
+          rowGenerate += `</tr>`;
         } else if ((index + 1) > hasta) {
           hayMas = true;
         }
@@ -6618,15 +6645,15 @@ export class DataArray {
         if ('class' in xRow) {
           if ('alternative' in xRow.class) {
             if (index % 2 === 0) {
-             rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
+              rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
             } else {
-             rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.alternative} ${actionClass}">`;
+              rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.alternative} ${actionClass}">`;
             }
           } else {
-           rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
+            rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${xRow.class.normal} ${actionClass}">`;
           }
         } else {
-         rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${actionClass}">`;
+          rowGenerate += `<tr ${actionClick}  class="${this.tableClass.tr} ${actionClass}">`;
         }
 
         Object.keys(items).forEach((item) => {
@@ -6660,21 +6687,21 @@ export class DataArray {
           }
 
           if (tipo == 'number') {
-           rowGenerate += `<td ${xattribute} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+            rowGenerate += `<td ${xattribute} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
           } else if (tipo == 'date' || tipo == 'datetime-local') {
-           rowGenerate += `<td ${xattribute} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+            rowGenerate += `<td ${xattribute} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
           } else {
-           rowGenerate += `<td ${xattribute} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
+            rowGenerate += `<td ${xattribute} name="${item}" class="${this.tableClass.td} ${newClass}" ${dataClick}>${valor}</td>`;
           }
 
         })
-       rowGenerate += `</tr>`;
-       
+        rowGenerate += `</tr>`;
+
       }
-      
+
     });
 
-   
+
     tbody.innerHTML = rowGenerate;
     this.bindClickPaginations(element);
     this.bindActionEvents(element)

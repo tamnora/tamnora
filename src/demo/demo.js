@@ -27,6 +27,7 @@ laTabla.setFunction('accionBuscar',()=>{
   }
   
   laTabla.addObjectFromArray(cursos);
+  laTabla.setDataKeys('attribute', { precio: 'pesos' })
   laTabla.updateTable();
   
 })
@@ -34,7 +35,6 @@ laTabla.setFunction('accionBuscar',()=>{
 laTabla.setFunction('nuevoRegistro', (e)=>{
   console.log(e)
   tmn.setValue('idSelected', 0);
-  
   cargarFormulario()
 })
 
@@ -72,9 +72,9 @@ function cargarTabla(){
   laTabla.addObjectFromArray(cursos);
   laTabla.orderColumns = ['curso_id', 'titulo', 'precio'];
   laTabla.setDataKeys('attribute', { precio: 'pesos' })
+  laTabla.setData('titulo','defaultValue', 'No existen datos')
 
-  console.log(laTabla.getDataAll());
-
+  
   const options = {
     title: 'Movimientos del cliente',
     subtitle: `No se ha seleccionado ningún Cliente`,
@@ -103,13 +103,31 @@ function cargarTabla(){
   
 }
 
+function separarEnParrafos(texto) {
+  // Divide el texto en líneas usando expresión regular
+  const lineas = texto.split(/(\r\n|\n|\r)/);
+
+  // Filtra las líneas vacías (si las hay)
+  const parrafos = lineas.filter((linea) => linea.trim() !== '')
+    .map((linea) => `<p>${linea}</p>`);
+
+  // Une los párrafos en un solo string
+  return parrafos.join('');
+}
+
+
 async function cargarFormulario(){
   const id = tmn.getValue('idSelected');
-  console.log(id)
   const mode = id == 0? true : false;
+  let tsql = `-sl curso_id, titulo, precio, resumen, descripcion -fr cursos 
+  -wr curso_id = ${id}`
+
+  if(mode){
+    tsql = `-sl curso_id, titulo, precio, resumen, descripcion -fr cursos -lt 1`
+  }
+
   await elForm.setStructure('cursos', 'curso_id')
-  elForm.removeAll()
-  await elForm.addObjectFromRunCode(`-sl curso_id, titulo, precio, resumen, descripcion -fr cursos -wr curso_id = ${id}`, mode)
+  await elForm.addObjectFromRunCode(tsql, mode)
   elForm.type = 'modal'
 
   elForm.orderColumns = ['curso_id', 'titulo', 'precio', 'resumen', 'descripcion']
@@ -123,6 +141,10 @@ async function cargarFormulario(){
   });
 
   elForm.labelCapitalize();
+let descripcion = elForm.data.formulario.descripcion
+let parrafos = separarEnParrafos(descripcion)
+// descripcion = descripcion.replace(/\n/g, '\\n');
+  console.log(parrafos)
  
 
   const options = {

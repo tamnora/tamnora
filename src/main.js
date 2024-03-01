@@ -15,7 +15,7 @@ tmn.themeColorDark = '#713228';
 tmn.setValue('idBuscado', '');
 tmn.setValue('dataClientes', []);
 
-tmn.setValue('cant', 10);
+tmn.setValue('cant', 200);
 tmn.setValue('itab', 0);
 tmn.setValue('id_cliente', 0)
 tmn.setValue('nombre_cliente', '')

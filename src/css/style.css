@@ -1039,17 +1039,6 @@ video {
   animation: spin 1s linear infinite;
 }
 
-@keyframes ping {
-  75%, 100% {
-    transform: scale(2);
-    opacity: 0;
-  }
-}
-
-.animate-ping {
-  animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite;
-}
-
 .cursor-pointer {
   cursor: pointer;
 }
@@ -1177,6 +1166,10 @@ video {
 
 .whitespace-nowrap {
   white-space: nowrap;
+}
+
+.whitespace-pre-line {
+  white-space: pre-line;
 }
 
 .rounded {
@@ -1368,6 +1361,10 @@ video {
   background-color: rgb(212 212 212 / 0.3);
 }
 
+.bg-neutral-400\/30 {
+  background-color: rgb(163 163 163 / 0.3);
+}
+
 .bg-neutral-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(250 250 250 / var(--tw-bg-opacity));
@@ -1413,19 +1410,6 @@ video {
 
 .bg-white\/50 {
   background-color: rgb(255 255 255 / 0.5);
-}
-
-.bg-blue-200 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(191 219 254 / var(--tw-bg-opacity));
-}
-
-.bg-neutral-400\/30 {
-  background-color: rgb(163 163 163 / 0.3);
-}
-
-.bg-sky-400\/30 {
-  background-color: rgb(56 189 248 / 0.3);
 }
 
 .bg-opacity-50 {
@@ -2302,11 +2286,6 @@ video {
 
 :is(.dark .dark\:bg-white\/5) {
   background-color: rgb(255 255 255 / 0.05);
-}
-
-:is(.dark .dark\:bg-blue-700) {
-  --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
 }
 
 :is(.dark .dark\:bg-opacity-80) {
