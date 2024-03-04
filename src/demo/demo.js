@@ -133,6 +133,8 @@ async function cargarFormulario(){
   elForm.orderColumns = ['curso_id', 'titulo', 'precio', 'resumen', 'descripcion']
   elForm.setDataKeys('type', {descripcion: 'textarea'});
   elForm.setDataKeys('column', { curso_id: 'col-span-2', titulo: 'col-span-10', precio: 'col-span-6', resumen: 'col-span-6', descripcion: 'col-span-12' });
+
+  // elForm.setData('descripcion', 'rows', 5)
   elForm.setFunction('reload', async ()=>{
     await traerDatos().then(data => {
       dataFetch = data[0].cursos

@@ -4,6 +4,7 @@ const TYPE_SERVER = 'node';
 
 let informe = { primero: 'nada', segundo: 'nada' };
 
+
 function createQuerySQL(type, params) {
   if (typeof type !== 'string') {
     throw new Error('type debe ser un string');
@@ -2983,6 +2984,7 @@ export class DataObject {
         modal.classList.add('flex');
         this.numberAlert = 0;
       },
+      onMount:()=>{console.log('form montado')},
       submit: async (event, modalName) => {
         let resultEvalute = true;
         this.setDataFromModel(this.data[this.name]);
@@ -3080,8 +3082,9 @@ export class DataObject {
           } else {
             val = this.getValue(`${datt}!${this.key}`);
           }
+          
           sql = `DELETE FROM ${this.table} WHERE ${this.key} = ${val}`;
-          reference = `<span class="font-bold ml-2">${this.key}  ${val}</span>`;
+          reference = `<span class="font-bold ml-2">${this.camposRegistro[this.key].name}  ${val}</span>`;
         } else {
           this.structure.forEach(value => {
             console.log(value)
@@ -3167,6 +3170,7 @@ export class DataObject {
           "placeholder": "",
           "value": "",
           "column": "",
+          "rows": "3",
           "attribute": 0,
           "hidden": false,
           "pattern": '',
@@ -3301,6 +3305,7 @@ export class DataObject {
               "placeholder": "",
               "value": value,
               "column": "",
+              "rows": "3",
               "attribute": 0,
               "hidden": false,
               "pattern": '',
@@ -3799,6 +3804,7 @@ export class DataObject {
           "placeholder": "",
           "value": value,
           "column": "",
+          "rows": "3",
           "attribute": 0,
           "hidden": false,
           "pattern": '',
@@ -3821,6 +3827,7 @@ export class DataObject {
           "placeholder": "",
           "value": value,
           "column": "",
+          "rows": "3",
           "attribute": 0,
           "hidden": false,
           "pattern": '',
@@ -3853,6 +3860,7 @@ export class DataObject {
       "placeholder": "",
       "value": value,
       "column": "",
+      "rows": "3",
       "attribute": 0,
       "hidden": false,
       "pattern": '',
@@ -4691,7 +4699,7 @@ export class DataObject {
         fieldElement = `
           <div class="${colspan}">
             <label for="${nameForm}_${campo}" class="${this.formClass.label}">${dato.name} ${textRequired}</label>
-            <textarea id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${onChange} ${pattern} ${attributes} class="${this.formClass.textarea} ${xClass}">${dato.value}</textarea>
+            <textarea id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${onChange} ${pattern} ${attributes} rows="${dato.rows}" class="${this.formClass.textarea} ${xClass}">${dato.value}</textarea>
           </div>
         `;
       } else if (dato.type === 'currency') {
@@ -4744,6 +4752,7 @@ export class DataObject {
     this.bindClickModal(element);
     this.bindElementsWithDataValues(element);
     this.bindChangeEvents(element);
+    this.executeFunctionByName('onMount');
     if (this.focus) {
       let elemnetFocus = document.querySelector(`#${nameForm}_${this.focus}`);
       elemnetFocus.focus();
@@ -4751,6 +4760,8 @@ export class DataObject {
     return form;
 
   }
+
+  
 
 
   // Vincula los eventos submit del formulario con sus functions personalizadas
@@ -4932,6 +4943,46 @@ export class DataArray {
     });
 
     this.tableClass = defaultClass().table;
+    this.initCss();
+  }
+
+  initCss(){
+    // Obtén el elemento por su ID
+    const element = document.getElementById('initcss');
+    let existe = false;
+    
+    // Verifica si el elemento existe
+    if (element) {
+        existe = true;
+    } else {
+        existe = false;
+    }
+
+    if(!existe){
+      const styleTag = document.createElement('style');
+      styleTag.id = "initcss";
+          
+          // Agregar estilos al elemento
+          styleTag.textContent = `
+          @-webkit-keyframes fadeIn {
+            0% { opacity: 0; }
+            to { opacity: 1; }
+          }
+          @keyframes fadeIn {
+            0% { opacity: 0; }
+            to { opacity: 1; }
+          }
+          .fadeIn {
+            -webkit-animation-name: fadeIn;
+            animation-name: fadeIn;
+            -webkit-animation-duration: 0.5s;
+            animation-duration: 0.5s;
+          }
+          `;
+  
+          // Agregar el elemento <style> al <head>
+          document.head.appendChild(styleTag);
+    }
   }
 
   createReactiveProxy(data) {
@@ -4956,6 +5007,8 @@ export class DataArray {
 
     return new Proxy(data, recursiveHandler);
   }
+
+  
 
   getValue(camino) {
     const propiedades = camino.split('!');
@@ -5435,6 +5488,7 @@ export class DataArray {
               "placeholder": "",
               "value": value,
               "column": "",
+              "rows": "3",
               "attribute": 0,
               "hidden": false,
               "pattern": '',
@@ -5494,6 +5548,7 @@ export class DataArray {
           "placeholder": "",
           "value": ' - ',
           "column": "",
+          "rows": "3",
           "attribute": 0,
           "hidden": false,
           "pattern": '',
@@ -5683,6 +5738,7 @@ export class DataArray {
           "placeholder": "",
           "value": value,
           "column": "",
+          "rows": "3",
           "attribute": 0,
           "hidden": false,
           "pattern": '',
@@ -5747,6 +5803,7 @@ export class DataArray {
           "placeholder": "",
           "value": value,
           "column": "",
+          "rows": "3",
           "attribute": 0,
           "hidden": false,
           "pattern": '',
@@ -6283,7 +6340,7 @@ export class DataArray {
             }
 
             if (field[item].change) {
-              valor = field[item].change({ items, valor, index });
+              valor = field[item].change({ items, valor, index, value });
             }
 
             if (field[item].click) {
@@ -6351,7 +6408,7 @@ export class DataArray {
           let newClass = '';
 
           if (field[item].change) {
-            let resu = field[item].change({ items, valor, index });
+            let resu = field[item].change({ items, valor, index, value });
             console.log(resu)
             valor = resu;
           }
@@ -6597,7 +6654,7 @@ export class DataArray {
             }
 
             if (field[item] && 'change' in field[item]) {
-              valor = field[item].change({ items, valor, index });
+              valor = field[item].change({ items, valor, index, value });
             }
 
             if (field[item] && 'click' in field[item]) {
@@ -6665,7 +6722,7 @@ export class DataArray {
           let newClass = '';
 
           if (field[item].change) {
-            let resu = field[item].change({ items, valor, index });
+            let resu = field[item].change({ items, valor, index, value });
             console.log(resu)
             valor = resu;
           }
@@ -6833,4 +6890,3 @@ export class DataArray {
 
 
 }
-
