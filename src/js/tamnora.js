@@ -3082,7 +3082,7 @@ export class DataObject {
           } else {
             val = this.getValue(`${datt}!${this.key}`);
           }
-          
+
           sql = `DELETE FROM ${this.table} WHERE ${this.key} = ${val}`;
           reference = `<span class="font-bold ml-2">${this.camposRegistro[this.key].name}  ${val}</span>`;
         } else {
@@ -3187,7 +3187,47 @@ export class DataObject {
         };
       });
     }
+    this.initCss();
 
+  }
+
+  initCss(){
+    // Obtén el elemento por su ID
+    const element = document.getElementById('initcss');
+    let existe = false;
+    
+    // Verifica si el elemento existe
+    if (element) {
+        existe = true;
+    } else {
+        existe = false;
+    }
+
+    if(!existe){
+      const styleTag = document.createElement('style');
+      styleTag.id = "initcss";
+          
+          // Agregar estilos al elemento
+          styleTag.textContent = `
+          @-webkit-keyframes fadeIn {
+            0% { opacity: 0; }
+            to { opacity: 1; }
+          }
+          @keyframes fadeIn {
+            0% { opacity: 0; }
+            to { opacity: 1; }
+          }
+          .fadeIn {
+            -webkit-animation-name: fadeIn;
+            animation-name: fadeIn;
+            -webkit-animation-duration: 0.5s;
+            animation-duration: 0.5s;
+          }
+          `;
+  
+          // Agregar el elemento <style> al <head>
+          document.head.appendChild(styleTag);
+    }
   }
 
   setClass(obj) {
@@ -4964,6 +5004,70 @@ export class DataArray {
           
           // Agregar estilos al elemento
           styleTag.textContent = `
+          :root {
+            --emerald-800: #065f46;
+            --emerald-700: #047857;
+            --neutral-900: #171717;
+            --neutral-800: #262626;
+            --neutral-100: #f5f5f5;
+            --neutral-200: #e5e5e5;
+            --neutral-300: #D4D4D4;
+            --sky-700: #0369A1;
+            --sky-500: #0EA5E9;
+          }
+          
+          /* Estiliza la barra de desplazamiento vertical */
+          ::-webkit-scrollbar {
+            background: var(--neutral-100);
+            width: 16px;
+            height: 14px;
+          }
+          
+          ::-webkit-scrollbar-track {
+            background: var(--neutral-100);
+          }
+          
+          ::-webkit-scrollbar-thumb {
+            background-color: var(--neutral-200);
+            border-radius: 20px;
+            border: 4px solid var(--neutral-100);
+          }
+          
+          /* Estilo de la barra de desplazamiento en modo oscuro */
+          html.dark ::-webkit-scrollbar {
+            background: var(--neutral-900);
+            width: 16px;
+            height: 14px;
+          }
+          
+          html.dark ::-webkit-scrollbar-track {
+            background: var(--neutral-900); /* Cambia el color de fondo en modo oscuro */
+          }
+          
+          html.dark ::-webkit-scrollbar-thumb {
+            background-color: var(--neutral-800); /* Cambia el color del pulgar en modo oscuro */
+            border: 4px solid var(--neutral-900); /* Cambia el color del borde en modo oscuro */
+          }
+          
+          /* Estilo para el cuadro de expansión de textarea */
+          
+          textarea::-webkit-resizer {
+            background-color: var(--neutral-200); /* Color de fondo */
+            border-top: 5px solid var(--neutral-100);
+            border-left: 5px solid var(--neutral-100);
+            border-right: 5px solid var(--sky-500);
+            border-bottom: 5px solid var(--sky-500);
+          }
+
+          html.dark textarea::-webkit-resizer {
+            background-color: var(--neutral-800); 
+            border-top: 5px solid var(--neutral-800);
+            border-left: 5px solid var(--neutral-800);
+            border-right: 5px solid var(--sky-700);
+            border-bottom: 5px solid var(--sky-700);
+          }
+          
+
           @-webkit-keyframes fadeIn {
             0% { opacity: 0; }
             to { opacity: 1; }

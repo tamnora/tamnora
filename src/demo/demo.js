@@ -8,6 +8,7 @@ let dataFetch = [];
 
 laTabla.setValue('buscado', 'casa');
 
+
 tmn.setValue('idSelected', 0);
 
 tmn.select('#navbar').html(navbar('Tamnora js'))
