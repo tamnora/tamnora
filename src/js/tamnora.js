@@ -215,7 +215,6 @@ function convertirClavesAMinusculasYFormatoFecha(objeto) {
 }
 
 function formatoDeCeros(valor) {
-  // Agrega un cero delante si el valor es menor que 10
   return valor < 10 ? `0${valor}` : valor;
 }
 
@@ -252,19 +251,24 @@ export function defaultClass() {
     btnEmerald: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/40 hover:shadow-sky-600/60 dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100  scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center me-2`,
     btnSky: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50  dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100 active:bg-sky-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center me-2`,
     btnRed: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-600/30 hover:shadow-red-600/50  dark:from-red-600 dark:to-red-700 active:translate-y-0.5 transition-all duration-100 active:bg-red-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-red-800/80 text-center me-2`,
-    btnNeutral: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-neutral-700 dark:text-white bg-gradient-to-r from-neutral-50 to-neutral-100 dark:from-neutral-700 dark:to-neutral-800 shadow-sms shadow-neutral-400/30 hover:shadow-neutral-400/50 dark:shadow-lg dark:shadow-neutral-700/80 border-b border-neutral-50 dark:border-neutral-700 active:translate-y-0.5  transition-all duration-100 scale-95 hover:scale-100 text-center me-2`,
+    btnNeutral: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-neutral-500 shadow-md hover:shadow-xl shadow-neutral-600/30 dark:shadow-neutral-300/30 dark:bg-neutral-600 active:translate-y-0.5 transition-all duration-100 active:bg-neutral-700 scale-95 hover:scale-100 text-center me-2`,
+    btnBlue: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-blue-500 shadow-md hover:shadow-xl shadow-blue-600/30 dark:shadow-blue-300/30 dark:bg-blue-600 active:translate-y-0.5 transition-all duration-100 active:bg-blue-700 scale-95 hover:scale-100 text-center me-2`,
     form: {
-      divModal: `fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70 p-4 overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center `,
+      divModal: `fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70  overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center`,
       btnCloseModal: `text-neutral-400 bg-transparent hover:bg-red-200 hover:text-red-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-red-600 dark:hover:text-white`,
       divPadre: `relative bg-transparent  shadow-none animated fadeIn`,
       modalContainer: `relative w-full max-w-3xl max-h-full bg-neutral-100 dark:bg-neutral-800 p-6 rounded-lg`,
-      header: `flex flex-col items-start sm:flex-row sm:justify-between sm:items-center pb-4 border-b rounded-t dark:border-neutral-700`,
+      modalContainerFull: `relative w-full h-screen bg-neutral-100 dark:bg-neutral-800 p-6 `,
+      modalContainer2xl: `relative w-full max-w-2xl max-h-full bg-neutral-100 dark:bg-neutral-800 p-6 rounded-lg`,
+      header: `flex flex-col items-start sm:flex-row sm:justify-between sm:items-center px-2 pb-6 border-b rounded-t border-neutral-200 dark:border-neutral-600`,
       grid: `grid grid-cols-12 gap-2 py-6 px-2`,
       gridColumns: `col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3`,
-      titleContainer: `flex flex-col`,
+      titleContainer: `flex flex-col w-full`,
+      buttonsContainer: `flex gap-2 w-full justify-end`,
       title: `text-lg font-medium text-left text-neutral-600 dark:text-white leading-none`,
       subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400 leading-tight`,
-      label: `flex items-center gap-1 pl-1 text-sm font-medium text-neutral-500 dark:text-neutral-500`,
+      observ: `mt-1 ml-1 text-sm font-normal italic text-neutral-500 dark:text-neutral-500 leading-tight`,
+      label: `flex items-center gap-1 pl-1 text-sm font-semibold text-neutral-600 dark:text-neutral-400`,
       input: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 dark:bg-neutral-700/50 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-sky-700 dark:focus:border-sky-700`,
       textarea: `bg-white border border-neutral-300 text-neutral-900 text-sm rounded-lg focus:outline-none focus:ring-sky-500 focus:border-sky-500 block w-full p-2.5 dark:bg-neutral-700/50 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-white dark:focus:ring-sky-700 dark:focus:border-sky-700 whitespace-pre-line`,
       inputDisable: `bg-neutral-100 border border-neutral-300 text-neutral-400 text-sm rounded-lg focus:outline-none focus:ring-yellow-500 focus:border-yellow-500 block w-full p-2.5 dark:bg-neutral-800 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-neutral-500 dark:focus:ring-yellow-700 dark:focus:border-yellow-700`,
@@ -273,8 +277,8 @@ export function defaultClass() {
       btn: `h-10 font-medium rounded-lg px-4 py-2 text-sm focus:ring focus:outline-none  `,
       btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600  `,
       containerButtons: `flex items-center justify-start pt-4 gap-2 border-t border-neutral-200 dark:border-neutral-600`,
-      submit: `!m-0 flex capitalize items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50  hover:from-sky-600 hover:to-sky-700 active:translate-y-0.5 transition-all duration-100 active:bg-sky-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center`,
-      delete: `!m-0 flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-600/30 hover:shadow-red-600/50  hover:from-red-600 hover:to-red-700 active:translate-y-0.5 transition-all duration-100 active:bg-red-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-red-800/80 text-center`,
+      submit: `!m-0 flex capitalize items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-sky-600 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50  hover:bg-sky-700 active:translate-y-0.5 transition-all duration-100 active:bg-sky-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center`,
+      delete: `!m-0 flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-red-600 shadow-lg shadow-red-600/30 hover:shadow-red-600/50  hover:bg-red-700 active:translate-y-0.5 transition-all duration-100 active:bg-red-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-red-800/80 text-center`,
       darkBlue: `bg-blue-700 text-white hover:bg-blue-800 focus:ring-blue-700`,
       darkRed: `bg-red-700 text-white hover:bg-red-800 focus:ring-red-700`,
       darkGreen: `bg-green-700 text-white hover:bg-green-800 focus:ring-green-700`,
@@ -285,30 +289,30 @@ export function defaultClass() {
     },
     table: {
       divPadre: `relative bg-transparent overflow-hidden animated fadeIn`,
-      tableContainer: `overflow-x-auto rounded-lg border border-neutral-400/30 dark:border-neutral-700/50 `,
+      tableContainer: `overflow-x-auto rounded-lg border border-neutral-400/30 dark:border-neutral-700/50`,
       table: `w-full text-sm text-left text-neutral-500 dark:text-neutral-400`,
       header: `flex justify-between items-center w-full bg-transparent mb-6 gap-3`,
       titleContainer: `flex flex-col w-full`,
-      buttonsContainer: `flex justify-end items-center`,
+      buttonsContainer: `flex justify-end items-center gap-2 w-full`,
       title: `text-lg font-medium text-left text-neutral-600 dark:text-neutral-200 leading-none`,
-      subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-300 leading-tight`,
+      subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400 leading-tight`,
       btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600  `,
-      thead: `bg-neutral-300/30 text-neutral-500 dark:text-neutral-600 border-b border-neutral-300 dark:bg-neutral-900/30 dark:border-neutral-600`,
-      tfoot: `bg-transparent dark:bg-neutral-800 text-neutral-700  dark:text-neutral-400`,
+      thead: `bg-neutral-300/50 text-neutral-500 dark:text-neutral-600 border-b border-neutral-300 dark:bg-neutral-900/30 dark:border-neutral-600`,
+      tfoot: `bg-neutral-200/50 dark:bg-neutral-800/30 text-neutral-700  dark:text-neutral-400`,
       pagination: `flex flex-col sm:flex-row sm:justify-between items-center text-neutral-700 sm:px-4 pt-4 dark:text-neutral-400 `,
       paginationBtn: `bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700/50 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white text-xs`,
       paginationBtnDisable: `bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700/50 dark:text-neutral-600 text-xs`,
       th: `px-4 py-3 select-none text-xs text-neutral-500 uppercase dark:text-neutral-500 whitespace-nowrap`,
       tr: `border-t border-neutral-200 dark:border-neutral-700`,
-      trhover: `hover:bg-neutral-200/50 dark:hover:bg-neutral-700 hover:text-neutral-700 dark:hover:text-neutral-200 cursor-pointer`,
+      trhover: `hover:bg-neutral-200/40 dark:hover:bg-neutral-800/40 hover:text-neutral-700 dark:hover:text-neutral-200 cursor-pointer`,
       td: `px-4 py-3 select-none whitespace-nowrap`,
       tdclick: `px-4 py-3 select-none cursor-pointer font-semibold hover:text-green-400`,
       trh: `text-md font-semibold whitespace-nowrap`,
       trtitle: `text-md font-semibold`,
       tdh: `px-4 py-2 select-none whitespace-nowrap`,
       tdnumber: `px-4 py-4 text-right`,
-      rowNormal: `bg-neutral-50 dark:bg-neutral-800`,
-      rowAlternative: `bg-neutral-100 dark:bg-neutral-800/50`,
+      rowNormal: `bg-neutral-50 dark:bg-neutral-700`,
+      rowAlternative: `bg-neutral-100 dark:bg-neutral-700/50`,
     }
   }
 }
@@ -968,7 +972,6 @@ export function padRight(str, length = 4, character = '0') {
   return str;
 }
 
-
 export class Tamnora {
   constructor(config = {}) {
     this.data = this.createReactiveProxy(config.data);
@@ -1055,7 +1058,6 @@ export class Tamnora {
     }
   }
 
-  // Inicializa la librería y realiza las vinculaciones necesarias
   initialize() {
     this.bindElementsWithDataValues();
     this.bindClickEvents();
@@ -1067,7 +1069,6 @@ export class Tamnora {
     this.listenerMessage();
   }
 
-  //Crea un Proxy reactivo para los datos
   createReactiveProxy(data) {
     const recursiveHandler = {
       get: (target, prop) => {
@@ -1090,8 +1091,6 @@ export class Tamnora {
 
     return new Proxy(data, recursiveHandler);
   }
-
-
 
   getValue(camino) {
     const propiedades = camino.split('!');
@@ -1279,8 +1278,6 @@ export class Tamnora {
     }
   }
 
-
-
   createInputSearch(id, config, callback) {
     const container = document.getElementById(id);
     const idInput = `inputSearch_${id}`;
@@ -1352,9 +1349,6 @@ export class Tamnora {
       console.error('No se pudo encontrar el elemento input en la estructura HTML.');
     }
   }
-
-
-
 
   async createSearchInput(nameIdElement, table, id, name, where = '', titleId = 'ID:', titleName = 'Buscar:') {
     const searchName = `${nameIdElement}_searchName`;
@@ -1604,8 +1598,6 @@ export class Tamnora {
     });
   }
 
-
-  // Vincula los eventos click definidos en atributos data-click a functions
   bindClickEvents(componentDiv) {
     let elementsWithClick;
     if (componentDiv) {
@@ -1783,7 +1775,6 @@ export class Tamnora {
     }
   }
 
-  // Aplica los datos pasados mediante set-empresa, set-otroDato, etc. a los elementos con atributo get-empresa, get-otroDato, etc. dentro del componente.
   applyDataPropsFromAttributes(componentDiv) {
     const dataProps = {};
     const groupGet = [];
@@ -1809,7 +1800,6 @@ export class Tamnora {
     }
   }
 
-  //Aplica las clases de estilo a los elementos con atributos data-tail, pero solo dentro del componente
   applyStyleClasses(componentDiv) {
     let elementsWithTail;
     if (componentDiv) {
@@ -1830,7 +1820,6 @@ export class Tamnora {
     });
   }
 
-  //Aplica las clases de estilo a los elementos con atributos data-navactive, pero solo dentro del componente
   applyStyleClassesNavActive(componentDiv) {
     let elementsWithNavActive;
 
@@ -2045,7 +2034,6 @@ export class Tamnora {
     return value;
   }
 
-  // Vincula los elementos con atributos data-value a los datos reactivos, pero solo dentro del componente
   bindElementsWithDataValues(componentDiv) {
     let elementsWithDataValue;
     let toggleThemeButton;
@@ -2191,7 +2179,6 @@ export class Tamnora {
     });
   }
 
-  // Método para guardar el state en el localStorage
   saveStateToLocalStorage() {
     try {
       const serializedState = JSON.stringify(this.state);
@@ -2201,7 +2188,6 @@ export class Tamnora {
     }
   }
 
-  // Método para cargar el state desde el localStorage
   loadStateFromLocalStorage() {
     try {
       const serializedState = localStorage.getItem('tmnState');
@@ -2214,13 +2200,11 @@ export class Tamnora {
     return {};
   }
 
-  // Método para actualizar el state y guardar los cambios en el localStorage
   setState(key, value) {
     this.state[key] = value;
     this.saveStateToLocalStorage();
   }
 
-  // Método para obtener un valor del state
   getState(key) {
     if (this.state[key]) {
       return this.state[key];
@@ -2230,7 +2214,6 @@ export class Tamnora {
     }
   }
 
-  // Vincula los eventos submit del formulario con sus functions personalizadas
   bindSubmitEvents(componentDiv) {
     let forms;
     if (componentDiv) {
@@ -2272,7 +2255,6 @@ export class Tamnora {
     });
   }
 
-  // Ejecuta una función pasando el nombre como string
   executeFunctionByName(functionName, ...args) {
     if (this.functions && typeof this.functions[functionName] === 'function') {
       const func = this.functions[functionName];
@@ -2282,26 +2264,22 @@ export class Tamnora {
     }
   }
 
-  // Ejecuta una función pasando el nombre como string
   execute(callBack) {
     callBack();
   }
 
-  // Método privado para ejecutar la función onMount si está definida
   onDOMContentLoaded() {
     if (typeof this.onMountCallback === 'function') {
       this.onMountCallback();
     }
   }
 
-  // Método para configurar la función personalizada de onMount desde el exterior
   onMount(fn) {
     if (typeof fn === 'function') {
       this.onMountCallback = fn;
     }
   }
 
-  // Método para vincular el data-for y actualizar el contenido
   bindDataFor() {
     const elementsWithDataFor = document.querySelectorAll('[data-for]');
     elementsWithDataFor.forEach((element) => {
@@ -2341,8 +2319,6 @@ export class Tamnora {
     });
   }
 
-
-  // Método auxiliar para reemplazar el valor en el HTML
   replaceValueInHTML(html, valueName, item, index) {
     return html.replace(new RegExp(`{${valueName}(\\..+?|)(\\s*\\|\\s*index\\s*)?}`, 'g'), (match) => {
       const propertyAndFilter = match.substring(valueName.length + 1, match.length - 1);
@@ -2364,14 +2340,12 @@ export class Tamnora {
     });
   }
 
-  // Función auxiliar para obtener el valor de una propiedad del objeto "item"
   getPropertyValue(item, property) {
     const properties = property.replace('.', '');
     let value = item[properties];
     return value;
   }
 
-  // Función para obtener la función de filtro si se proporciona
   getFilterFunction(filter) {
     if (filter === 'uppercase') {
       return (value) => value.toUpperCase();
@@ -2388,7 +2362,6 @@ export class Tamnora {
     return (value) => value;
   }
 
-  // Método para vincular el data-for y actualizar el contenido
   refreshDataFor(template) {
     const elementsWithDataFor = document.querySelectorAll(`[data-template="${template}"]`);
     elementsWithDataFor.forEach((element) => {
@@ -2430,7 +2403,6 @@ export class Tamnora {
     });
   }
 
-  // Método para resaltar el enlace activo
   handleNavigation() {
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll('[data-navactive]');
@@ -2443,7 +2415,6 @@ export class Tamnora {
     });
   }
 
-  // Método para manejar la navegación en la carga de la página
   handleNavigationOnLoad() {
     const currentPath = window.location.pathname;
     const navLinks = document.querySelectorAll('[data-navactive]');
@@ -2465,7 +2436,6 @@ export class Tamnora {
     el.focus();
   }
 
-  // Acceder a elementos vinculados por selector y agregar eventos
   select(selector) {
     const element = document.querySelector(selector);
     if (element) {
@@ -2649,7 +2619,7 @@ export class Tamnora {
       return null;
     }
   }
-  // Acceder a todos los elementos vinculados por selector y agregar eventos
+ 
   selectAll(selector) {
     const elements = document.querySelectorAll(selector);
     return Array.from(elements).map((element) => {
@@ -2727,7 +2697,6 @@ export class Tamnora {
     });
   }
 
-  // Agregar lógica del tema oscuro
   darkMode(option) {
     if (option) {
       if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -2789,18 +2758,6 @@ export class Tamnora {
     });
   }
 
-  // date(value = ''){
-  //   return formatDate(value);
-  // }
-
-  // number(value = 0){
-  //   return formatNumber(value,{type:'currency'});
-  // }
-
-  // numberArray(value = 0){
-  //   return formatNumberArray(value)
-  // }
-
   currency(value, element) {
     let newValue = formatNumber(value, { type: 'currency', leng: 'en' });
     if (newValue == 'NaN') {
@@ -2810,8 +2767,6 @@ export class Tamnora {
 
     this.setValueRoute(element.target.dataset.value, newValue);
   }
-
-
 
   pesos(numero, decimales, signo = '') {
     let numeroString = formatNumber(numero, { dec: decimales, symb: signo, type: 'currency' })
@@ -2863,8 +2818,6 @@ export class Tamnora {
     // Check if today is within the range of startDate and endDate
     return todayObj >= startDateObj && todayObj <= endDateObj;
   }
-
-
 
   async dLookup(columna, tabla, condicion) {
     const resp = await runCode(`-sl ${columna} -fr ${tabla} -wr ${condicion}`);
@@ -2919,7 +2872,7 @@ export class Tamnora {
   createSearch(options = {}) {
     if (!options.value) options.value = 'buscando';
     if (!options.change) options.change = 'accionBuscar';
-    if (!options.inputClass) options.inputClass = 'bg-neutral-100 text-neutral-600 focus:border-sky-400 dark:bg-neutral-900 dark:text-neutral-300 dark:border-neutral-800';
+    if (!options.inputClass) options.inputClass = 'bg-neutral-50 text-neutral-600 focus:border-sky-400 dark:bg-neutral-700/50 dark:text-neutral-300 dark:border-neutral-800';
     if (!options.iconClass) options.iconClass = 'text-neutral-500 dark:text-neutral-400';
 
     let comp = `
@@ -2935,14 +2888,12 @@ export class Tamnora {
       autoComplete="off"
       data-value="${options.value}"
       data-change = "${options.change}"
-      class="block w-80 py-2 px-3 ps-10 text-sm font-normal border rounded-lg outline-none shadow-sm ${options.inputClass}" 
+      class="block w-full py-2 px-3 ps-10 text-sm font-normal border rounded-lg outline-none shadow-sm ${options.inputClass}" 
       placeholder='Buscar...' />
   </div>
     `
     return comp
   }
-
-
 
 }
 
@@ -2984,7 +2935,7 @@ export class DataObject {
         modal.classList.add('flex');
         this.numberAlert = 0;
       },
-      onMount:()=>{console.log('form montado')},
+      onMount:()=>{},
       submit: async (event, modalName) => {
         let resultEvalute = true;
         this.setDataFromModel(this.data[this.name]);
@@ -3162,14 +3113,16 @@ export class DataObject {
     };
 
     if (Object.keys(fields).length > 0) {
-      fields.forEach(field => {
-        this.camposRegistro[field] = {
+      fields.forEach(fieldName => {
+        this.camposRegistro[fieldName] = {
           "type": "text",
-          "name": field,
+          "name": fieldName,
           "required": false,
           "placeholder": "",
           "value": "",
           "column": "",
+          "field": fieldName,
+          "observ": "",
           "rows": "3",
           "attribute": 0,
           "hidden": false,
@@ -3276,8 +3229,6 @@ export class DataObject {
     }
   }
 
-
-
   getStructure() {
     return this.structure
   }
@@ -3345,6 +3296,8 @@ export class DataObject {
               "placeholder": "",
               "value": value,
               "column": "",
+              "field": fieldName,
+              "observ": "",
               "rows": "3",
               "attribute": 0,
               "hidden": false,
@@ -3386,7 +3339,6 @@ export class DataObject {
       console.log(this.structure)
     }
   }
-
 
   setData(fieldName, key, value) {
     const name = this.name;
@@ -3463,8 +3415,6 @@ export class DataObject {
 
     }
   }
-
-
 
   setDataFromModel(objectModel) {
     Object.keys(objectModel).forEach((fieldName) => {
@@ -3566,7 +3516,6 @@ export class DataObject {
     return resultado;
   }
 
-  // Nuevo método para recorrer y aplicar una función a cada campo
   forEachField(callback) {
     for (const fieldName in this.camposRegistro) {
       callback(fieldName, this.camposRegistro[fieldName]);
@@ -3752,8 +3701,6 @@ export class DataObject {
 
   }
 
-
-
   typeToType(inType = 'text') {
     let outType;
     if (inType == 'int') outType = 'number';
@@ -3779,8 +3726,6 @@ export class DataObject {
     return outType
   }
 
-
-  // Nuevo método para agregar objetos al array y completar campos
   addObject(dataObject, structure = [], clean = false) {
     const newObject = {};
     const newObjectDefault = {};
@@ -3844,6 +3789,8 @@ export class DataObject {
           "placeholder": "",
           "value": value,
           "column": "",
+          "field": fieldName,
+          "observ": "",
           "rows": "3",
           "attribute": 0,
           "hidden": false,
@@ -3867,6 +3814,8 @@ export class DataObject {
           "placeholder": "",
           "value": value,
           "column": "",
+          "field": fieldName,
+          "observ": "",
           "rows": "3",
           "attribute": 0,
           "hidden": false,
@@ -3900,6 +3849,8 @@ export class DataObject {
       "placeholder": "",
       "value": value,
       "column": "",
+      "field": fieldName,
+      "observ": "",
       "rows": "3",
       "attribute": 0,
       "hidden": false,
@@ -4174,7 +4125,6 @@ export class DataObject {
     valorActual[propiedadFinal] = nuevoValor;
   }
 
-
   pushValue(name, obj, format = false) {
     const newdata = this.data[obj];
     this.data[name].push(newdata);
@@ -4216,7 +4166,6 @@ export class DataObject {
     }
   }
 
-  // Actualiza los elementos vinculados a un atributo data-value cuando el dato cambia
   updateElementsWithDataValue(dataKey, value) {
     const componentDiv = document.querySelector(`#${this.name}`);
     const elementsWithDataValue = componentDiv.querySelectorAll(`[data-form="${dataKey}"]`);
@@ -4498,7 +4447,6 @@ export class DataObject {
     this.forEachField((field, key) => this.setData(field, 'name', this.capitalize(key.name)))
   }
 
-  // Método para detectar el tipo de dato basado en el valor
   detectDataType(value) {
     if (!isNaN(parseFloat(value)) && isFinite(value)) {
       return "number";
@@ -4542,7 +4490,7 @@ export class DataObject {
       this.changeColorClass(data.colorForm);
     }
 
-    if (this.type == 'modal') {
+    if (this.type != 'normal') {
       this.nameModal = idElem;
 
       if (data.show == true) {
@@ -4551,9 +4499,13 @@ export class DataObject {
         element.classList.add('hidden');
       }
 
-      form += `<div id="${this.modalName}_mod" tabindex="-1" name="divModal" aria-hidden="true" class="${this.formClass.divModal}">
-      <div name="modalContainer" class="${this.formClass.modalContainer}">
-          <div name="divPadre" class="${this.formClass.divPadre}">`;
+      form += `<div id="${this.modalName}_mod" tabindex="-1" name="divModal" aria-hidden="true" class="${this.formClass.divModal}">`;
+      if(this.type == 'modal-full'){
+        form += `<div name="modalContainer" class="${this.formClass.modalContainerFull}">`;
+      } else {
+        form += `<div name="modalContainer" class="${this.formClass.modalContainer}">`;
+      }
+      form += `<div name="divPadre" class="${this.formClass.divPadre}">`;
 
       form += `<div name="header" class="${this.formClass.header}">`
       form += `<div name="titleContainer" class="${this.formClass.titleContainer}">`;
@@ -4564,18 +4516,18 @@ export class DataObject {
       if ("subtitle" in data) {
         form += `<p name="subtitle" class="${this.formClass.subtitle}">${data.subtitle}</p>`;
       }
-      if ("buttons" in data) {
-        form += `<div>${data.buttons}</div>`;
-      }
       form += '</div>'
+      if ("buttons" in data) {
+        form += `<div class="${this.formClass.buttonsContainer}">${data.buttons}</div>`;
+      }
 
 
-      form += `<button name="btnCloseModal" data-modal="closeModal,#${this.modalName}" type="button" class="${this.formClass.btnCloseModal}">
+      form += `<div><button name="btnCloseModal" data-modal="closeModal,#${this.modalName}" type="button" class="${this.formClass.btnCloseModal}">
           <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
           </svg>
           <span class="sr-only">Close modal</span>
-      </button>`
+      </button></div>`
 
       form += `</div><form data-action="submit" data-inmodal="${this.nameModal}">`;
 
@@ -4627,6 +4579,7 @@ export class DataObject {
       let dataUppercase = '';
       let attributes = '';
       let attributeClass = '';
+      let observ = '';
 
       if (data.bind) {
         dataValue = `data-form="${data.bind}!${campo}"`;
@@ -4664,6 +4617,10 @@ export class DataObject {
         colspan = columns
       }
 
+      if(dato.observ != ''){
+        observ = `<small class="${this.formClass.observ}">&#11177; ${dato.observ}</small>`;
+      }
+
       if (dato.hidden == true) {
         colspan += ' hidden';
       }
@@ -4678,8 +4635,6 @@ export class DataObject {
         attributeClass = this.formClass.input;
         attributes = '';
       }
-
-
 
       if (dato.type === 'select') {
         let haySelected = false;
@@ -4710,6 +4665,7 @@ export class DataObject {
           <select id="${nameForm}_${campo}" ${dataValue} ${onChange} class="${this.formClass.select} ${xClass}" ${esrequired}>
             ${options}
           </select>
+          ${observ}
         </div>`;
       } else if (dato.type === 'datalist') {
         const options = dato.options.map(option => {
@@ -4727,6 +4683,7 @@ export class DataObject {
           <datalist id="lista-${campo}">
             ${options}
           </datalist>
+          ${observ}
         </div>`;
       } else if (dato.type === 'checkbox') {
         fieldElement = `
@@ -4740,13 +4697,16 @@ export class DataObject {
           <div class="${colspan}">
             <label for="${nameForm}_${campo}" class="${this.formClass.label}">${dato.name} ${textRequired}</label>
             <textarea id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${onChange} ${pattern} ${attributes} rows="${dato.rows}" class="${this.formClass.textarea} ${xClass}">${dato.value}</textarea>
+            ${observ}
           </div>
         `;
+        console.log(dato)
       } else if (dato.type === 'currency') {
         fieldElement = `
           <div class="${colspan}">
             <label for="${nameForm}_${campo}" class="${this.formClass.label}">${dato.name} ${textRequired}</label>
             <input type="text" autocomplete="off" data-change="currency" id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${pattern} value="${formatNumberArray(dato.value)[2]}" ${attributes} class="${attributeClass} ${xClass}">
+            ${observ}
           </div>
         `;
       } else {
@@ -4755,6 +4715,7 @@ export class DataObject {
           <div class="${colspan}">
             <label for="${nameForm}_${campo}" class="${this.formClass.label}">${dato.name} ${textRequired}</label>
             <input type="${dato.type}" autocomplete="off" id="${nameForm}_${campo}" ${dataValue} ${dataUppercase} ${onChange} ${esrequired} ${pattern} value="${dato.value}" ${attributes} class="${attributeClass} ${xClass}">
+            ${observ}
           </div>
         `;
       }
@@ -4801,10 +4762,6 @@ export class DataObject {
 
   }
 
-  
-
-
-  // Vincula los eventos submit del formulario con sus functions personalizadas
   bindSubmitEvents(componentDiv) {
     let forms;
     if (componentDiv) {
@@ -4867,7 +4824,6 @@ export class DataObject {
     });
   }
 
-
   bindClickModal(componentDiv) {
     let elementsWithClick;
     if (componentDiv) {
@@ -4925,7 +4881,6 @@ export class DataObject {
     });
   }
 
-  // Ejecuta una función pasando el nombre como string
   executeFunctionByName(functionName, ...args) {
     if (this.functions && typeof this.functions[functionName] === 'function') {
       const func = this.functions[functionName];
@@ -5013,7 +4968,7 @@ export class DataArray {
             --neutral-200: #e5e5e5;
             --neutral-300: #D4D4D4;
             --sky-700: #0369A1;
-            --sky-500: #0EA5E9;
+            --sky-500: #0ea5e9;
           }
           
           /* Estiliza la barra de desplazamiento vertical */
@@ -5111,8 +5066,6 @@ export class DataArray {
 
     return new Proxy(data, recursiveHandler);
   }
-
-  
 
   getValue(camino) {
     const propiedades = camino.split('!');
@@ -5233,7 +5186,6 @@ export class DataArray {
     valorActual[propiedadFinal] = nuevoValor;
   }
 
-
   pushValue(name, obj, format = false) {
     const newdata = this.data[obj];
     this.data[name].push(newdata);
@@ -5275,7 +5227,6 @@ export class DataArray {
     }
   }
 
-  // Actualiza los elementos vinculados a un atributo data-value cuando el dato cambia
   updateElementsWithDataValue(dataKey, value) {
     const componentDiv = document.querySelector(`#${this.name}`);
     const elementsWithDataValue = componentDiv.querySelectorAll(`[data-value="${dataKey}"]`);
@@ -5491,7 +5442,6 @@ export class DataArray {
     this.tableClass[item] = outClass;
   }
 
-
   setData(index, fieldName, key, value) {
     if (this.dataArray[index] && this.dataArray[index][fieldName]) {
       this.dataArray[index][fieldName][key] = value;
@@ -5592,6 +5542,8 @@ export class DataArray {
               "placeholder": "",
               "value": value,
               "column": "",
+              "field": fieldName,
+              "observ": "",
               "rows": "3",
               "attribute": 0,
               "hidden": false,
@@ -5652,6 +5604,8 @@ export class DataArray {
           "placeholder": "",
           "value": ' - ',
           "column": "",
+          "field": clave,
+          "observ": "",
           "rows": "3",
           "attribute": 0,
           "hidden": false,
@@ -5780,14 +5734,12 @@ export class DataArray {
     });
   }
 
-  // Nuevo método para recorrer y aplicar una función a cada elemento del array
   forEachItem(callback) {
     this.dataArray.forEach((item, index) => {
       callback(item, index);
     });
   }
 
-  // Nuevo método para agregar objetos al array y completar campos
   addObject(dataObject, structure = [], clean = false) {
     const newObject = {};
     let groupType = {};
@@ -5842,6 +5794,8 @@ export class DataArray {
           "placeholder": "",
           "value": value,
           "column": "",
+          "field": fieldName,
+          "observ": "",
           "rows": "3",
           "attribute": 0,
           "hidden": false,
@@ -5907,6 +5861,8 @@ export class DataArray {
           "placeholder": "",
           "value": value,
           "column": "",
+          "field": fieldName,
+          "observ": "",
           "rows": "3",
           "attribute": 0,
           "hidden": false,
@@ -5990,7 +5946,6 @@ export class DataArray {
     }
   }
 
-  // Método para detectar el tipo de dato basado en el valor
   detectDataType(value) {
     if (!isNaN(parseFloat(value)) && isFinite(value)) {
       return "number";
@@ -6071,8 +6026,6 @@ export class DataArray {
     this.from = 1
   }
 
-
-  // Nuevo método para obtener los nombres de las claves de un objeto
   getKeys(index) {
     if (this.dataArray[index]) {
       return Object.keys(this.dataArray[index]);
@@ -6158,7 +6111,6 @@ export class DataArray {
       divContainer.innerHTML = tabla;
     }
   }
-
 
   buscarYResaltar(componentDiv) {
     // Obtén la tabla
@@ -6981,8 +6933,6 @@ export class DataArray {
     });
   }
 
-
-  // Ejecuta una función pasando el nombre como string
   executeFunctionByName(functionName, ...args) {
     if (this.functions && typeof this.functions[functionName] === 'function') {
       const func = this.functions[functionName];
@@ -6991,6 +6941,5 @@ export class DataArray {
       console.error(`La función '${functionName}' no está definida en la DataArray.`);
     }
   }
-
 
 }

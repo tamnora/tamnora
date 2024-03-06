@@ -67,7 +67,7 @@ function cargarTabla(){
   
   laTabla.searchColumns= ['titulo'];
   let inputSearch = tmn.createSearch({valorBuscado: valorBuscado});
-  let btnNuevo = tmn.createButton({title: 'Nuevo', dataClick: 'nuevoRegistro,0'})
+  let btnNuevo = tmn.createButton({title: 'Nuevo', dataClick: 'nuevoRegistro,0', className: 'btnBlue'})
   
   let buttons = `${inputSearch}${btnNuevo}`;
   laTabla.addObjectFromArray(cursos);
@@ -110,11 +110,24 @@ function separarEnParrafos(texto) {
 
   // Filtra las líneas vacías (si las hay)
   const parrafos = lineas.filter((linea) => linea.trim() !== '')
-    .map((linea) => `<p>${linea}</p>`);
+    .map((linea) => {
+      if (linea.includes('*')) {
+        // Si la línea contiene asteriscos, envuelve el texto entre asteriscos en negrita
+        let partes = linea.split('*');
+        for (let i = 1; i < partes.length; i += 2) {
+          partes[i] = `<strong>${partes[i]}</strong>`;
+        }
+        return `<p>${partes.join('')}</p>`;
+      } else {
+        // De lo contrario, simplemente envuelve la línea en un párrafo normal
+        return `<p>${linea}</p>`;
+      }
+    });
 
   // Une los párrafos en un solo string
   return parrafos.join('');
 }
+
 
 
 async function cargarFormulario(){
@@ -135,7 +148,8 @@ async function cargarFormulario(){
   elForm.setDataKeys('type', {descripcion: 'textarea'});
   elForm.setDataKeys('column', { curso_id: 'col-span-2', titulo: 'col-span-10', precio: 'col-span-6', resumen: 'col-span-6', descripcion: 'col-span-12' });
 
-  // elForm.setData('descripcion', 'rows', 5)
+  elForm.setData('descripcion', 'rows', 12);
+  elForm.setData('resumen', 'observ', 'Puedes con todo esto')
   elForm.setFunction('reload', async ()=>{
     await traerDatos().then(data => {
       dataFetch = data[0].cursos
@@ -148,10 +162,17 @@ let descripcion = elForm.data.formulario.descripcion
 let parrafos = separarEnParrafos(descripcion)
 // descripcion = descripcion.replace(/\n/g, '\\n');
   console.log(parrafos)
+
+  let inputSearch = tmn.createSearch();
+  let btnNuevo = tmn.createButton({title: 'Nuevo'})
+  
+  let buttons = `${inputSearch}${btnNuevo}`;
  
 
   const options = {
     title: 'Editar Movimiento Prueba',
+    subtitle: 'Editamos el contenido de los cursos',
+    buttons: buttons,
     submit: 'Guardar!',
     delete: 'Eliminar!',
   }
