@@ -2899,7 +2899,7 @@ export class Tamnora {
 
 export class DataObject {
   constructor(name = 'newform', refTmn, fields = {}) {
-    this.camposRegistro = {};
+    this.dataForm = {};
     this.formOptions = {};
     this.data = this.createReactiveProxy(fields.data);
     this.tmn = refTmn;
@@ -2939,11 +2939,11 @@ export class DataObject {
       submit: async (event, modalName) => {
         let resultEvalute = true;
         this.setDataFromModel(this.data[this.name]);
-        for (const fieldName in this.camposRegistro) {
-          if (this.camposRegistro[fieldName].validate) {
-            let value = this.camposRegistro[fieldName].value;
-            let campo = this.camposRegistro[fieldName].name;
-            let validate = this.camposRegistro[fieldName].validate;
+        for (const fieldName in this.dataForm) {
+          if (this.dataForm[fieldName].validate) {
+            let value = this.dataForm[fieldName].value;
+            let campo = this.dataForm[fieldName].name;
+            let validate = this.dataForm[fieldName].validate;
             if (!eval(validate)) {
               resultEvalute = false;
               const input = globalThis.document.getElementById(`${this.name}_${fieldName}`);
@@ -3035,7 +3035,7 @@ export class DataObject {
           }
 
           sql = `DELETE FROM ${this.table} WHERE ${this.key} = ${val}`;
-          reference = `<span class="font-bold ml-2">${this.camposRegistro[this.key].name}  ${val}</span>`;
+          reference = `<span class="font-bold ml-2">${this.dataForm[this.key].name}  ${val}</span>`;
         } else {
           this.structure.forEach(value => {
             console.log(value)
@@ -3114,7 +3114,7 @@ export class DataObject {
 
     if (Object.keys(fields).length > 0) {
       fields.forEach(fieldName => {
-        this.camposRegistro[fieldName] = {
+        this.dataForm[fieldName] = {
           "type": "text",
           "name": fieldName,
           "required": false,
@@ -3342,22 +3342,22 @@ export class DataObject {
 
   setData(fieldName, key, value) {
     const name = this.name;
-    if (this.camposRegistro[fieldName]) {
+    if (this.dataForm[fieldName]) {
       if (!isNaN(parseFloat(value)) && isFinite(value)) {
-        this.camposRegistro[fieldName][key] = parseFloat(value)
+        this.dataForm[fieldName][key] = parseFloat(value)
         this.defaultDataObjeto[fieldName][key] = parseFloat(value);
       } else {
-        this.camposRegistro[fieldName][key] = value;
+        this.dataForm[fieldName][key] = value;
         this.defaultDataObjeto[fieldName][key] = value;
         if (value == 'currency') {
-          this.camposRegistro[fieldName].pattern = "[0-9.,]*";
+          this.dataForm[fieldName].pattern = "[0-9.,]*";
           this.defaultDataObjeto[fieldName].pattern = "[0-9.,]*";
         }
       }
       if (key == 'introDate') {
         let myDate = new Date();
-        let days = this.camposRegistro[fieldName]['setDate'];
-        let typeInput = this.camposRegistro[fieldName]['type'];
+        let days = this.dataForm[fieldName]['setDate'];
+        let typeInput = this.dataForm[fieldName]['type'];
         if (days > 0) {
           myDate.setDate(myDate.getDate() + days);
         } else if (days < 0) {
@@ -3365,15 +3365,15 @@ export class DataObject {
         }
 
         if (typeInput == 'datetime-local') {
-          this.camposRegistro[fieldName].value = formatDate(myDate).fechaHora;
+          this.dataForm[fieldName].value = formatDate(myDate).fechaHora;
           this.defaultDataObjeto[fieldName].value = formatDate(myDate).fechaHora;
           this.data[name][fieldName] = formatDate(myDate).fechaHora;
         } else if (typeInput == 'date') {
-          this.camposRegistro[fieldName].value = formatDate(myDate).fecha;
+          this.dataForm[fieldName].value = formatDate(myDate).fecha;
           this.defaultDataObjeto[fieldName].value = formatDate(myDate).fecha;
           this.data[name][fieldName] = formatDate(myDate).fecha;
         } else if (typeInput == 'time') {
-          this.camposRegistro[fieldName].value = formatDate(myDate).horaLarga;
+          this.dataForm[fieldName].value = formatDate(myDate).horaLarga;
           this.defaultDataObjeto[fieldName].value = formatDate(myDate).horaLarga;
           this.data[name][fieldName] = formatDate(myDate).horaLarga;
         }
@@ -3420,15 +3420,15 @@ export class DataObject {
     Object.keys(objectModel).forEach((fieldName) => {
       let value = objectModel[fieldName];
 
-      if (this.camposRegistro[fieldName]) {
-        if (this.camposRegistro[fieldName].type == 'number' || this.camposRegistro[fieldName].type == 'select') {
+      if (this.dataForm[fieldName]) {
+        if (this.dataForm[fieldName].type == 'number' || this.dataForm[fieldName].type == 'select') {
           if (!isNaN(parseFloat(value)) && isFinite(value)) {
-            this.camposRegistro[fieldName].value = parseFloat(value)
+            this.dataForm[fieldName].value = parseFloat(value)
           } else {
-            this.camposRegistro[fieldName].value = value;
+            this.dataForm[fieldName].value = value;
           }
         } else {
-          this.camposRegistro[fieldName].value = value;
+          this.dataForm[fieldName].value = value;
 
         }
 
@@ -3441,34 +3441,34 @@ export class DataObject {
   }
 
   getData(fieldName, key) {
-    if (this.camposRegistro[fieldName]) {
-      return this.camposRegistro[fieldName][key];
+    if (this.dataForm[fieldName]) {
+      return this.dataForm[fieldName][key];
     }
     return undefined;
   }
 
   setDataGroup(fieldNames, key, value) {
     fieldNames.forEach(fieldName => {
-      if (this.camposRegistro[fieldName]) {
-        this.camposRegistro[fieldName][key] = value;
+      if (this.dataForm[fieldName]) {
+        this.dataForm[fieldName][key] = value;
       }
     });
   }
 
   setDataKeys(key, objectNameValue) {
     Object.keys(objectNameValue).forEach((val) => {
-      if (this.camposRegistro[val]) {
-        this.camposRegistro[val][key] = objectNameValue[val];
+      if (this.dataForm[val]) {
+        this.dataForm[val][key] = objectNameValue[val];
       }
     })
   }
 
   setDataObject(fieldName, updates) {
     const name = this.name;
-    if (this.camposRegistro[fieldName]) {
+    if (this.dataForm[fieldName]) {
       for (const prop in updates) {
-        if (updates.hasOwnProperty(prop) && this.camposRegistro[fieldName].hasOwnProperty(prop)) {
-          this.camposRegistro[fieldName][prop] = updates[prop];
+        if (updates.hasOwnProperty(prop) && this.dataForm[fieldName].hasOwnProperty(prop)) {
+          this.dataForm[fieldName][prop] = updates[prop];
 
           if (prop == 'value') {
             if (!isNaN(parseFloat(updates[prop])) && isFinite(updates[prop])) {
@@ -3491,19 +3491,19 @@ export class DataObject {
   getDataGroup(fieldNames, key) {
     const dataGroup = {};
     fieldNames.forEach(fieldName => {
-      if (this.camposRegistro[fieldName]) {
-        dataGroup[fieldName] = this.camposRegistro[fieldName][key];
+      if (this.dataForm[fieldName]) {
+        dataGroup[fieldName] = this.dataForm[fieldName][key];
       }
     });
     return dataGroup;
   }
 
   getDataAll() {
-    return this.camposRegistro;
+    return this.dataForm;
   }
 
   removeAll() {
-    this.camposRegistro = {};
+    this.dataForm = {};
   }
 
   reordenarClaves(objeto, orden) {
@@ -3517,18 +3517,18 @@ export class DataObject {
   }
 
   forEachField(callback) {
-    for (const fieldName in this.camposRegistro) {
-      callback(fieldName, this.camposRegistro[fieldName]);
+    for (const fieldName in this.dataForm) {
+      callback(fieldName, this.dataForm[fieldName]);
     }
   }
 
   validations() {
     let resultado = true;
-    for (const fieldName in this.camposRegistro) {
-      if (this.camposRegistro[fieldName].validate) {
-        let value = this.camposRegistro[fieldName].value;
-        let name = this.camposRegistro[fieldName].name;
-        let validate = this.camposRegistro[fieldName].validate;
+    for (const fieldName in this.dataForm) {
+      if (this.dataForm[fieldName].validate) {
+        let value = this.dataForm[fieldName].value;
+        let name = this.dataForm[fieldName].name;
+        let validate = this.dataForm[fieldName].validate;
         if (!eval(validate)) {
           resultado = false;
           console.log(`El campo ${name} no pasa la validación`)
@@ -3539,17 +3539,17 @@ export class DataObject {
   }
 
   getDataClone() {
-    return this.camposRegistro;
+    return this.dataForm;
   }
 
   cloneFrom(newObject, clean = false) {
     const name = this.name;
-    this.camposRegistro = newObject;
+    this.dataForm = newObject;
     console.log(newObject)
 
-    for (const fieldName in this.camposRegistro) {
-      const type = this.camposRegistro[fieldName].type;
-      let value = this.camposRegistro[fieldName].value;
+    for (const fieldName in this.dataForm) {
+      const type = this.dataForm[fieldName].type;
+      let value = this.dataForm[fieldName].value;
       if (clean == true) {
         if (type == 'number') {
           value = 0;
@@ -3575,8 +3575,8 @@ export class DataObject {
 
       if (introDate == true) {
         let myDate = new Date();
-        let days = this.camposRegistro[fieldName]['setDate'];
-        let typeInput = this.camposRegistro[fieldName]['type'];
+        let days = this.dataForm[fieldName]['setDate'];
+        let typeInput = this.dataForm[fieldName]['type'];
         if (days > 0) {
           myDate.setDate(myDate.getDate() + days);
         } else if (days < 0) {
@@ -3584,15 +3584,15 @@ export class DataObject {
         }
 
         if (typeInput == 'datetime-local') {
-          this.camposRegistro[fieldName].value = formatDate(myDate).fechaHora;
+          this.dataForm[fieldName].value = formatDate(myDate).fechaHora;
           this.defaultDataObjeto[fieldName].value = formatDate(myDate).fechaHora;
           this.data[name][fieldName] = formatDate(myDate).fechaHora;
         } else if (typeInput == 'date') {
-          this.camposRegistro[fieldName].value = formatDate(myDate).fecha;
+          this.dataForm[fieldName].value = formatDate(myDate).fecha;
           this.defaultDataObjeto[fieldName].value = formatDate(myDate).fecha;
           this.data[name][fieldName] = formatDate(myDate).fecha;
         } else if (typeInput == 'time') {
-          this.camposRegistro[fieldName].value = formatDate(myDate).horaLarga;
+          this.dataForm[fieldName].value = formatDate(myDate).horaLarga;
           this.defaultDataObjeto[fieldName].value = formatDate(myDate).horaLarga;
           this.data[name][fieldName] = formatDate(myDate).horaLarga;
         }
@@ -3600,10 +3600,10 @@ export class DataObject {
       } else {
         if (!isNaN(parseFloat(value)) && isFinite(value)) {
           this.data[name][fieldName] = parseFloat(value);
-          this.camposRegistro[fieldName].value = parseFloat(value);
+          this.dataForm[fieldName].value = parseFloat(value);
         } else {
           this.data[name][fieldName] = value;
-          this.camposRegistro[fieldName].value = value;
+          this.dataForm[fieldName].value = value;
         }
       }
       this.updateElementsWithDataValue(`${name}!${fieldName}`, value)
@@ -3613,17 +3613,17 @@ export class DataObject {
 
   updateDataInFormModal(newObjectData) {
     const name = this.name;
-    for (const fieldName in this.camposRegistro) {
-      const setDate = this.camposRegistro[fieldName].setDate;
-      const type = this.camposRegistro[fieldName].type;
+    for (const fieldName in this.dataForm) {
+      const setDate = this.dataForm[fieldName].setDate;
+      const type = this.dataForm[fieldName].type;
       let value = newObjectData[fieldName];
 
       if (!isNaN(parseFloat(value)) && isFinite(value)) {
         this.data[name][fieldName] = parseFloat(value);
-        this.camposRegistro[fieldName].value = parseFloat(value);
+        this.dataForm[fieldName].value = parseFloat(value);
       } else {
         this.data[name][fieldName] = value;
-        this.camposRegistro[fieldName].value = value;
+        this.dataForm[fieldName].value = value;
       }
 
 
@@ -3634,17 +3634,17 @@ export class DataObject {
 
   updateDataInForm(newObjectData) {
     const name = this.name;
-    for (const fieldName in this.camposRegistro) {
-      const setDate = this.camposRegistro[fieldName].setDate;
-      const type = this.camposRegistro[fieldName].type;
+    for (const fieldName in this.dataForm) {
+      const setDate = this.dataForm[fieldName].setDate;
+      const type = this.dataForm[fieldName].type;
       let value = newObjectData[fieldName];
 
       if (!isNaN(parseFloat(value)) && isFinite(value)) {
         this.data[name][fieldName] = parseFloat(value);
-        this.camposRegistro[fieldName].value = parseFloat(value);
+        this.dataForm[fieldName].value = parseFloat(value);
       } else {
         this.data[name][fieldName] = value;
-        this.camposRegistro[fieldName].value = value;
+        this.dataForm[fieldName].value = value;
       }
 
 
@@ -3673,15 +3673,15 @@ export class DataObject {
         }
 
         if (typeInput == 'datetime-local') {
-          this.camposRegistro[fieldName].value = formatDate(myDate).fechaHora;
+          this.dataForm[fieldName].value = formatDate(myDate).fechaHora;
           this.defaultDataObjeto[fieldName].value = formatDate(myDate).fechaHora;
           this.data[name][fieldName] = formatDate(myDate).fechaHora;
         } else if (typeInput == 'date') {
-          this.camposRegistro[fieldName].value = formatDate(myDate).fecha;
+          this.dataForm[fieldName].value = formatDate(myDate).fecha;
           this.defaultDataObjeto[fieldName].value = formatDate(myDate).fecha;
           this.data[name][fieldName] = formatDate(myDate).fecha;
         } else if (typeInput == 'time') {
-          this.camposRegistro[fieldName].value = formatDate(myDate).horaLarga;
+          this.dataForm[fieldName].value = formatDate(myDate).horaLarga;
           this.defaultDataObjeto[fieldName].value = formatDate(myDate).horaLarga;
           this.data[name][fieldName] = formatDate(myDate).horaLarga;
         }
@@ -3689,10 +3689,10 @@ export class DataObject {
       } else {
         if (!isNaN(parseFloat(value)) && isFinite(value)) {
           this.data[name][fieldName] = parseFloat(value);
-          this.camposRegistro[fieldName].value = parseFloat(value);
+          this.dataForm[fieldName].value = parseFloat(value);
         } else {
           this.data[name][fieldName] = value;
-          this.camposRegistro[fieldName].value = value;
+          this.dataForm[fieldName].value = value;
         }
       }
       //this.updateElementsWithDataValue(`${name}!${fieldName}`, value)
@@ -3834,7 +3834,7 @@ export class DataObject {
       }
     }
 
-    this.camposRegistro = newObject;
+    this.dataForm = newObject;
     this.defaultDataObjeto = newObjectDefault;
 
 
@@ -3866,7 +3866,7 @@ export class DataObject {
       "noData": true
     };
 
-    this.camposRegistro[fieldName] = newObject;
+    this.dataForm[fieldName] = newObject;
     this.defaultDataObjeto[fieldName] = newObject;
     this.setValueRoute(`${this.name}!${fieldName}`, value);
 
@@ -3882,7 +3882,7 @@ export class DataObject {
   }
 
   loadDefaultObject() {
-    this.camposRegistro = this.defaultDataObjeto
+    this.dataForm = this.defaultDataObjeto
   }
 
   async addObjectFromRunCode(sq, clean = false) {
@@ -3942,8 +3942,8 @@ export class DataObject {
 
       if (objectNameValue) {
         Object.keys(objectNameValue).forEach((val) => {
-          if (this.camposRegistro[val]) {
-            this.camposRegistro[val]['type'] = objectNameValue[val];
+          if (this.dataForm[val]) {
+            this.dataForm[val]['type'] = objectNameValue[val];
           }
         })
       }
@@ -4181,7 +4181,7 @@ export class DataObject {
           this.data[dataObj][dataProp] = value;
         }
 
-        typeObject = this.camposRegistro[dataProp].type;
+        typeObject = this.dataForm[dataProp].type;
 
         if (element.type === 'checkbox') {
           element.checked = value ?? false;
@@ -4471,7 +4471,7 @@ export class DataObject {
     let columns = this.formClass.gridColumns;
 
     if (this.orderColumns.length > 0) {
-      this.camposRegistro = this.reordenarClaves(this.camposRegistro, this.orderColumns)
+      this.dataForm = this.reordenarClaves(this.dataForm, this.orderColumns)
     }
 
 
@@ -4913,7 +4913,7 @@ export class DataArray {
     this.widthPadre = 'w-full';
     this.arrayOrder = [];
     this.defaultDataRow = {};
-    this.dataArray = initial.initialData.map(item => {
+    this.dataTable = initial.initialData.map(item => {
       const newItem = {};
       initial.fields.forEach(field => {
         newItem[field] = {
@@ -5242,7 +5242,7 @@ export class DataArray {
           this.data[dataObj][dataProp] = value;
         }
 
-        typeObject = this.camposRegistro[dataProp].type;
+        typeObject = this.dataForm[dataProp].type;
 
         // if(typeObject == 'datetime-local'){
         //   value = this.transformarFechaHora(value)
@@ -5443,8 +5443,8 @@ export class DataArray {
   }
 
   setData(index, fieldName, key, value) {
-    if (this.dataArray[index] && this.dataArray[index][fieldName]) {
-      this.dataArray[index][fieldName][key] = value;
+    if (this.dataTable[index] && this.dataTable[index][fieldName]) {
+      this.dataTable[index][fieldName][key] = value;
     }
   }
 
@@ -5627,18 +5627,18 @@ export class DataArray {
   }
 
   getData(index, fieldName, key) {
-    if (this.dataArray[index] && this.dataArray[index][fieldName]) {
-      return this.dataArray[index][fieldName][key];
+    if (this.dataTable[index] && this.dataTable[index][fieldName]) {
+      return this.dataTable[index][fieldName][key];
     }
     return undefined;
   }
 
   setDataGroup(index, fieldNames, key, value) {
     const id = parseInt(index)
-    if (this.dataArray[id]) {
+    if (this.dataTable[id]) {
       fieldNames.forEach(fieldName => {
-        if (this.dataArray[id][fieldName]) {
-          this.dataArray[id][fieldName][key] = value;
+        if (this.dataTable[id][fieldName]) {
+          this.dataTable[id][fieldName][key] = value;
         }
       });
     }
@@ -5647,10 +5647,10 @@ export class DataArray {
   getDataGroup(index, fieldNames, key) {
     const id = parseInt(index)
     const dataGroup = {};
-    if (this.dataArray[id]) {
+    if (this.dataTable[id]) {
       fieldNames.forEach(fieldName => {
-        if (this.dataArray[id][fieldName]) {
-          dataGroup[fieldName] = this.dataArray[id][fieldName][key];
+        if (this.dataTable[id][fieldName]) {
+          dataGroup[fieldName] = this.dataTable[id][fieldName][key];
         }
       });
     }
@@ -5659,28 +5659,28 @@ export class DataArray {
 
   getDataObjectForIndex(index) {
     const id = parseInt(index)
-    return this.dataArray[id];
+    return this.dataTable[id];
   }
 
   getDataObjectForKey(index, key) {
     const id = parseInt(index)
     const newObject = {};
-    Object.keys(this.dataArray[id]).forEach(data => {
-      newObject[data] = this.dataArray[id][data][key];
+    Object.keys(this.dataTable[id]).forEach(data => {
+      newObject[data] = this.dataTable[id][data][key];
     })
     return newObject;
   }
 
   getDataAll() {
-    return this.dataArray;
+    return this.dataTable;
   }
 
   getDataAllKeys(key) {
     const newArray = [];
-    this.dataArray.forEach((obj, index) => {
+    this.dataTable.forEach((obj, index) => {
       let newObject = {}
       Object.keys(obj).forEach(data => {
-        newObject[data] = this.dataArray[index][data][key];
+        newObject[data] = this.dataTable[index][data][key];
       })
       newArray.push(newObject)
     })
@@ -5691,8 +5691,8 @@ export class DataArray {
     if (this.orderColumns.length > 0) {
       return this.orderColumns.length
     } else {
-      if (this.dataArray.length > 0) {
-        const firstPositionObject = this.dataArray[0];
+      if (this.dataTable.length > 0) {
+        const firstPositionObject = this.dataTable[0];
         return Object.keys(firstPositionObject).length;
       } else {
         return 0; // Si no hay objetos en la posición 0, retornamos 0
@@ -5724,10 +5724,10 @@ export class DataArray {
   }
 
   setDataKeys(key, objectNameValue) {
-    this.dataArray.forEach((item, index) => {
+    this.dataTable.forEach((item, index) => {
       Object.keys(objectNameValue).forEach((val) => {
-        if (this.dataArray[index][val]) {
-          this.dataArray[index][val][key] = objectNameValue[val];
+        if (this.dataTable[index][val]) {
+          this.dataTable[index][val][key] = objectNameValue[val];
         }
       })
 
@@ -5735,7 +5735,7 @@ export class DataArray {
   }
 
   forEachItem(callback) {
-    this.dataArray.forEach((item, index) => {
+    this.dataTable.forEach((item, index) => {
       callback(item, index);
     });
   }
@@ -5814,7 +5814,7 @@ export class DataArray {
       }
     }
 
-    this.dataArray.push(newObject);
+    this.dataTable.push(newObject);
   }
 
   getDefaultRow() {
@@ -6004,22 +6004,22 @@ export class DataArray {
   }
 
   removeObjectIndex(index) {
-    if (index >= 0 && index < this.dataArray.length) {
-      this.dataArray.splice(index, 1);
+    if (index >= 0 && index < this.dataTable.length) {
+      this.dataTable.splice(index, 1);
     }
   }
 
   removeObjectWhere(condition) {
-    this.dataArray = this.dataArray.filter(item => !condition(item));
+    this.dataTable = this.dataTable.filter(item => !condition(item));
   }
 
   removeAll() {
-    this.dataArray = [];
+    this.dataTable = [];
   }
 
   loadDefaultRow() {
-    this.dataArray = [];
-    this.dataArray.push(this.defaultDataRow);
+    this.dataTable = [];
+    this.dataTable.push(this.defaultDataRow);
   }
 
   resetFrom() {
@@ -6027,8 +6027,8 @@ export class DataArray {
   }
 
   getKeys(index) {
-    if (this.dataArray[index]) {
-      return Object.keys(this.dataArray[index]);
+    if (this.dataTable[index]) {
+      return Object.keys(this.dataTable[index]);
     }
     return [];
   }
@@ -6181,7 +6181,7 @@ export class DataArray {
     }
 
     if (this.orderColumns.length > 0) {
-      this.arrayOrder = this.dataArray.map((objeto) =>
+      this.arrayOrder = this.dataTable.map((objeto) =>
         this.reordenarClaves(objeto, this.orderColumns)
       );
       arrayTable = 'arrayOrder';
@@ -6626,7 +6626,7 @@ export class DataArray {
     hasta = desde + this.recordsPerView - 1;
 
     if (this.orderColumns.length > 0) {
-      this.arrayOrder = this.dataArray.map((objeto) =>
+      this.arrayOrder = this.dataTable.map((objeto) =>
         this.reordenarClaves(objeto, this.orderColumns)
       );
       arrayTable = 'arrayOrder';
