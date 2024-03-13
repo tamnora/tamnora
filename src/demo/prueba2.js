@@ -6,6 +6,7 @@ const tmn = new Tamnora;
 const tabla = tmn.newTable('tabla');
 const form = tmn.newForm('form');
 
+
 tmn.setValue('idSelected', 0);
 tmn.select('#navbar').html(navbar('Tamnora js'))
 tmn.setComponentHTML
@@ -20,21 +21,18 @@ tmn.fetchData(`https://api.campusvirtualisei.com/cursos`)
 
 tmn.setFunction('showMovi', (data)=>{
   tmn.setValue('form', tmn.getValue('tabla')[data[0]])
-  form.addData(tmn.getValue('tabla')[data[0]])
-  form.update();
-  
+  form.updateData(tmn.getValue('tabla')[data[0]])
 })
 
 function creandoElementos(){
   let cursos = tmn.getValue('cursos');
-  tabla.addData(cursos)
-  tabla.columns = ['curso_id', 'titulo']
-  form.addData(cursos[1])
-  form.show = 'modal'
+  tabla.addData(cursos);
+  tabla.columns = ['curso_id', 'titulo'];
+  form.addData(cursos[1]);
   form.setDataKey('type', {precio: 'currency'});
 
 
-  const options = {
+  const optionsTable = {
     title: 'Titulo de la tabla',
     subtitle: 'Subtitulo de la tabla',
     row: {
@@ -46,9 +44,19 @@ function creandoElementos(){
     }
   }
 
-  
-  tabla.createTable(options);
-  
-  form.createForm()
+  let inputSearch = tmn.createSearch();
+  let btnNuevo = tmn.createButton({title: 'Nuevo'})
+  let buttons = `${inputSearch}${btnNuevo}`;
+
+  const optionsForm = {
+    title: 'Editar Movimiento Prueba',
+    subtitle: 'Editamos el contenido de los cursos',
+    buttons: buttons,
+    submit: 'Guardar!',
+    delete: 'Eliminar!',
+  }
+
+  tabla.createTable(optionsTable);
+  form.createForm(optionsForm)
   
 }

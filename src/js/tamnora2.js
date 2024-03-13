@@ -660,8 +660,6 @@ export function formatNumberArray(str, dec = 2) {
   let parteEntera = '';
   let parteDecimal = '';
 
-
-
   arrayNumero.forEach((parte, index) => {
     if (index == ultimoValor) {
       numeroFinal += `${parte}`;
@@ -1000,7 +998,201 @@ export class Tamnora {
           });
         });
 
-      }
+      },
+      closeModal: (name) => {
+        console.log(this.objects[name])
+        const btnDelete = this.objects[name].formElement.querySelector('[data-formclick="delete"]');
+        const modal = document.querySelector(`#${this.objects[name].name}`);
+        if (btnDelete) btnDelete.innerHTML = this.objects[name].formOptions.delete;
+        modal.classList.remove('flex');
+        modal.classList.add('hidden');
+        this.objects[name].numberAlert = 0;
+      },
+      openModal: (name) => {
+        console.log(this.objects[name])
+        const btnDelete = this.objects[name].formElement.querySelector('[data-formclick="delete"]');
+        const modal = document.querySelector(`#${this.objects[name].name}`);
+        if (btnDelete) btnDelete.innerHTML = this.objects[name].formOptions.delete;
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        this.objects[name].numberAlert = 0;
+      },
+      onMount: (name) => {this.objects[name].onMount()},
+        submit: async (event, modalName, name) => {
+          let resultEvalute = true;
+          this.objects[name].setDataFromModel(this.objects[name].data[this.objects[name].name]);
+          for (const fieldName in this.objects[name].midata) {
+            if (this.objects[name].midata[fieldName].validate) {
+              let value = this.objects[name].midata[fieldName].value;
+              let campo = this.objects[name].midata[fieldName].name;
+              let validate = this.objects[name].midata[fieldName].validate;
+              if (!eval(validate)) {
+                resultEvalute = false;
+                const input = globalThis.document.getElementById(`${this.objects[name].name}_${fieldName}`);
+                input.focus();
+                input.select();
+                console.log(`El campo ${campo} no pasa la validación`)
+                return false;
+              }
+            }
+          }
+
+          if (resultEvalute) {
+            let defaultTitle = event.submitter.innerHTML;
+            event.submitter.disabled = true;
+            event.submitter.innerHTML = `
+            <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-blue-600 dark:text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+        </svg>
+        Procesando...
+            `
+
+            // Define una promesa dentro del evento submit
+            const promesa = new Promise((resolve, reject) => {
+              const datt = this.name;
+              this.setDataFromModel(this.data[datt]);
+              const paraSQL = this.getDataAll();
+              const send = prepararSQL(this.table, paraSQL, this.id);
+              const validation = this.validations();
+
+              if (validation) {
+                if (send.status == 1) {
+                  dbSelect(send.tipo, send.sql).then(val => {
+                    if (val[0].resp == 1) {
+                      resolve(val[0]);
+                    } else {
+                      reject(val[0]);
+                    }
+                  })
+                } else {
+                  reject('Algo falta por aquí!')
+                }
+              } else {
+                reject('No paso la validación!')
+              }
+
+            });
+
+            // Maneja la promesa
+            promesa
+              .then((respuesta) => {
+                console.log(respuesta); // Maneja la respuesta del servidor
+                event.submitter.innerHTML = `${defaultTitle} <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+              `;
+                event.submitter.disabled = false;
+                if (this.nameModal) {
+                  this.functions.closeModal();
+                }
+                this.functions['reload'](respuesta);
+                if (this.resetOnSubmit) {
+                  this.resetValues();
+                }
+
+              })
+              .catch((error) => {
+                console.error("Error al enviar el formulario:", error);
+                event.submitter.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+              </svg> Error al Guardar !
+              
+              `;
+              });
+          }
+
+        },
+        delete: async (e, name) => {
+          const isThis = this.objects[name];
+          let sql, reference, val, key;
+          const datt = isThis.name;
+          const btnDelete = isThis.formElement.querySelector('[data-formclick="delete"]');
+
+          if (isThis.key != '') {
+            key = isThis.key;
+            if (isThis.id) {
+              val = isThis.id;
+            } else {
+              val = isThis.getValue(`${datt}!${isThis.key}`);
+            }
+
+            sql = `DELETE FROM ${isThis.table} WHERE ${isThis.key} = ${val}`;
+            reference = `<span class="font-bold ml-2">${isThis.midata[isThis.key].name}  ${val}</span>`;
+          } else {
+            isThis.structure.forEach(value => {
+              console.log(value)
+              if (value.COLUMN_KEY == 'PRI') {
+                key = value.COLUMN_NAME;
+                val = isThis.getValue(`${datt}!${value.COLUMN_NAME}`);
+                sql = `DELETE FROM ${isThis.table} WHERE ${value.COLUMN_NAME} = ${val}`;
+                reference = `<span class="font-bold ml-2">${value.COLUMN_NAME}  ${val}</span>`;
+              }
+            })
+
+          }
+
+          if (sql && val) {
+            if (isThis.numberAlert > 0) {
+              let defaultTitle = btnDelete.innerHTML;
+              btnDelete.disabled = true;
+              btnDelete.innerHTML = `
+                  <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
+              <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
+              </svg>
+              Eliminando...
+                  `
+
+              // Define una promesa dentro del evento submit
+              const promesa = new Promise((resolve, reject) => {
+                dbSelect('d', sql).then(val => {
+                  if (val[0].resp == 1) {
+                    resolve(val[0]);
+                  } else {
+                    reject(val[0]);
+                  }
+                })
+
+              });
+
+              // Maneja la promesa
+              promesa
+                .then((respuesta) => {
+                  console.log(respuesta); // Maneja la respuesta del servidor
+                  btnDelete.innerHTML = isThis.formOptions.delete;
+                  btnDelete.disabled = false;
+                  isThis.numberAlert = 0;
+                  if (isThis.modalName) {
+                    isThis.functions.closeModal();
+                  }
+                  isThis.functions['reload'](respuesta);
+                  if (isThis.resetOnSubmit) {
+                    isThis.resetValues();
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error al enviar el formulario:", error);
+                });
+
+
+            } else {
+              isThis.numberAlert = 1;
+              btnDelete.innerHTML = `
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="inline w-4 h-4 mr-2 text-white">
+    <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+  </svg>  Confirma ELIMINAR ${reference}
+                   `
+            }
+
+
+
+          } else {
+            console.error(`NO se puede ELIMINAR ${key} con valor ${val} NULL`)
+          }
+
+        },
+        reload: () => { }
     };
 
     window.addEventListener('popstate', () => {
@@ -1377,7 +1569,6 @@ export class Tamnora {
 
     }
   }
-
 
   cleanValue(obj, format = false) {
     if (this.defaultData[obj] && format) {
@@ -2220,7 +2411,6 @@ export class Tamnora {
   }
 
   updateElementsWithDataValue(dataKey, value, name) {
-    console.log('por aqui')
     const updateElement = (element) => {
       if (dataKey.includes('!')) {
         const [dataObj, dataProp] = dataKey.split('!');
@@ -2236,14 +2426,20 @@ export class Tamnora {
           typeObject = this.objects[name].midata[dataProp].type;
         }
 
+        
+
         if (element.type === 'checkbox') {
           element.checked = value ?? false;
         } else if (element.tagName === 'SELECT') {
           element.value = value ?? '';
-        } else if (element.tagName === 'INPUT') {
-          element.value = value ?? '';
         } else if (element.tagName === 'TEXTAREA') {
           element.textContent = value ?? ''; // Establecer el contenido del textarea
+        } else if (element.tagName === 'INPUT') {
+          if(typeObject == 'currency'){
+            element.value = formatNumberArray(value)[2]
+          } else {
+            element.value = value ?? '';
+          }
         } else {
           element.textContent = value ?? '';
         }
@@ -3114,201 +3310,12 @@ export class Tamnora {
         createForm: (options) => { this.createForm(options, nameForm) },
         setDataKey: (key, objectNameValue) => { this.setDataKeys(key, objectNameValue, nameForm) },
         update: () => { this.updateForm(nameForm) },
-        functions: {}
+        updateData: (updates)=>{this.setDataObject(updates, nameForm)},
+        openModal: ()=>{this.functions.openModal(nameForm)},
+        closeModal: ()=>{this.functions.closeModal(nameForm)},
+        onMount: ()=>{}
       }
-      this.objects[name].functions = {
-        closeModal: () => {
-          const btnDelete = this.objects[name].formElement.querySelector('[data-formclick="delete"]');
-          const modal = document.querySelector(`#${this.objects[name].name}`);
-          if (btnDelete) btnDelete.innerHTML = this.objects[name].formOptions.delete;
-          modal.classList.remove('flex');
-          modal.classList.add('hidden');
-          this.objects[name].numberAlert = 0;
-        },
-        openModal: () => {
-          const btnDelete = this.objects[name].formElement.querySelector('[data-formclick="delete"]');
-          const modal = document.querySelector(`#${this.objects[name].name}`);
-          if (btnDelete) btnDelete.innerHTML = this.objects[name].formOptions.delete;
-          modal.classList.remove('hidden');
-          modal.classList.add('flex');
-          this.objects[name].numberAlert = 0;
-        },
-        onMount: () => { },
-        submit: async (event, modalName) => {
-          let resultEvalute = true;
-          this.objects[name].setDataFromModel(this.objects[name].data[this.objects[name].name]);
-          for (const fieldName in this.objects[name].midata) {
-            if (this.objects[name].midata[fieldName].validate) {
-              let value = this.objects[name].midata[fieldName].value;
-              let campo = this.objects[name].midata[fieldName].name;
-              let validate = this.objects[name].midata[fieldName].validate;
-              if (!eval(validate)) {
-                resultEvalute = false;
-                const input = globalThis.document.getElementById(`${this.objects[name].name}_${fieldName}`);
-                input.focus();
-                input.select();
-                console.log(`El campo ${campo} no pasa la validación`)
-                return false;
-              }
-            }
-          }
-
-          if (resultEvalute) {
-            let defaultTitle = event.submitter.innerHTML;
-            event.submitter.disabled = true;
-            event.submitter.innerHTML = `
-            <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-blue-600 dark:text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
-        <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
-        </svg>
-        Procesando...
-            `
-
-            // Define una promesa dentro del evento submit
-            const promesa = new Promise((resolve, reject) => {
-              const datt = this.name;
-              this.setDataFromModel(this.data[datt]);
-              const paraSQL = this.getDataAll();
-              const send = prepararSQL(this.table, paraSQL, this.id);
-              const validation = this.validations();
-
-              if (validation) {
-                if (send.status == 1) {
-                  dbSelect(send.tipo, send.sql).then(val => {
-                    if (val[0].resp == 1) {
-                      resolve(val[0]);
-                    } else {
-                      reject(val[0]);
-                    }
-                  })
-                } else {
-                  reject('Algo falta por aquí!')
-                }
-              } else {
-                reject('No paso la validación!')
-              }
-
-            });
-
-            // Maneja la promesa
-            promesa
-              .then((respuesta) => {
-                console.log(respuesta); // Maneja la respuesta del servidor
-                event.submitter.innerHTML = `${defaultTitle} <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-              </svg>
-              `;
-                event.submitter.disabled = false;
-                if (this.nameModal) {
-                  this.functions.closeModal();
-                }
-                this.functions['reload'](respuesta);
-                if (this.resetOnSubmit) {
-                  this.resetValues();
-                }
-
-              })
-              .catch((error) => {
-                console.error("Error al enviar el formulario:", error);
-                event.submitter.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
-              </svg> Error al Guardar !
-              
-              `;
-              });
-          }
-
-        },
-        delete: async (e) => {
-          let sql, reference, val, key;
-          const datt = this.name;
-          const btnDelete = this.formElement.querySelector('[data-formclick="delete"]');
-
-          if (this.key != '') {
-            key = this.key;
-            if (this.id) {
-              val = this.id;
-            } else {
-              val = this.getValue(`${datt}!${this.key}`);
-            }
-
-            sql = `DELETE FROM ${this.table} WHERE ${this.key} = ${val}`;
-            reference = `<span class="font-bold ml-2">${this.midata[this.key].name}  ${val}</span>`;
-          } else {
-            this.structure.forEach(value => {
-              console.log(value)
-              if (value.COLUMN_KEY == 'PRI') {
-                key = value.COLUMN_NAME;
-                val = this.getValue(`${datt}!${value.COLUMN_NAME}`);
-                sql = `DELETE FROM ${this.table} WHERE ${value.COLUMN_NAME} = ${val}`;
-                reference = `<span class="font-bold ml-2">${value.COLUMN_NAME}  ${val}</span>`;
-              }
-            })
-
-          }
-
-          if (sql && val) {
-            if (this.numberAlert > 0) {
-              let defaultTitle = btnDelete.innerHTML;
-              btnDelete.disabled = true;
-              btnDelete.innerHTML = `
-                  <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
-              <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
-              </svg>
-              Eliminando...
-                  `
-
-              // Define una promesa dentro del evento submit
-              const promesa = new Promise((resolve, reject) => {
-                dbSelect('d', sql).then(val => {
-                  if (val[0].resp == 1) {
-                    resolve(val[0]);
-                  } else {
-                    reject(val[0]);
-                  }
-                })
-
-              });
-
-              // Maneja la promesa
-              promesa
-                .then((respuesta) => {
-                  console.log(respuesta); // Maneja la respuesta del servidor
-                  btnDelete.innerHTML = this.formOptions.delete;
-                  btnDelete.disabled = false;
-                  this.numberAlert = 0;
-                  if (this.modalName) {
-                    this.functions.closeModal();
-                  }
-                  this.functions['reload'](respuesta);
-                  if (this.resetOnSubmit) {
-                    this.resetValues();
-                  }
-                })
-                .catch((error) => {
-                  console.error("Error al enviar el formulario:", error);
-                });
-
-
-            } else {
-              this.numberAlert = 1;
-              btnDelete.innerHTML = `
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="inline w-4 h-4 mr-2 text-white">
-    <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-  </svg>  Confirma ELIMINAR ${reference}
-                   `
-            }
-
-
-
-          } else {
-            console.error(`NO se puede ELIMINAR ${key} con valor ${val} NULL`)
-          }
-
-        },
-        reload: () => { }
-      }
+      
     }
 
     this.cantForms++;
@@ -3357,7 +3364,6 @@ export class Tamnora {
     this.cantTables++;
     return this.objects[nameTable]
   }
-
 
   addArray(name, arr = [{ datos: 'Falta datos de la tabla' }]) {
     this.removeAll(name);
@@ -4185,42 +4191,39 @@ export class Tamnora {
   createForm(data = {}, name) {
     const thisForm = this.objects[name];
     const classNames = this.class.form;
-
     let element;
     let form = '';
-    const idElem = thisForm.name;
+    
     let columns = classNames.gridColumns;
 
     if (thisForm.orderColumns.length > 0) {
       thisForm.midata = this.reordenarClaves(thisForm.midata, thisForm.orderColumns)
     }
 
-
     if (!thisForm.formElement) {
-      element = document.querySelector(`#${idElem}`);
+      element = document.querySelector(`#${name}`);
       thisForm.formElement = element;
     } else {
       element = thisForm.formElement;
     }
 
     thisForm.formOptions = data;
-    let nameForm = idElem;
-
-
+    let nameForm = name;
+    
     if (data.colorForm) {
       thisForm.changeColorClass(data.colorForm);
     }
 
     if (thisForm.view != 'normal') {
-      thisForm.nameModal = idElem;
-
+      thisForm.nameModal = name;
+      
       if (data.show == true) {
         element.classList.add('flex');
       } else {
         element.classList.add('hidden');
       }
 
-      form += `<div id="${thisForm.modalName}_mod" tabindex="-1" name="divModal" aria-hidden="true" class="${classNames.divModal}">`;
+      form += `<div id="${name}_mod" tabindex="-1" name="divModal" aria-hidden="true" class="${classNames.divModal}">`;
       if (thisForm.view == 'modal-full') {
         form += `<div name="modalContainer" class="${classNames.modalContainerFull}">`;
       } else {
@@ -4243,7 +4246,7 @@ export class Tamnora {
       }
 
 
-      form += `<div><button name="btnCloseModal" data-modal="closeModal,#${thisForm.modalName}" type="button" class="${classNames.btnCloseModal}">
+      form += `<div><button name="btnCloseModal" data-modal="closeModal,${name}" type="button" class="${classNames.btnCloseModal}">
           <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
           </svg>
@@ -4474,7 +4477,7 @@ export class Tamnora {
     this.bindClickModal(element);
     this.bindElementsWithDataValues(element);
     this.bindChangeEvents(element);
-    thisForm.functions.onMount();
+    this.functions.onMount(thisForm.name);
     if (thisForm.focus) {
       let elemnetFocus = document.querySelector(`#${nameForm}_${thisForm.focus}`);
       elemnetFocus.focus();
@@ -4484,13 +4487,23 @@ export class Tamnora {
   }
 
   updateForm(name) {
+    const thisForm = this.objects[name];
+    let element;
+  
+    if (!thisForm.formElement) {
+      element = document.querySelector(`#${thisForm.name}`);
+      thisForm.formElement = element;
+    } else {
+      element = thisForm.formElement;
+    }
+
     if (typeof this.data[name] == 'object') {
       Object.keys(this.data[name]).forEach((key) => {
         let value = this.data[name][key];
         this.updateElementsWithDataValue(`${name}!${key}`, value, name);
       });
     }
-
+  
   }
 
   forEachField(name, callback) {
@@ -4507,10 +4520,23 @@ export class Tamnora {
     })
   }
 
-  update(name, value, nameForm) {
-    this.objects[nameForm].midata[val]
-    this.data[this.name][name] = value;
-    this.updateElementsWithDataValue(`${this.name}!${name}`, value);
+  setDataObject(updates, name) {
+      for (const prop in updates) {
+        if (updates.hasOwnProperty(prop) && this.objects[name].midata.hasOwnProperty(prop)) {
+          this.objects[name].midata[prop].value = updates[prop];
+            if (!isNaN(parseFloat(updates[prop])) && isFinite(updates[prop])) {
+              this.data[name][prop] = parseFloat(updates[prop]);
+            } else {
+              this.data[name][prop] = updates[prop];
+            }
+            this.updateElementsWithDataValue(`${name}!${prop}`, updates[prop], name)
+          
+        } else {
+          console.error(`Prop '${prop}' does not exist in the data object.`);
+        }
+      }
+
+    
   }
 
   bindSubmitEvents(componentDiv) {
