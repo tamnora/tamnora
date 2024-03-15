@@ -1,3 +1,9 @@
+const SERVER = import.meta.env.VITE_SERVER_NODE;
+const TYPE_SERVER = 'node';
+
+
+let informe = { primero: 'nada', segundo: 'nada' };
+
 function createQuerySQL(type, params) {
   if (typeof type !== 'string') {
     throw new Error('type debe ser un string');
@@ -178,6 +184,35 @@ function convertirClavesAMinusculas(objeto) {
   return resultado;
 }
 
+function convertirFormatoFecha(objeto) {
+  const resultado = {};
+
+  for (const clave in objeto) {
+    if (Object.prototype.hasOwnProperty.call(objeto, clave)) {
+      let valor = objeto[clave];
+
+      if (typeof valor === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(valor)) {
+        // Si el valor es una cadena que coincide con el formato de fecha ISO, conviértelo
+        let fechaFormateada = '';
+        const fecha = new Date(valor);
+        const horas = `${formatoDeCeros(fecha.getHours())}:${formatoDeCeros(fecha.getMinutes())}:${formatoDeCeros(fecha.getSeconds())}`;
+
+        if (horas == '00:00:00') {
+          fechaFormateada = `${fecha.getFullYear()}-${formatoDeCeros(fecha.getMonth() + 1)}-${formatoDeCeros(fecha.getDate())}`;
+        } else {
+          fechaFormateada = `${fecha.getFullYear()}-${formatoDeCeros(fecha.getMonth() + 1)}-${formatoDeCeros(fecha.getDate())} ${formatoDeCeros(fecha.getHours())}:${formatoDeCeros(fecha.getMinutes())}`;
+        }
+
+        resultado[clave] = fechaFormateada;
+      } else {
+        // Si no es una fecha, convierte la clave a minúsculas y copia el valor tal como está
+        resultado[clave] = valor;
+      }
+    }
+  }
+  return resultado;
+}
+
 function convertirClavesAMinusculasYFormatoFecha(objeto) {
   const resultado = {};
 
@@ -296,7 +331,7 @@ export function defaultClass() {
       paginationBtn: `bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700/50 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white text-xs`,
       paginationBtnDisable: `bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700/50 dark:text-neutral-600 text-xs`,
       th: `px-4 py-3 select-none text-xs text-neutral-500 uppercase dark:text-neutral-500 whitespace-nowrap`,
-      tr: `border-t border-neutral-200 dark:border-neutral-700`,
+      tr: `border-t border-neutral-200 dark:border-neutral-700 `,
       trhover: `hover:bg-neutral-200/40 dark:hover:bg-neutral-800/40 hover:text-neutral-700 dark:hover:text-neutral-200 cursor-pointer`,
       td: `px-4 py-3 select-none whitespace-nowrap`,
       tdclick: `px-4 py-3 select-none cursor-pointer font-semibold hover:text-green-400`,
@@ -376,7 +411,7 @@ export function prepararSQL(tabla, json, selectID = '') {
             tipoSQL = valueKey == 0 ? 'insert' : 'update';
           } else {
             typeInput = json[key].type;
-            //console.log(typeInput, json[key].value)
+
             if (typeInput == 'integer' || typeInput == 'number') {
               if (json[key].value > 0) {
                 if (json[key].value > 0) {
@@ -414,6 +449,8 @@ export function prepararSQL(tabla, json, selectID = '') {
               } else {
                 elValor = null;
               }
+            } else if (json[key].value == null) {
+              elValor = null;
             } else {
               elValor = `${json[key].value}`;
             }
@@ -898,6 +935,7 @@ export function formatDate(valor = null, separador = '-') {
       minutos +
       ':' +
       segundos,
+    fechaHoraLocal: '' + anio + '-' + mes + '-' + dia + 'T' + hora + ':' + minutos,
     fechaHora:
       '' +
       anio +
@@ -1000,7 +1038,7 @@ export class Tamnora {
 
       },
       closeModal: (name) => {
-        console.log(this.objects[name])
+        // console.log(this.objects[name])
         const btnDelete = this.objects[name].formElement.querySelector('[data-formclick="delete"]');
         const modal = document.querySelector(`#${this.objects[name].name}`);
         if (btnDelete) btnDelete.innerHTML = this.objects[name].formOptions.delete;
@@ -1009,7 +1047,7 @@ export class Tamnora {
         this.objects[name].numberAlert = 0;
       },
       openModal: (name) => {
-        console.log(this.objects[name])
+        // console.log(this.objects[name])
         const btnDelete = this.objects[name].formElement.querySelector('[data-formclick="delete"]');
         const modal = document.querySelector(`#${this.objects[name].name}`);
         if (btnDelete) btnDelete.innerHTML = this.objects[name].formOptions.delete;
@@ -1017,30 +1055,32 @@ export class Tamnora {
         modal.classList.add('flex');
         this.objects[name].numberAlert = 0;
       },
-      onMount: (name) => {this.objects[name].onMount()},
-        submit: async (event, modalName, name) => {
-          let resultEvalute = true;
-          this.objects[name].setDataFromModel(this.objects[name].data[this.objects[name].name]);
-          for (const fieldName in this.objects[name].midata) {
-            if (this.objects[name].midata[fieldName].validate) {
-              let value = this.objects[name].midata[fieldName].value;
-              let campo = this.objects[name].midata[fieldName].name;
-              let validate = this.objects[name].midata[fieldName].validate;
-              if (!eval(validate)) {
-                resultEvalute = false;
-                const input = globalThis.document.getElementById(`${this.objects[name].name}_${fieldName}`);
-                input.focus();
-                input.select();
-                console.log(`El campo ${campo} no pasa la validación`)
-                return false;
-              }
+      onMount: (name) => { this.objects[name].onMount() },
+      submit: async (event, modalName, name) => {
+        let resultEvalute = true;
+        //console.log(name, this.data[name])
+        this.setDataFromModel(this.data[name], name);
+        for (const fieldName in this.objects[name].midata) {
+          if (this.objects[name].midata[fieldName].validate) {
+            let value = this.objects[name].midata[fieldName].value;
+            let campo = this.objects[name].midata[fieldName].name;
+            let validate = this.objects[name].midata[fieldName].validate;
+
+            if (!eval(validate)) {
+              resultEvalute = false;
+              const input = globalThis.document.getElementById(`${this.objects[name].name}_${fieldName}`);
+              input.focus();
+              input.select();
+              console.log(`El campo ${campo} no pasa la validación`)
+              return false;
             }
           }
+        }
 
-          if (resultEvalute) {
-            let defaultTitle = event.submitter.innerHTML;
-            event.submitter.disabled = true;
-            event.submitter.innerHTML = `
+        if (resultEvalute) {
+          let defaultTitle = event.submitter.innerHTML;
+          event.submitter.disabled = true;
+          event.submitter.innerHTML = `
             <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-blue-600 dark:text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
         <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
@@ -1048,95 +1088,106 @@ export class Tamnora {
         Procesando...
             `
 
-            // Define una promesa dentro del evento submit
-            const promesa = new Promise((resolve, reject) => {
-              const datt = this.name;
-              this.setDataFromModel(this.data[datt]);
-              const paraSQL = this.getDataAll();
-              const send = prepararSQL(this.table, paraSQL, this.id);
-              const validation = this.validations();
+          // Define una promesa dentro del evento submit
+          const promesa = new Promise((resolve, reject) => {
+            const datt = this.objects[name].name;
+            // this.setDataFromModel(this.data[datt]);
+            const paraSQL = this.getDataAll(name);
+            // console.log('paraSQL', paraSQL)
+            const send = prepararSQL(this.objects[name].table, paraSQL, this.objects[name].id);
+            const validation = this.validations(name);
+            // console.log('Voy por acá')
+            // console.log(send.tipo, send.sql)
 
-              if (validation) {
-                if (send.status == 1) {
-                  dbSelect(send.tipo, send.sql).then(val => {
-                    if (val[0].resp == 1) {
-                      resolve(val[0]);
-                    } else {
-                      reject(val[0]);
-                    }
-                  })
-                } else {
-                  reject('Algo falta por aquí!')
-                }
+            if (validation) {
+              if (send.status == 1) {
+                dbSelect(send.tipo, send.sql).then(val => {
+                  if (val[0].resp == 1) {
+                    resolve(val[0]);
+                  } else {
+                    reject(val[0]);
+                  }
+                })
               } else {
-                reject('No paso la validación!')
+                reject('Algo falta por aquí!')
+              }
+            } else {
+              reject('No paso la validación!')
+            }
+
+          });
+
+          // Maneja la promesa
+          promesa
+            .then((respuesta) => {
+              console.log(respuesta); // Maneja la respuesta del servidor
+              event.submitter.innerHTML = `${defaultTitle}`;
+              event.submitter.disabled = false;
+
+              if (this.objects[name].nameModal) {
+                this.functions.closeModal(name);
               }
 
-            });
+              if(this.functions[`onSubmit_${name}`]){
+                this.functions[`onSubmit_${name}`](respuesta);
+              }
 
-            // Maneja la promesa
-            promesa
-              .then((respuesta) => {
-                console.log(respuesta); // Maneja la respuesta del servidor
-                event.submitter.innerHTML = `${defaultTitle} <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
-              </svg>
-              `;
-                event.submitter.disabled = false;
-                if (this.nameModal) {
-                  this.functions.closeModal();
-                }
-                this.functions['reload'](respuesta);
-                if (this.resetOnSubmit) {
-                  this.resetValues();
-                }
 
-              })
-              .catch((error) => {
-                console.error("Error al enviar el formulario:", error);
-                event.submitter.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
+              if (this.objects[name].resetOnSubmit) {
+                this.objects[name].resetValues();
+              }
+
+
+
+            })
+            .catch((error) => {
+              this.objects[name].onSubmit(error);
+              console.error("Error al enviar el formulario:", error);
+              event.submitter.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mr-2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
               </svg> Error al Guardar !
               
               `;
-              });
-          }
+            });
+        }
 
-        },
-        delete: async (e, name) => {
-          const isThis = this.objects[name];
-          let sql, reference, val, key;
-          const datt = isThis.name;
-          const btnDelete = isThis.formElement.querySelector('[data-formclick="delete"]');
+      },
+      delete: async (name) => {
+        const isThis = this.objects[name];
+        console.log(isThis)
+        let sql, reference, val, key;
+        const datt = isThis.name;
+        const btnDelete = isThis.formElement.querySelector(`[data-formclick="delete,${name}"]`);
+        console.log(isThis.formElement)
 
-          if (isThis.key != '') {
-            key = isThis.key;
-            if (isThis.id) {
-              val = isThis.id;
-            } else {
-              val = isThis.getValue(`${datt}!${isThis.key}`);
-            }
-
-            sql = `DELETE FROM ${isThis.table} WHERE ${isThis.key} = ${val}`;
-            reference = `<span class="font-bold ml-2">${isThis.midata[isThis.key].name}  ${val}</span>`;
+        if (isThis.key != '') {
+          key = isThis.key;
+          if (isThis.id) {
+            val = isThis.id;
           } else {
-            isThis.structure.forEach(value => {
-              console.log(value)
-              if (value.COLUMN_KEY == 'PRI') {
-                key = value.COLUMN_NAME;
-                val = isThis.getValue(`${datt}!${value.COLUMN_NAME}`);
-                sql = `DELETE FROM ${isThis.table} WHERE ${value.COLUMN_NAME} = ${val}`;
-                reference = `<span class="font-bold ml-2">${value.COLUMN_NAME}  ${val}</span>`;
-              }
-            })
-
+            val = this.getValue(`${datt}!${isThis.key}`);
           }
 
-          if (sql && val) {
-            if (isThis.numberAlert > 0) {
-              let defaultTitle = btnDelete.innerHTML;
-              btnDelete.disabled = true;
-              btnDelete.innerHTML = `
+          sql = `DELETE FROM ${isThis.table} WHERE ${isThis.key} = ${val}`;
+          reference = `<span class="font-bold ml-2">${isThis.midata[isThis.key].name}  ${val}</span>`;
+        } else {
+          isThis.structure.forEach(value => {
+            console.log(value)
+            if (value.COLUMN_KEY == 'PRI') {
+              key = value.COLUMN_NAME;
+              val = isThis.getValue(`${datt}!${value.COLUMN_NAME}`);
+              sql = `DELETE FROM ${isThis.table} WHERE ${value.COLUMN_NAME} = ${val}`;
+              reference = `<span class="font-bold ml-2">${value.COLUMN_NAME}  ${val}</span>`;
+            }
+          })
+
+        }
+
+        if (sql && val) {
+          if (isThis.numberAlert > 0) {
+            let defaultTitle = btnDelete.innerHTML;
+            btnDelete.disabled = true;
+            btnDelete.innerHTML = `
                   <svg aria-hidden="true" role="status" class="inline w-4 h-4 mr-3 text-white animate-spin" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="#E5E7EB"/>
               <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentColor"/>
@@ -1144,55 +1195,61 @@ export class Tamnora {
               Eliminando...
                   `
 
-              // Define una promesa dentro del evento submit
-              const promesa = new Promise((resolve, reject) => {
-                dbSelect('d', sql).then(val => {
-                  if (val[0].resp == 1) {
-                    resolve(val[0]);
-                  } else {
-                    reject(val[0]);
-                  }
-                })
+            // Define una promesa dentro del evento submit
+            const promesa = new Promise((resolve, reject) => {
+              dbSelect('d', sql).then(val => {
+                if (val[0].resp == 1) {
+                  resolve(val[0]);
+                } else {
+                  reject(val[0]);
+                }
+              })
 
+            });
+
+            // Maneja la promesa
+            promesa
+              .then((respuesta) => {
+                console.log(respuesta); // Maneja la respuesta del servidor
+                btnDelete.innerHTML = isThis.formOptions.delete;
+                btnDelete.disabled = false;
+                isThis.numberAlert = 0;
+
+                if (this.objects[name].nameModal) {
+                  this.functions.closeModal(name);
+                }
+
+                if(this.functions[`onDelete_${name}`]){
+                  this.functions[`onDelete_${name}`](respuesta);
+                }
+  
+  
+                if (this.objects[name].resetOnSubmit) {
+                  this.objects[name].resetValues();
+                }
+              })
+              .catch((error) => {
+                console.error("Error al enviar el formulario:", error);
               });
 
-              // Maneja la promesa
-              promesa
-                .then((respuesta) => {
-                  console.log(respuesta); // Maneja la respuesta del servidor
-                  btnDelete.innerHTML = isThis.formOptions.delete;
-                  btnDelete.disabled = false;
-                  isThis.numberAlert = 0;
-                  if (isThis.modalName) {
-                    isThis.functions.closeModal();
-                  }
-                  isThis.functions['reload'](respuesta);
-                  if (isThis.resetOnSubmit) {
-                    isThis.resetValues();
-                  }
-                })
-                .catch((error) => {
-                  console.error("Error al enviar el formulario:", error);
-                });
 
-
-            } else {
-              isThis.numberAlert = 1;
-              btnDelete.innerHTML = `
+          } else {
+            isThis.numberAlert = 1;
+            btnDelete.innerHTML = `
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="inline w-4 h-4 mr-2 text-white">
     <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 5a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 5zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
   </svg>  Confirma ELIMINAR ${reference}
                    `
-            }
-
-
-
-          } else {
-            console.error(`NO se puede ELIMINAR ${key} con valor ${val} NULL`)
           }
 
-        },
-        reload: () => { }
+
+
+        } else {
+          console.error(`NO se puede ELIMINAR ${key} con valor ${val} NULL`)
+        }
+
+      },
+      reload: () => { console.log }
     };
 
     window.addEventListener('popstate', () => {
@@ -1317,6 +1374,70 @@ export class Tamnora {
             -webkit-animation-duration: 0.5s;
             animation-duration: 0.5s;
           }
+
+          @-webkit-keyframes fadeInDown {
+            0% {
+              opacity: 0;
+              -webkit-transform: translateY(-100%);
+              transform: translateY(-100%);
+            }
+            to {
+              opacity: 1;
+              -webkit-transform: translateY(0);
+              transform: translateY(0);
+            }
+          }
+          
+          @keyframes fadeInDown {
+            0% {
+              opacity: 0;
+              -webkit-transform: translateY(-100%);
+              transform: translateY(-100%);
+            }
+            to {
+              opacity: 1;
+              -webkit-transform: translateY(0);
+              transform: translateY(0);
+            }
+          }
+          
+          .fadeInDown {
+            -webkit-animation-name: fadeInDown;
+            animation-name: fadeInDown;
+            -webkit-animation-duration: 0.5s;
+            animation-duration: 0.5s;
+          }
+
+          @keyframes fadeInTableRow {
+            0% {
+              opacity: 0;
+              transform: translateY(-20px);
+            }
+            100% {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+          
+          .fadeInTableRow {
+            animation: fadeInTableRow 0.5s ease;
+          }
+
+          @keyframes flashTableRow {
+            0%, 50%, 100% {
+              opacity: 1;
+            }
+            25%, 75% {
+              opacity: 0.2;
+            }
+          }
+          
+          .flashTableRow {
+            animation: flashTableRow 1s ease-in-out; /* Duración y función de temporización */
+          }
+          
+
+          
           `;
 
       // Agregar el elemento <style> al <head>
@@ -2338,80 +2459,167 @@ export class Tamnora {
     return value;
   }
 
-  bindElementsWithDataValues(componentDiv) {
-    const processElement = (element, dataKey, dataDefaul, isUpperCase) => {
-      let valorDefaul = '';
-      const [dataObj, dataProp] = dataKey.split('!');
-      if (!this.data[dataObj]) {
-        this.data[dataObj] = {};
-      }
-      if (!this.data[dataObj][dataProp]) {
-        this.data[dataObj][dataProp] = "";
-      }
-      if (dataDefaul) {
-        if (dataDefaul.startsWith('#')) {
-          const subcadena = dataDefaul.slice(1);
-          valorDefaul = this.data[subcadena];
-        } else {
-          valorDefaul = dataDefaul
-        }
-        if (!this.defaultData[dataObj]) {
-          this.defaultData[dataObj] = {};
-        }
-        if (!this.defaultData[dataObj][dataProp]) {
-          this.defaultData[dataObj][dataProp] = "";
-        }
-        this.defaultData[dataObj][dataProp] = valorDefaul;
-        this.data[dataObj][dataProp] = valorDefaul;
-      }
-      if (element.tagName === 'SELECT' || element.tagName === 'TEXTAREA') {
-        this.data[dataObj][dataProp] = element.value;
-        element.addEventListener('change', (event) => {
-          this.data[dataObj][dataProp] = event.target.value;
-        });
-      } else if (element.type === 'checkbox') {
-        if (!this.data[dataObj][dataProp]) {
-          this.data[dataObj][dataProp] = false;
-        }
-        element.checked = this.data[dataObj][dataProp] ?? false;
-        element.addEventListener('change', (event) => {
-          this.data[dataObj][dataProp] = event.target.checked;
-        });
-      } else if (element.tagName === 'INPUT' && element.getAttribute('data-change') !== 'currency') {
-        element.value = this.data[dataObj][dataProp] ?? '';
-        if (isUpperCase) {
-          element.addEventListener('input', (event) => {
-            const newValue = event.target.value.toUpperCase();
-            this.data[dataObj][dataProp] = newValue;
-            event.target.value = newValue;
-          });
-        } else {
-          element.addEventListener('input', (event) => {
-            this.data[dataObj][dataProp] = event.target.value;
-          });
-        }
-      } else {
-        element.textContent = this.data[dataObj][dataProp] ?? '';
-      }
-    };
 
+  bindElementsWithDataValues(componentDiv) {
     let elementsWithDataValue;
     if (componentDiv) {
       elementsWithDataValue = componentDiv.querySelectorAll('[data-value], [data-form]');
     } else {
-      elementsWithDataValue = document.querySelectorAll('[data-value], [data-form]');
+      elementsWithDataValue = document.querySelectorAll('[data-value]');
     }
 
     elementsWithDataValue.forEach((element) => {
-      const dataKey = element.getAttribute('data-value') || element.getAttribute('data-form');
+      const dataKey = element.hasAttribute('data-value') ? element.getAttribute('data-value') : element.getAttribute('data-form');
       const dataDefaul = element.getAttribute('data-default');
       const isUpperCase = element.getAttribute('data-UpperCase');
-      processElement(element, dataKey, dataDefaul, isUpperCase);
+      let valorDefaul = '';
+
+      if (dataKey.includes('!')) {
+        const [dataObj, dataProp] = dataKey.split('!');
+        if (!this.data[dataObj]) {
+          this.data[dataObj] = {};
+        }
+
+        if (!this.data[dataObj][dataProp]) {
+          this.data[dataObj][dataProp] = "";
+        }
+
+        if (dataDefaul) {
+          if (dataDefaul.startsWith('#')) {
+            const subcadena = dataDefaul.slice(1);
+            valorDefaul = this.data[subcadena];
+          } else {
+            valorDefaul = dataDefaul
+          }
+
+          if (!this.defaultData[dataObj]) {
+            this.defaultData[dataObj] = {};
+          }
+
+          if (!this.defaultData[dataObj][dataProp]) {
+            this.defaultData[dataObj][dataProp] = "";
+          }
+          this.defaultData[dataObj][dataProp] = valorDefaul;
+          this.data[dataObj][dataProp] = valorDefaul;
+        }
+
+
+
+        if (element.tagName === 'SELECT') {
+
+          const dataObj = dataKey.split('!')[0];
+          this.data[dataObj][dataProp] = element.value;
+
+          element.addEventListener('change', (event) => {
+            this.data[dataObj][dataProp] = event.target.value;
+          });
+        } else if (element.tagName === 'TEXTAREA') {
+          const dataObj = dataKey.split('!')[0];
+          this.data[dataObj][dataProp] = element.value;
+
+          element.addEventListener('change', (event) => {
+            this.data[dataObj][dataProp] = event.target.value;
+            console.log(event.target.value)
+          });
+        } else if (element.type === 'checkbox') {
+
+          if (!this.data[dataObj][dataProp]) {
+            this.data[dataObj][dataProp] = false;
+          }
+          element.checked = this.data[dataObj][dataProp] ?? false;
+
+          element.addEventListener('change', (event) => {
+            this.data[dataObj][dataProp] = event.target.checked;
+          });
+        } else if (element.tagName === 'INPUT') {
+
+          if (element.getAttribute('data-change') !== 'currency') {
+            element.value = this.data[dataObj][dataProp] ?? '';
+
+            if (isUpperCase) {
+              element.addEventListener('input', (event) => {
+                const newValue = event.target.value.toUpperCase();
+                this.data[dataObj][dataProp] = newValue;
+                event.target.value = newValue;
+              });
+            } else {
+              element.addEventListener('input', (event) => {
+                this.data[dataObj][dataProp] = event.target.value;
+              });
+            }
+          }
+        } else {
+          element.textContent = this.data[dataObj][dataProp] ?? '';
+        }
+
+
+
+      } else {
+
+        if (dataDefaul) {
+
+          if (dataDefaul.startsWith('#')) {
+            const subcadena = dataDefaul.slice(1);
+            valorDefaul = this.data[subcadena];
+          } else {
+            valorDefaul = dataDefaul
+          }
+
+          if (!this.defaultData[dataKey]) {
+            this.defaultData[dataKey] = '';
+          }
+
+          this.defaultData[dataKey] = valorDefaul;
+          this.data[dataKey] = valorDefaul;
+        }
+
+        if (element.tagName === 'SELECT') {
+          this.data[dataKey] = element.value;
+
+          element.addEventListener('change', (event) => {
+            this.data[dataKey] = event.target.value;
+          });
+        } else if (element.type === 'checkbox') {
+          if (!this.data[dataKey]) {
+            this.data[dataKey] = false;
+          }
+          element.checked = this.data[dataKey] || false;
+
+          element.addEventListener('change', (event) => {
+            this.data[dataKey] = event.target.checked;
+          });
+        } else if (element.tagName === 'INPUT') {
+          element.value = this.data[dataKey] || '';
+          if (isUpperCase) {
+            element.addEventListener('input', (event) => {
+              const newValue = event.target.value.toUpperCase();
+              this.data[dataKey] = newValue;
+              event.target.value = newValue;
+            });
+          } else {
+            element.addEventListener('input', (event) => {
+              this.data[dataKey] = event.target.value;
+            });
+          }
+        } else {
+          element.textContent = this.data[dataKey] ?? '';
+        }
+      }
+
     });
   }
 
   updateElementsWithDataValue(dataKey, value, name) {
-    const updateElement = (element) => {
+    let elementsWithDataValue;
+    if (name) {
+      const componentDiv = document.querySelector(`#${name}`);
+      elementsWithDataValue = componentDiv.querySelectorAll(`[data-form="${dataKey}"]`);
+    } else {
+      elementsWithDataValue = document.querySelectorAll(`[data-value="${dataKey}"]`);
+    }
+
+    let typeObject = '';
+    elementsWithDataValue.forEach((element) => {
       if (dataKey.includes('!')) {
         const [dataObj, dataProp] = dataKey.split('!');
         if (!this.data[dataObj]) {
@@ -2421,22 +2629,21 @@ export class Tamnora {
           this.data[dataObj][dataProp] = value;
         }
 
-        let typeObject = '';
-        if (name && this.objects[name] && this.objects[name].midata && this.objects[name].midata[dataProp]) {
+        if (name) {
           typeObject = this.objects[name].midata[dataProp].type;
         }
-
-        
 
         if (element.type === 'checkbox') {
           element.checked = value ?? false;
         } else if (element.tagName === 'SELECT') {
           element.value = value ?? '';
         } else if (element.tagName === 'TEXTAREA') {
-          element.textContent = value ?? ''; // Establecer el contenido del textarea
+          element.textContent = value ?? '';
         } else if (element.tagName === 'INPUT') {
-          if(typeObject == 'currency'){
+          if (typeObject == 'currency') {
             element.value = formatNumberArray(value)[2]
+          } else if (typeObject == 'datetime-local') {
+            document.querySelector(`[data-form="${dataKey}"]`).value = value
           } else {
             element.value = value ?? '';
           }
@@ -2451,25 +2658,14 @@ export class Tamnora {
         } else if (element.type === 'checkbox') {
           element.checked = value ?? false;
         } else if (element.tagName === 'TEXTAREA') {
-          element.textContent = value ?? ''; // Establecer el contenido del textarea
+          element.textContent = value ?? '';
         } else {
           element.textContent = value;
         }
       }
-    };
-
-    let elementsWithDataValue;
-    if (name && document.querySelector(`#${name}`)) {
-      const componentDiv = document.querySelector(`#${name}`);
-      elementsWithDataValue = componentDiv.querySelectorAll(`[data-value="${dataKey}"], [data-form="${dataKey}"]`);
-    } else {
-      elementsWithDataValue = document.querySelectorAll(`[data-value="${dataKey}"]`);
-    }
-
-    elementsWithDataValue.forEach((element) => {
-      updateElement(element);
     });
   }
+
 
   saveStateToLocalStorage() {
     try {
@@ -3158,8 +3354,9 @@ export class Tamnora {
   }
 
   createSearch(options = {}) {
-    if (!options.value) options.value = 'buscando';
-    if (!options.change) options.change = 'accionBuscar';
+    let textDefault = 'textToSearch';
+    if (!options.value) options.value = textDefault;
+    if (!options.change) options.change = `${textDefault}Go`;
     if (!options.inputClass) options.inputClass = 'bg-neutral-50 text-neutral-600 focus:border-sky-400 dark:bg-neutral-700/50 dark:text-neutral-300 dark:border-neutral-800';
     if (!options.iconClass) options.iconClass = 'text-neutral-500 dark:text-neutral-400';
 
@@ -3182,7 +3379,6 @@ export class Tamnora {
     `
     return comp
   }
-
 
   createNewObject(fieldName, type, value, key) {
     return {
@@ -3211,7 +3407,6 @@ export class Tamnora {
     };
   }
 
-
   handleStructure(name, structure) {
     const groupType = {};
     const primaryKey = {};
@@ -3235,7 +3430,6 @@ export class Tamnora {
     return { groupType, primaryKey };
   }
 
-  // Método para manejar el objeto de datos
   handleDataObject(dataObject, groupType, primaryKey, clean = false) {
     const newObject = {};
 
@@ -3297,7 +3491,7 @@ export class Tamnora {
         key: '',
         focus: '',
         id: null,
-        orderColumns: [],
+        columns: [],
         camposOrden: {},
         numberAlert: 0,
         resetOnSubmit: false,
@@ -3308,14 +3502,22 @@ export class Tamnora {
         defaultDataObjeto: {},
         addData: (obj, clean = false) => { this.addObject(nameForm, obj, clean) },
         createForm: (options) => { this.createForm(options, nameForm) },
-        setDataKey: (key, objectNameValue) => { this.setDataKeys(key, objectNameValue, nameForm) },
+        setData: (fieldName, key, value) => { this.setData(fieldName, key, value, nameForm) },
+        newData: () => { 
+          let obj = this.cleanDataObject(this.data[nameForm]);
+          this.data[nameForm] = obj;
+          this.updateForm(nameForm);
+        },
+        setDataKeys: (key, objectNameValue) => { this.setDataKeys(key, objectNameValue, nameForm) },
         update: () => { this.updateForm(nameForm) },
-        updateData: (updates)=>{this.setDataObject(updates, nameForm)},
-        openModal: ()=>{this.functions.openModal(nameForm)},
-        closeModal: ()=>{this.functions.closeModal(nameForm)},
-        onMount: ()=>{}
+        updateData: (updates) => { this.setDataObject(updates, nameForm) },
+        openModal: () => { this.functions.openModal(nameForm) },
+        closeModal: () => { this.functions.closeModal(nameForm) },
+        onSubmit: (fn) => { this.setFunction(`onSubmit_${nameForm}`, fn) },
+        onDelete: (fn) => { this.setFunction(`onDelete_${nameForm}`, fn) },
+        onMount: () => { }
       }
-      
+
     }
 
     this.cantForms++;
@@ -3357,7 +3559,16 @@ export class Tamnora {
         arrayOrder: [],
         defaultDataRow: {},
         addData: (arr) => { this.addArray(nameTable, arr) },
-        createTable: (options) => { this.createTable(options, nameTable) }
+        createTable: (options) => { this.createTable(options, nameTable) },
+        updateData: (arr) => {
+          this.addArray(nameTable, arr);
+          this.updateTable(nameTable);
+        },
+        loadingTable: (obj)=>{
+          let {rows = 5, cols = 4, withHeader = false} = obj
+          this.objects[nameTable].loader = true;
+          this.loadingTable(nameTable, rows, cols, withHeader);
+        }
       }
     }
 
@@ -3371,20 +3582,71 @@ export class Tamnora {
     this.setDefaultRow(name, arr[0]);
     this.setValue(name, arr);
     arr.forEach(reg => {
-      this.addObject(name, reg)
+      const obj = convertirFormatoFecha(reg)
+      this.addObject(name, obj)
     });
   }
 
-  addObject(name, dataObject, clean = false) {
+  addObject(name, obj, clean = false) {
+    const dataObject = convertirFormatoFecha(obj)
     const structure = this.objects[name]?.structure || [];
     const { groupType, primaryKey } = this.handleStructure(name, structure);
     const newObject = this.handleDataObject(dataObject, groupType, primaryKey, clean);
+    const newObjectDefault = this.handleDataObject(dataObject, groupType, primaryKey, true);
+    
 
     if (this.objects[name].type == 'form') {
       this.objects[name].midata = newObject;
+      this.objects[name].defaultDataObjeto = newObjectDefault;
       this.setValue(name, dataObject);
     } else {
       this.objects[name].midata.push(newObject);
+    }
+  }
+
+  cleanDataObject(originalObject) {
+    const newObject = {};
+    for (const clave in originalObject) {
+        // Verificar si la propiedad es un objeto y no es nulo
+        if (typeof originalObject[clave] === 'object' && originalObject[clave] !== null) {
+            // Recursivamente crear un nuevo objeto en blanco para propiedades objeto
+            newObject[clave] = cleanDataObject(originalObject[clave]);
+        } else {
+            // Establecer el valor en blanco
+            newObject[clave] = '';
+        }
+    }
+    return newObject;
+  }
+
+  async setStructure(table, key = '', reset = false, name) {
+    let ejecute = false;
+    if (this.objects[name].structure.length == 0 || reset == true) {
+      ejecute = true;
+    } else {
+      return true
+    }
+
+    if (ejecute) {
+      let struc = await structure('t', table);
+      if (!struc[0].resp) {
+        this.objects[name].table = table;
+        this.objects[name].key = key;
+
+        const newStruc = []
+        struc.forEach(data => {
+          data.table = table;
+          data.COLUMN_NAME = data.COLUMN_NAME.toLowerCase()
+          newStruc.push(data);
+        })
+
+        this.objects[name].structure = newStruc;
+        console.log(this.objects[name].structure)
+
+      } else {
+        console.error(struc[0].msgError)
+        return false
+      }
     }
   }
 
@@ -3468,6 +3730,27 @@ export class Tamnora {
     }
   }
 
+  getDataAll(name) {
+    return this.objects[name].midata;
+  }
+
+  validations(name) {
+    let resultado = true;
+    const thisData = this.objects[name].midata;
+    for (const fieldName in thisData) {
+      if (thisData[fieldName].validate) {
+        let value = thisData[fieldName].value;
+        let name = thisData[fieldName].name;
+        let validate = thisData[fieldName].validate;
+        if (!eval(validate)) {
+          resultado = false;
+          console.log(`El campo ${name} no pasa la validación`)
+        }
+      }
+    }
+    return resultado
+  }
+
   removeAll(name) {
     this.objects[name].midata = [];
   }
@@ -3512,7 +3795,6 @@ export class Tamnora {
     this.objects[name].defaultDataRow = newObject;
   }
 
-
   //tables
   loadingBody(name = 'tabla') {
     const thisTable = this.objects[name]?.name;
@@ -3550,9 +3832,9 @@ export class Tamnora {
 
   }
 
-  loadingTable(name, rows = 2, cols = 5) {
-    const thisTable = this.objects[name];
+  loadingTable(name, rows = 2, cols = 5, withHeader = false) {
     let tabla, divContainer;
+    let divHeader = '';
 
     if (this.objects[name]?.loader) {
       if (!this.objects[name]?.tableElement) {
@@ -3561,7 +3843,23 @@ export class Tamnora {
         divContainer = this.objects[name]?.tableElement;
       }
 
-      tabla = `<table name="table" class="w-full text-sm text-left text-neutral-500 dark:text-neutral-400">
+      if(withHeader){
+        divHeader = `<div role="status" class="w-full pt-1 pb-4 space-y-4  divide-y divide-neutral-200 rounded animate-pulse dark:divide-neutral-700 ">
+        <div class="flex items-center justify-between">
+            <div>
+                <div class="h-4 bg-neutral-300 rounded-full dark:bg-neutral-600 w-64 mb-2.5"></div>
+                <div class="w-32 h-3 bg-neutral-200 rounded-full dark:bg-neutral-700"></div>
+            </div>
+            <div class="h-8 bg-neutral-300 rounded-full dark:bg-neutral-700 w-52"></div>
+        </div>
+        <span class="sr-only">Loading...</span>
+    </div>`;
+      } 
+
+
+      tabla = `${divHeader}
+      <div class="overflow-x-auto rounded-lg border border-neutral-400/30 dark:border-neutral-700/50  w-full">
+      <table name="table" class="w-full text-sm text-left text-neutral-500 dark:text-neutral-400">
       <thead name="thead" class="bg-neutral-400/30 text-neutral-500 dark:text-neutral-600 border-b border-neutral-300 dark:bg-neutral-900/30 dark:border-neutral-600">
       <tr class="text-md font-semibold">`;
 
@@ -3589,8 +3887,9 @@ export class Tamnora {
         tabla += `</tr>`;
       }
 
-      tabla += `</tbody> </table>`
+      tabla += `</tbody> </table></div>`
       divContainer.innerHTML = tabla;
+  
     }
   }
 
@@ -3599,15 +3898,17 @@ export class Tamnora {
     let busqueda = this.objects[name]?.searchValue ? this.objects[name]?.searchValue.toLowerCase() : '';
     const tabla = componentDiv.querySelector('tbody');
 
+   
     // Recorre las filas de la tabla
     for (var i = 0; i < tabla.rows.length; i++) {
       // Recorre las celdas de cada fila
       for (var j = 0; j < tabla.rows[i].cells.length; j++) {
         // Si el texto de la celda contiene la búsqueda
-        let name = tabla.rows[i].cells[j].getAttribute('name');
+        let nameCol = tabla.rows[i].cells[j].getAttribute('name');
+        
         let originalText = tabla.rows[i].cells[j].textContent.trim(); // Mantener el texto original
         let value = originalText.toLowerCase();
-        if (this.objects[name]?.searchColumns.includes(name)) {
+        if (this.objects[name]?.searchColumns.includes(nameCol)) {
           if (value.includes(busqueda)) {
             // Crear un elemento <span> con la clase y estilos deseados
             let highlightedSpan = document.createElement('span');
@@ -3633,10 +3934,10 @@ export class Tamnora {
     }
   }
 
-  createTable(options = {}, name) {
+  createTable(objOptions, name) {
     const thisTable = this.objects[name];
     const classNames = this.class.table;
-
+    let options;
     let element;
     if (!thisTable.tableElement) {
       element = document.querySelector(`#${name}`);
@@ -3644,7 +3945,13 @@ export class Tamnora {
     } else {
       element = thisTable.tableElement;
     }
-    thisTable.tableOptions = options;
+    if (objOptions) {
+      thisTable.tableOptions = objOptions;
+      options = objOptions;
+    } else {
+      options = thisTable.tableOptions;
+    }
+
     let table = ``;
     let tableHeader = ``;
     let count = 0;
@@ -3694,7 +4001,7 @@ export class Tamnora {
     }
 
     table += `<div name="tableContainer" class="${classNames.tableContainer}  ${thisTable.widthTable}">`;
-    table += `<table name="table" class="${classNames.table}">`;
+    table += `<table id="tbl_${name}" name="${name}" class="${classNames.table}">`;
     table += `<thead name="thead" class="${classNames.thead}">`;
 
     tableHeader += `<tr class="${classNames.trtitle}">`;
@@ -4070,61 +4377,374 @@ export class Tamnora {
     this.bindElementsWithDataValues(element, name);
     this.bindChangeEvents(element, name);
     this.buscarYResaltar(element, name);
+  
     return table;
   }
 
   updateTable(name) {
     const thisTable = this.objects[name];
     const tableElement = thisTable.tableElement;
+    const classNames = this.class.table;
+    const options = thisTable.tableOptions;
+
+    let table = ``;
+    let tableHeader = ``;
+    let count = 0;
+    let desde = 0;
+    let hasta = 0;
+    let recordsPerView = 0;
+    let footer = [];
+    let header = [];
+    let field = {};
+    let xRow = {};
+    let hayMas = false;
+    let midata = 'midata'
+
+
+    if (thisTable.columns.length > 0) {
+      thisTable.arrayOrder = thisTable.midata.map((objeto) =>
+        this.reordenarClaves(objeto, thisTable.columns)
+      );
+      midata = 'arrayOrder';
+    }
 
     if (!tableElement) {
-        console.error(`No se encontró la tabla con el nombre '${name}'`);
-        return;
+      console.error(`No se encontró la tabla con el nombre '${name}'`);
+      return;
     }
 
-    const tbodyElement = tableElement.querySelector('tbody');
+    const theTableElement = tableElement.querySelector(`#tbl_${name}`);
 
-    if (!tbodyElement) {
-        console.error(`No se encontró el cuerpo de la tabla para el nombre '${name}'`);
-        return;
+    if (!theTableElement) {
+      console.error(`No se encontró el cuerpo de la tabla para el nombre '${name}'`);
+      return;
     }
 
-    let tbodyContent = '';
+    theTableElement.innerHTML = '';
+
+    table += `<thead name="thead" class="${classNames.thead}">`;
+
+    tableHeader += `<tr class="${classNames.trtitle}">`;
+
+    if ("row" in options) {
+      xRow = options.row;
+    }
+
+    desde = thisTable.from > 0 ? thisTable.from : 1;
+    recordsPerView = thisTable.recordsPerView;
+    hasta = desde + thisTable.recordsPerView - 1;
+
+
+    Object.keys(thisTable[midata][0]).forEach(item => {
+      let objectItem = thisTable[midata][0][item];
+      let tipo = this.detectDataType(objectItem.value);
+      let xheader = {};
+      let xfooter = {};
+      let classTitleColumn = '';
+      let ColSearch = '';
+      let xfield, xname, xattribute, xhidden;
+
+      xattribute = objectItem.attribute ? objectItem.attribute : '';
+      xhidden = objectItem.hidden ? 'hidden' : '';
+
+
+      xname = objectItem.name;
+
+      if (thisTable.searchColumns.includes(item)) {
+        ColSearch = '&#9679; '
+      }
+
+      if ("header" in options) {
+        xheader = options.header[item] ? options.header[item] : {};
+      }
+
+      if ("footer" in options) {
+        xfooter = options.footer[item] ? options.footer[item] : {};
+      }
+
+      if (xattribute) {
+        xheader.attribute = xattribute;
+        xfooter.attribute = xattribute;
+      }
+
+      if (xhidden) {
+        xheader.hidden = xhidden;
+        xfooter.hidden = xhidden;
+      }
+
+      header.push(xheader);
+      footer.push(xfooter);
+
+      if ("field" in options) {
+        xfield = options.field[item] ? options.field[item] : '';
+      } else {
+        xfield = '';
+      }
+      field[item] = xfield;
+
+      if (tipo == 'number') {
+        classTitleColumn = 'text-right'
+      }
+
+      if ("header" in options) {
+        if (options.header[item]) {
+          if ('class' in options.header[item]) {
+            classTitleColumn = options.header[item].class;
+          }
+          if ('title' in options.header[item]) {
+            xname = options.header[item].title;
+          }
+        }
+      }
+
+      if (tipo == 'number') {
+        tableHeader += `<th scope="col" ${xattribute} ${xhidden} class="${classNames.th} ${classTitleColumn}">${ColSearch}${xname}</th>`;
+      } else {
+        tableHeader += `<th scope="col" ${xattribute} ${xhidden} class="${classNames.th} ${classTitleColumn}">${ColSearch}${xname}</th>`;
+      }
+    })
+
+    tableHeader += `</tr>`
+    table += tableHeader;
+    table += `</thead><tbody>`;
+
+    if ("firstRow" in options) {
+      table += `<tr>`;
+      Object.keys(thisTable[midata][0]).forEach(item => {
+        let tipo = thisTable.detectDataType(thisTable[midata][0][item].value);
+        let classTitleColumn = '';
+        let xfield, xvalue, xattribute, xhidden;
+
+        xattribute = thisTable[midata][0][item].attribute ? thisTable[midata][0][item].attribute : '';
+        xhidden = thisTable[midata][0][item].hidden ? 'hidden' : '';
+
+        xvalue = '';
+
+        if ("firstRow" in options) {
+          if (options.firstRow[item]) {
+            if ('class' in options.firstRow[item]) {
+              classTitleColumn = options.firstRow[item].class;
+            }
+            if ('value' in options.firstRow[item]) {
+              xvalue = options.firstRow[item].value;
+            }
+          }
+        }
+
+
+        table += `<td scope="col" ${xattribute} ${xhidden} class="${classNames.td} ${classTitleColumn}">${xvalue}</td>`;
+
+
+
+      })
+
+      table += `</tr>`;
+    }
 
     thisTable[midata].forEach((items, index) => {
-        const { click, change, alternative, firstRow } = thisTable.tableOptions;
-        const rowOptions = alternative && alternative === true && index % 2 !== 0 ? { class: 'rowAlternative' } : { class: 'rowNormal' };
+      count++;
+      if (thisTable.paginations) {
+        if ((index + 1) < desde) {
+          hayMenos = true;
+        } else if ((index + 1) >= desde && (index + 1) <= hasta) {
+          let actionClick = '';
+          let actionClass = '';
+          let trNewClass = '';
 
-        tbodyContent += '<tr';
-        Object.keys(rowOptions).forEach(key => {
-            tbodyContent += ` ${key}="${rowOptions[key]}"`;
-        });
-        tbodyContent += '>';
+          if ('click' in xRow) {
+            if (xRow.click.function && xRow.click.field) {
+              if (items[xRow.click.field]) {
+                actionClick = `data-action="${xRow.click.function},${index},${items[xRow.click.field].value}" `;
+                actionClass = classNames.trhover;
+              } else {
+                console.error('row.click.field: ', `No existe columna ${xRow.click.field} en ${name}`);
+              }
+            } else {
+              console.error('row.click.function', xRow.click.function);
+              console.error('row.click.field', xRow.click.field);
+            }
+          }
 
-        Object.keys(items).forEach(item => {
-            const value = items[item].value;
-            const tipo = this.detectDataType(value);
-            const valor = this.formatValueByDataType(value);
-            const xattribute = items[item].attribute ? items[item].attribute : '';
-            const xhidden = items[item].hidden ? 'hidden' : '';
+          if ('change' in xRow) {
+            trNewClass = xRow.change({ items, index });
+          }
+
+          if ('alternative' in xRow) {
+            if (xRow.alternative == true) {
+              if (index % 2 === 0) {
+                table += `<tr ${actionClick} class="${classNames.tr} ${classNames.rowNormal} ${actionClass} ${trNewClass}">`;
+              } else {
+                table += `<tr ${actionClick} class="${classNames.tr} ${classNames.rowAlternative} ${actionClass} ${trNewClass}">`;
+              }
+            } else {
+              table += `<tr ${actionClick} class="${classNames.tr} ${classNames.rowNormal} ${actionClass} ${trNewClass}">`;
+            }
+          } else {
+            table += `<tr ${actionClick} class="${classNames.tr} ${actionClass}">`;
+          }
+
+          Object.keys(items).forEach((item, iri) => {
+            let xattribute = thisTable[midata][index][item].attribute ? thisTable[midata][index][item].attribute : '';
+            let xhidden = thisTable[midata][index][item].hidden ? 'hidden' : '';
+            let value = items[item].value;
+            let tipo = this.detectDataType(value);
+            let valor = this.formatValueByDataType(value);
             let dataClick = '';
+            let newClass = '';
+            let mywidth = ''
 
-            if (click && click.function && click.field && item === click.field) {
-                dataClick = `data-action="${click.function},${index},${value}"`;
+            if (thisTable.widthColumns.length > 0) {
+              mywidth = thisTable.widthColumns[iri];
             }
 
-            tbodyContent += `<td ${xattribute} ${xhidden} class="${this.classNames.td}" ${dataClick}>${valor}</td>`;
-        });
+            if (xattribute == 'currency') {
+              valor = formatNumberArray(value)[2];
+            }
 
-        tbodyContent += '</tr>';
+            if (xattribute == 'pesos') {
+              valor = pesos(value);
+            }
+
+            if (field[item].change) {
+              valor = field[item].change({ items, valor, index, value });
+            }
+
+            if (field[item].click) {
+              dataClick = `data-action="${field[item].click}, ${index}, ${value}"`;
+            } else {
+              dataClick = ``;
+            }
+
+            if (field[item].type) {
+              tipo = field[item].type
+              valor = thisTable.formatValueByDataType(value, tipo);
+            }
+
+            if (field[item].class) {
+              newClass = mywidth + ' ' + field[item].class;
+            } else {
+              if (tipo == 'number') {
+                newClass = mywidth + ' text-right'
+              } else {
+                newClass = mywidth;
+              }
+            }
+
+            table += `<td ${xattribute} ${xhidden} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
+
+
+          })
+          table += `</tr>`;
+        } else if ((index + 1) > hasta) {
+          hayMas = true;
+        }
+      } else {
+        let actionClick = '';
+        let actionClass = '';
+        if ('click' in xRow) {
+          if (xRow.click.function && xRow.click.field) {
+            actionClick = `data-action="${xRow.click.function},${index},${items[xRow.click.field].value}" `;
+            actionClass = 'cursor-pointer';
+          } else {
+            console.error('row.click.function', xRow.click.function);
+            console.error('row.click.field', xRow.click.field);
+          }
+        }
+
+        if ('class' in xRow) {
+          if ('alternative' in xRow.class) {
+            if (index % 2 === 0) {
+              table += `<tr ${actionClick}  class="${classNames.tr} ${xRow.class.normal} ${actionClass} flashTableRow">`;
+            } else {
+              table += `<tr ${actionClick}  class="${classNames.tr} ${xRow.class.alternative} ${actionClass} flashTableRow">`;
+            }
+          } else {
+            table += `<tr ${actionClick}  class="${classNames.tr} ${xRow.class.normal} ${actionClass} flashTableRow">`;
+          }
+        } else {
+          table += `<tr ${actionClick}  class="${classNames.tr} ${actionClass} flashTableRow">`;
+        }
+
+        Object.keys(items).forEach((item) => {
+          let xattribute = thisTable[midata][index][item].attribute ? thisTable[midata][index][item].attribute : '';
+          let value = items[item].value;
+          let tipo = thisTable.detectDataType(value);
+          let valor = thisTable.formatValueByDataType(value);
+          let dataClick = '';
+          let newClass = '';
+
+          if (field[item].change) {
+            let resu = field[item].change({ items, valor, index, value });
+            console.log(resu)
+            valor = resu;
+          }
+
+          if (field[item].click) {
+            dataClick = `data-action="${field[item].click}, ${index}, ${value}" `;
+          } else {
+            dataClick = ``;
+          }
+
+          if (field[item].class) {
+            newClass = field[item].class;
+          } else {
+            if (tipo == 'number') {
+              newClass = 'text-right'
+            } else {
+              newClass = '';
+            }
+          }
+
+          if (tipo == 'number') {
+            table += `<td ${xattribute} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
+          } else if (tipo == 'date' || tipo == 'datetime-local') {
+            table += `<td ${xattribute} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
+          } else {
+            table += `<td ${xattribute} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
+          }
+
+        })
+        table += `</tr>`;
+      }
+
     });
 
-    tbodyElement.innerHTML = tbodyContent;
+    table += `</tbody>`;
+
+    if (hayMas == false) {
+      table += `<tfoot class="${classNames.tfoot}"><tr class="text-md font-semibold">`
+      footer.forEach(ref => {
+        let valor = this.formatValueByDataType(ref.value);
+        let tipo = this.detectDataType(ref.value);
+        let xcss = ref.class ? ref.class : '';
+        let xattribute = ref.attribute ? ref.attribute : '';
+        let xhidden = ref.hidden ? 'hidden' : '';
+        if (tipo == 'number') {
+          table += `<td ${xattribute}  class="text-right ${classNames.td} ${xcss}" >${valor}</td>`;
+        } else if (tipo == 'date' || tipo == 'datetime-local') {
+          table += `<td ${xattribute}  class="${classNames.td} ${xcss}" >${valor}</td>`;
+        } else {
+          table += `<td ${xattribute}  class="${classNames.td} ${xcss}" >${valor}</td>`;
+        }
+      })
+      table += `</tr>`;
+      // if(hayMas){
+      // 	table += `<tr><td colspan="${footer.length}" data-tail="td">Hay mas registros</td><tr>`;
+      // }
+      table += `</tfoot>`;
+    }
+
+    theTableElement.innerHTML = table;
 
     // Volver a vincular eventos si es necesario
+    this.bindClickPaginations(tableElement, name);
+    this.bindActionEvents(tableElement, name)
     this.bindClickEvents(tableElement, name);
+    this.bindElementsWithDataValues(tableElement, name);
     this.bindChangeEvents(tableElement, name);
-}
+    this.buscarYResaltar(tableElement, name);
+
+  }
 
 
   bindClickPaginations(componentDiv) {
@@ -4193,11 +4813,11 @@ export class Tamnora {
     const classNames = this.class.form;
     let element;
     let form = '';
-    
+
     let columns = classNames.gridColumns;
 
-    if (thisForm.orderColumns.length > 0) {
-      thisForm.midata = this.reordenarClaves(thisForm.midata, thisForm.orderColumns)
+    if (thisForm.columns.length > 0) {
+      thisForm.midata = this.reordenarClaves(thisForm.midata, thisForm.columns)
     }
 
     if (!thisForm.formElement) {
@@ -4209,14 +4829,14 @@ export class Tamnora {
 
     thisForm.formOptions = data;
     let nameForm = name;
-    
+
     if (data.colorForm) {
       thisForm.changeColorClass(data.colorForm);
     }
 
     if (thisForm.view != 'normal') {
       thisForm.nameModal = name;
-      
+
       if (data.show == true) {
         element.classList.add('flex');
       } else {
@@ -4253,7 +4873,7 @@ export class Tamnora {
           <span class="sr-only">Close modal</span>
       </button></div>`
 
-      form += `</div><form data-action="submit" data-inmodal="${thisForm.nameModal}">`;
+      form += `</div><form data-action="submit" name="${nameForm}"  data-inmodal="${thisForm.nameModal}">`;
 
     } else {
       form += `<div name="divPadre" class="${classNames.divPadre}">`;
@@ -4278,7 +4898,7 @@ export class Tamnora {
 
       }
 
-      form += `<form id="form_${nameForm}" data-action="submit">`
+      form += `<form id="form_${nameForm}" name="${nameForm}" data-action="submit">`
     }
 
 
@@ -4342,7 +4962,7 @@ export class Tamnora {
       }
 
       if (dato.observ != '') {
-        observ = `<small class="${classNames.observ}">&#11177; ${dato.observ}</small>`;
+        observ = `<small class="${classNames.observ}">&#11014; ${dato.observ}</small>`;
       }
 
       if (dato.hidden == true) {
@@ -4424,12 +5044,19 @@ export class Tamnora {
             ${observ}
           </div>
         `;
-        console.log(dato)
       } else if (dato.type === 'currency') {
         fieldElement = `
           <div class="${colspan}">
             <label for="${nameForm}_${campo}" class="${classNames.label}">${dato.name} ${textRequired}</label>
             <input type="text" autocomplete="off" data-change="currency" id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${pattern} value="${formatNumberArray(dato.value)[2]}" ${attributes} class="${attributeClass} ${xClass}">
+            ${observ}
+          </div>
+        `;
+      } else if (dato.type === 'datetime-local') {
+        fieldElement = `
+          <div class="${colspan}">
+            <label for="${nameForm}_${campo}" class="${classNames.label}">${dato.name} ${textRequired}</label>
+            <input type="${dato.type}" autocomplete="off" id="${nameForm}_${campo}" ${dataValue} ${dataUppercase} ${onChange} ${esrequired} ${pattern} value="${formatDate(new Date(dato.value)).fechaHoraLocal}" ${attributes} class="${attributeClass} ${xClass}">
             ${observ}
           </div>
         `;
@@ -4457,7 +5084,7 @@ export class Tamnora {
       }
 
       if (data.delete) {
-        form += ` <button type="button" data-formclick="delete" class="${classNames.delete}">${data.delete}</button>`;
+        form += ` <button type="button" data-formclick="delete,${name}" class="${classNames.delete}">${data.delete}</button>`;
       }
 
       form += `</div>`;
@@ -4489,7 +5116,8 @@ export class Tamnora {
   updateForm(name) {
     const thisForm = this.objects[name];
     let element;
-  
+
+    
     if (!thisForm.formElement) {
       element = document.querySelector(`#${thisForm.name}`);
       thisForm.formElement = element;
@@ -4503,12 +5131,63 @@ export class Tamnora {
         this.updateElementsWithDataValue(`${name}!${key}`, value, name);
       });
     }
-  
+
   }
 
   forEachField(name, callback) {
     for (const fieldName in this.objects[name].midata) {
       callback(fieldName, this.objects[name].midata[fieldName]);
+    }
+  }
+
+  setData(fieldName, key, value, name) {
+    const thisData = this.objects[name].midata;
+    if (thisData[fieldName]) {
+      if (!isNaN(parseFloat(value)) && isFinite(value)) {
+        thisData[fieldName][key] = parseFloat(value)
+        // this.defaultDataObjeto[fieldName][key] = parseFloat(value);
+      } else {
+        thisData[fieldName][key] = value;
+        // this.defaultDataObjeto[fieldName][key] = value;
+        if (value == 'currency') {
+          thisData[fieldName].pattern = "[0-9.,]*";
+          // this.defaultDataObjeto[fieldName].pattern = "[0-9.,]*";
+        }
+      }
+      if (key == 'introDate') {
+        let myDate = new Date();
+        let days = thisData[fieldName]['setDate'];
+        let typeInput = thisData[fieldName]['type'];
+        if (days > 0) {
+          myDate.setDate(myDate.getDate() + days);
+        } else if (days < 0) {
+          myDate.setDate(myDate.getDate() - days);
+        }
+
+        if (typeInput == 'datetime-local') {
+          thisData[fieldName].value = formatDate(myDate).fechaHora;
+          // this.defaultDataObjeto[fieldName].value = formatDate(myDate).fechaHora;
+          this.data[name][fieldName] = formatDate(myDate).fechaHora;
+        } else if (typeInput == 'date') {
+          thisData[fieldName].value = formatDate(myDate).fecha;
+          // this.defaultDataObjeto[fieldName].value = formatDate(myDate).fecha;
+          this.data[name][fieldName] = formatDate(myDate).fecha;
+        } else if (typeInput == 'time') {
+          thisData[fieldName].value = formatDate(myDate).horaLarga;
+          // this.defaultDataObjeto[fieldName].value = formatDate(myDate).horaLarga;
+          this.data[name][fieldName] = formatDate(myDate).horaLarga;
+        }
+      }
+
+      if (key == 'value') {
+        if (!isNaN(parseFloat(value)) && isFinite(value)) {
+          this.data[name][fieldName] = parseFloat(value);
+        } else {
+          this.data[name][fieldName] = value;
+        }
+        this.updateElementsWithDataValue(`${name}!${fieldName}`, value, name)
+      }
+
     }
   }
 
@@ -4520,23 +5199,50 @@ export class Tamnora {
     })
   }
 
-  setDataObject(updates, name) {
-      for (const prop in updates) {
-        if (updates.hasOwnProperty(prop) && this.objects[name].midata.hasOwnProperty(prop)) {
-          this.objects[name].midata[prop].value = updates[prop];
-            if (!isNaN(parseFloat(updates[prop])) && isFinite(updates[prop])) {
-              this.data[name][prop] = parseFloat(updates[prop]);
-            } else {
-              this.data[name][prop] = updates[prop];
-            }
-            this.updateElementsWithDataValue(`${name}!${prop}`, updates[prop], name)
-          
+  setDataFromModel(objeto, name) {
+    const objectModel = convertirFormatoFecha(objeto)
+    const thisData = this.objects[name].midata;
+    Object.keys(objectModel).forEach((fieldName) => {
+      let value = objectModel[fieldName];
+
+      if (thisData[fieldName]) {
+        if (thisData[fieldName].type == 'number' || thisData[fieldName].type == 'select') {
+          if (!isNaN(parseFloat(value)) && isFinite(value)) {
+            thisData[fieldName].value = parseFloat(value)
+          } else {
+            thisData[fieldName].value = value;
+          }
         } else {
-          console.error(`Prop '${prop}' does not exist in the data object.`);
+          thisData[fieldName].value = value;
+
         }
+
+      } else {
+        console.error('No existe ', fieldName, value)
       }
 
-    
+
+    })
+  }
+
+  setDataObject(objeto, name) {
+    const updates = convertirFormatoFecha(objeto)
+    for (const prop in updates) {
+      if (updates.hasOwnProperty(prop) && this.objects[name].midata.hasOwnProperty(prop)) {
+        this.objects[name].midata[prop].value = updates[prop];
+        if (!isNaN(parseFloat(updates[prop])) && isFinite(updates[prop])) {
+          this.data[name][prop] = parseFloat(updates[prop]);
+        } else {
+          this.data[name][prop] = updates[prop];
+        }
+        this.updateElementsWithDataValue(`${name}!${prop}`, updates[prop], name);
+
+      } else {
+        console.warn(`Key '${prop}' does not exist in this.objects.${name}.midata`);
+      }
+    }
+
+
   }
 
   bindSubmitEvents(componentDiv) {
@@ -4557,8 +5263,9 @@ export class Tamnora {
       }
 
       form.addEventListener('submit', async (event) => {
+        let name = event.target.name
         event.preventDefault(); // Prevenir el comportamiento por defecto del formulario  
-        this.executeFunctionByName(functionName, event, modalName)
+        this.executeFunctionByName(functionName, event, modalName, name)
 
       });
 

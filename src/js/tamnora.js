@@ -185,6 +185,32 @@ function convertirClavesAMinusculas(objeto) {
   return resultado;
 }
 
+function convertirFormatoFecha(objeto) {
+  const resultado = {};
+
+  for (const clave in objeto) {
+    if (Object.prototype.hasOwnProperty.call(objeto, clave)) {
+      let valor = objeto[clave];
+
+      if (typeof valor === 'string' && /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/.test(valor)) {
+        // Si el valor es una cadena que coincide con el formato de fecha ISO, conviértelo
+        let fechaFormateada = '';
+        const fecha = new Date(valor);
+        const horas = `${formatoDeCeros(fecha.getHours())}:${formatoDeCeros(fecha.getMinutes())}:${formatoDeCeros(fecha.getSeconds())}`;
+
+        if (horas == '00:00:00') {
+          fechaFormateada = `${fecha.getFullYear()}-${formatoDeCeros(fecha.getMonth() + 1)}-${formatoDeCeros(fecha.getDate())}`;
+        } else {
+          fechaFormateada = `${fecha.getFullYear()}-${formatoDeCeros(fecha.getMonth() + 1)}-${formatoDeCeros(fecha.getDate())} ${formatoDeCeros(fecha.getHours())}:${formatoDeCeros(fecha.getMinutes())}:${formatoDeCeros(fecha.getSeconds())}`;
+        }
+
+        resultado[clave] = fechaFormateada;
+      }
+    }
+  }
+  return resultado;
+}
+
 function convertirClavesAMinusculasYFormatoFecha(objeto) {
   const resultado = {};
 
