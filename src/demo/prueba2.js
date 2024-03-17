@@ -9,7 +9,7 @@ const form = tmn.newForm('form');
 
 tmn.setValue('idSelected', 0);
 tmn.setValue('textToSearch', '')
-tmn.select('#navbar').html(navbar('Tamnora js'))
+tmn.select('#navbar').html(navbar('TamnoraJS Prueba'))
 tmn.setComponentHTML
 tabla.loadingTable({withHeader:true});
 
@@ -58,11 +58,24 @@ form.onSubmit(async (response)=> {
   });
 })
 
+form.onDelete(async (response)=> {
+  console.log('La respuesta es', response)
+  await tmn.fetchData(`https://api.campusvirtualisei.com/cursos`)
+  .then(data => {
+    tmn.setValue('cursos', data[0].cursos);
+    let cursos = tmn.getValue('cursos');
+    tabla.updateData(cursos);
+  });
+})
+
 async function creandoElementos(){
   let cursos = tmn.getValue('cursos');
   tabla.addData(cursos);
   tabla.searchColumns= ['titulo'];
   tabla.columns = ['curso_id', 'titulo', 'precio'];
+  tabla.setDataKeys('type', {precio: 'currency'})
+  tabla.setDataKeys('name', { curso_id: 'ID', titulo: 'Titulo', precio: 'Valor del Curso' });
+
 
   await tmn.setStructure('cursos', 'curso_id', false, 'form')
   form.addData(cursos[1]);
@@ -71,6 +84,7 @@ async function creandoElementos(){
   form.columns = ['curso_id', 'titulo', 'resumen', 'descripcion', 'imagen', 'video', 'precio']
   form.setDataKeys('type', {descripcion: 'textarea'});
   form.setDataKeys('column', { curso_id: 'col-span-2', titulo: 'col-span-10', resumen: 'col-span-12', descripcion: 'col-span-12', imagen: 'col-span-4', video: 'col-span-4', precio: 'col-span-4' });
+  form.setDataKeys('name', { curso_id: 'ID', titulo: 'Titulo', resumen: 'Resumen', descripcion: 'Descripción', imagen: 'Imagen', video: 'Video', precio: 'Valor del Curso' });
 
   form.setData('descripcion', 'rows', 10);
   form.setDataKeys('attribute', {curso_id: 'readonly'})

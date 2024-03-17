@@ -1038,8 +1038,7 @@ export class Tamnora {
 
       },
       closeModal: (name) => {
-        // console.log(this.objects[name])
-        const btnDelete = this.objects[name].formElement.querySelector('[data-formclick="delete"]');
+        const btnDelete = this.objects[name].formElement.querySelector(`[data-formclick="delete,${name}"]`);
         const modal = document.querySelector(`#${this.objects[name].name}`);
         if (btnDelete) btnDelete.innerHTML = this.objects[name].formOptions.delete;
         modal.classList.remove('flex');
@@ -1047,8 +1046,7 @@ export class Tamnora {
         this.objects[name].numberAlert = 0;
       },
       openModal: (name) => {
-        // console.log(this.objects[name])
-        const btnDelete = this.objects[name].formElement.querySelector('[data-formclick="delete"]');
+        const btnDelete = this.objects[name].formElement.querySelector(`[data-formclick="delete,${name}"]`);
         const modal = document.querySelector(`#${this.objects[name].name}`);
         if (btnDelete) btnDelete.innerHTML = this.objects[name].formOptions.delete;
         modal.classList.remove('hidden');
@@ -1056,7 +1054,7 @@ export class Tamnora {
         this.objects[name].numberAlert = 0;
       },
       onMount: (name) => { this.objects[name].onMount() },
-      submit: async (event, modalName, name) => {
+      submit: async (event, name) => {
         let resultEvalute = true;
         //console.log(name, this.data[name])
         this.setDataFromModel(this.data[name], name);
@@ -1120,7 +1118,6 @@ export class Tamnora {
           // Maneja la promesa
           promesa
             .then((respuesta) => {
-              console.log(respuesta); // Maneja la respuesta del servidor
               event.submitter.innerHTML = `${defaultTitle}`;
               event.submitter.disabled = false;
 
@@ -1128,16 +1125,13 @@ export class Tamnora {
                 this.functions.closeModal(name);
               }
 
-              if(this.functions[`onSubmit_${name}`]){
+              if (this.functions[`onSubmit_${name}`]) {
                 this.functions[`onSubmit_${name}`](respuesta);
               }
-
 
               if (this.objects[name].resetOnSubmit) {
                 this.objects[name].resetValues();
               }
-
-
 
             })
             .catch((error) => {
@@ -1154,11 +1148,9 @@ export class Tamnora {
       },
       delete: async (name) => {
         const isThis = this.objects[name];
-        console.log(isThis)
         let sql, reference, val, key;
         const datt = isThis.name;
         const btnDelete = isThis.formElement.querySelector(`[data-formclick="delete,${name}"]`);
-        console.log(isThis.formElement)
 
         if (isThis.key != '') {
           key = isThis.key;
@@ -1210,7 +1202,6 @@ export class Tamnora {
             // Maneja la promesa
             promesa
               .then((respuesta) => {
-                console.log(respuesta); // Maneja la respuesta del servidor
                 btnDelete.innerHTML = isThis.formOptions.delete;
                 btnDelete.disabled = false;
                 isThis.numberAlert = 0;
@@ -1219,11 +1210,11 @@ export class Tamnora {
                   this.functions.closeModal(name);
                 }
 
-                if(this.functions[`onDelete_${name}`]){
+                if (this.functions[`onDelete_${name}`]) {
                   this.functions[`onDelete_${name}`](respuesta);
                 }
-  
-  
+
+
                 if (this.objects[name].resetOnSubmit) {
                   this.objects[name].resetValues();
                 }
@@ -2519,7 +2510,6 @@ export class Tamnora {
 
           element.addEventListener('change', (event) => {
             this.data[dataObj][dataProp] = event.target.value;
-            console.log(event.target.value)
           });
         } else if (element.type === 'checkbox') {
 
@@ -2665,7 +2655,6 @@ export class Tamnora {
       }
     });
   }
-
 
   saveStateToLocalStorage() {
     try {
@@ -3503,7 +3492,7 @@ export class Tamnora {
         addData: (obj, clean = false) => { this.addObject(nameForm, obj, clean) },
         createForm: (options) => { this.createForm(options, nameForm) },
         setData: (fieldName, key, value) => { this.setData(fieldName, key, value, nameForm) },
-        newData: () => { 
+        newData: () => {
           let obj = this.cleanDataObject(this.data[nameForm]);
           this.data[nameForm] = obj;
           this.updateForm(nameForm);
@@ -3541,6 +3530,7 @@ export class Tamnora {
       this.objects[nameTable] = {
         type: 'table',
         midata: [{ Tabla: 'Falta los datos de la tabla' }],
+        dataArray: [],
         from: 1,
         recordsPerView: 10,
         paginations: true,
@@ -3561,14 +3551,16 @@ export class Tamnora {
         addData: (arr) => { this.addArray(nameTable, arr) },
         createTable: (options) => { this.createTable(options, nameTable) },
         updateData: (arr) => {
-          this.addArray(nameTable, arr);
+          this.updateArray(nameTable, arr);
           this.updateTable(nameTable);
         },
-        loadingTable: (obj)=>{
-          let {rows = 5, cols = 4, withHeader = false} = obj
+        loadingTable: (obj) => {
+          let { rows = 5, cols = 4, withHeader = false } = obj
           this.objects[nameTable].loader = true;
           this.loadingTable(nameTable, rows, cols, withHeader);
-        }
+        },
+        setData: (fieldName, key, value) => { this.setData(fieldName, key, value, nameTable) },
+        setDataKeys: (key, objectNameValue) => { this.setDataKeys(key, objectNameValue, nameTable) },
       }
     }
 
@@ -3581,10 +3573,17 @@ export class Tamnora {
     this.objects[name].from = 1;
     this.setDefaultRow(name, arr[0]);
     this.setValue(name, arr);
-    arr.forEach(reg => {
-      const obj = convertirFormatoFecha(reg)
-      this.addObject(name, obj)
-    });
+    // arr.forEach(reg => {
+    //   const obj = convertirFormatoFecha(reg)
+    //   this.addObject(name, obj)
+    // });
+    const obj = convertirFormatoFecha(arr[0])
+    this.addObject(name, obj)
+  }
+
+  updateArray(name, arr = [{ datos: 'Falta datos de la tabla' }]) {
+    this.objects[name].from = 1;
+    this.setValue(name, arr);
   }
 
   addObject(name, obj, clean = false) {
@@ -3593,28 +3592,29 @@ export class Tamnora {
     const { groupType, primaryKey } = this.handleStructure(name, structure);
     const newObject = this.handleDataObject(dataObject, groupType, primaryKey, clean);
     const newObjectDefault = this.handleDataObject(dataObject, groupType, primaryKey, true);
-    
+
 
     if (this.objects[name].type == 'form') {
       this.objects[name].midata = newObject;
       this.objects[name].defaultDataObjeto = newObjectDefault;
       this.setValue(name, dataObject);
     } else {
-      this.objects[name].midata.push(newObject);
+      // this.objects[name].midata.push(newObject);
+      this.objects[name].midata = newObject;
     }
   }
 
   cleanDataObject(originalObject) {
     const newObject = {};
     for (const clave in originalObject) {
-        // Verificar si la propiedad es un objeto y no es nulo
-        if (typeof originalObject[clave] === 'object' && originalObject[clave] !== null) {
-            // Recursivamente crear un nuevo objeto en blanco para propiedades objeto
-            newObject[clave] = cleanDataObject(originalObject[clave]);
-        } else {
-            // Establecer el valor en blanco
-            newObject[clave] = '';
-        }
+      // Verificar si la propiedad es un objeto y no es nulo
+      if (typeof originalObject[clave] === 'object' && originalObject[clave] !== null) {
+        // Recursivamente crear un nuevo objeto en blanco para propiedades objeto
+        newObject[clave] = cleanDataObject(originalObject[clave]);
+      } else {
+        // Establecer el valor en blanco
+        newObject[clave] = '';
+      }
     }
     return newObject;
   }
@@ -3843,7 +3843,7 @@ export class Tamnora {
         divContainer = this.objects[name]?.tableElement;
       }
 
-      if(withHeader){
+      if (withHeader) {
         divHeader = `<div role="status" class="w-full pt-1 pb-4 space-y-4  divide-y divide-neutral-200 rounded animate-pulse dark:divide-neutral-700 ">
         <div class="flex items-center justify-between">
             <div>
@@ -3854,7 +3854,7 @@ export class Tamnora {
         </div>
         <span class="sr-only">Loading...</span>
     </div>`;
-      } 
+      }
 
 
       tabla = `${divHeader}
@@ -3889,7 +3889,7 @@ export class Tamnora {
 
       tabla += `</tbody> </table></div>`
       divContainer.innerHTML = tabla;
-  
+
     }
   }
 
@@ -3898,14 +3898,14 @@ export class Tamnora {
     let busqueda = this.objects[name]?.searchValue ? this.objects[name]?.searchValue.toLowerCase() : '';
     const tabla = componentDiv.querySelector('tbody');
 
-   
+
     // Recorre las filas de la tabla
     for (var i = 0; i < tabla.rows.length; i++) {
       // Recorre las celdas de cada fila
       for (var j = 0; j < tabla.rows[i].cells.length; j++) {
         // Si el texto de la celda contiene la búsqueda
         let nameCol = tabla.rows[i].cells[j].getAttribute('name');
-        
+
         let originalText = tabla.rows[i].cells[j].textContent.trim(); // Mantener el texto original
         let value = originalText.toLowerCase();
         if (this.objects[name]?.searchColumns.includes(nameCol)) {
@@ -3964,18 +3964,36 @@ export class Tamnora {
     let xRow = {};
     let hayMas = false;
     let hayMenos = false;
-    let midata = 'midata'
+    let dataArray = [];
+    let miData = {};
 
     if (options.colorTable) {
       thisTable.changeColorClass(options.colorTable);
     }
 
+
     if (thisTable.columns.length > 0) {
-      thisTable.arrayOrder = thisTable.midata.map((objeto) =>
-        this.reordenarClaves(objeto, thisTable.columns)
-      );
-      midata = 'arrayOrder';
+      dataArray = this.data[name].map(item => {
+        return thisTable.columns.reduce((acc, key) => {
+          if (item.hasOwnProperty(key)) {
+            acc[key] = item[key];
+          }
+          return acc;
+        }, {});
+      });
+
+      thisTable.columns.forEach(key => {
+        if (thisTable.midata.hasOwnProperty(key)) {
+          miData[key] = thisTable.midata[key];
+        }
+      });
+
+    } else {
+      dataArray = this.data[name];
+      miData = thisTable.midata;
     }
+
+
 
     table += `<div class="${classNames.divPadre} ${thisTable.widthPadre}">`;
 
@@ -4015,8 +4033,8 @@ export class Tamnora {
     hasta = desde + thisTable.recordsPerView - 1;
 
 
-    Object.keys(thisTable[midata][0]).forEach(item => {
-      let objectItem = thisTable[midata][0][item];
+    Object.keys(miData).forEach(item => {
+      let objectItem = miData[item];
       let tipo = this.detectDataType(objectItem.value);
       let xheader = {};
       let xfooter = {};
@@ -4026,7 +4044,6 @@ export class Tamnora {
 
       xattribute = objectItem.attribute ? objectItem.attribute : '';
       xhidden = objectItem.hidden ? 'hidden' : '';
-
 
       xname = objectItem.name;
 
@@ -4090,13 +4107,13 @@ export class Tamnora {
 
     if ("firstRow" in options) {
       table += `<tr>`;
-      Object.keys(thisTable[midata][0]).forEach(item => {
-        let tipo = thisTable.detectDataType(thisTable[midata][0][item].value);
+      Object.keys(miData).forEach(item => {
+        let tipo = thisTable.detectDataType(miData[item].value);
         let classTitleColumn = '';
         let xfield, xvalue, xattribute, xhidden;
 
-        xattribute = thisTable[midata][0][item].attribute ? thisTable[midata][0][item].attribute : '';
-        xhidden = thisTable[midata][0][item].hidden ? 'hidden' : '';
+        xattribute = miData[item].attribute ? miData[item].attribute : '';
+        xhidden = miData[item].hidden ? 'hidden' : '';
 
         xvalue = '';
 
@@ -4121,7 +4138,7 @@ export class Tamnora {
       table += `</tr>`;
     }
 
-    thisTable[midata].forEach((items, index) => {
+    dataArray.forEach((items, index) => {
       count++;
       if (thisTable.paginations) {
         if ((index + 1) < desde) {
@@ -4163,25 +4180,27 @@ export class Tamnora {
             table += `<tr ${actionClick} class="${classNames.tr} ${actionClass}">`;
           }
 
+
           Object.keys(items).forEach((item, iri) => {
-            let xattribute = thisTable[midata][index][item].attribute ? thisTable[midata][index][item].attribute : '';
-            let xhidden = thisTable[midata][index][item].hidden ? 'hidden' : '';
-            let value = items[item].value;
-            let tipo = this.detectDataType(value);
+            let xattribute = miData[item].attribute ? miData[item].attribute : '';
+            let xhidden = miData[item].hidden ? 'hidden' : '';
+            let value = items[item];
+            let tipo = miData[item].type;
             let valor = this.formatValueByDataType(value);
             let dataClick = '';
             let newClass = '';
             let mywidth = ''
 
+
             if (thisTable.widthColumns.length > 0) {
               mywidth = thisTable.widthColumns[iri];
             }
 
-            if (xattribute == 'currency') {
+            if (tipo == 'currency') {
               valor = formatNumberArray(value)[2];
             }
 
-            if (xattribute == 'pesos') {
+            if (tipo == 'pesos') {
               valor = pesos(value);
             }
 
@@ -4203,7 +4222,7 @@ export class Tamnora {
             if (field[item].class) {
               newClass = mywidth + ' ' + field[item].class;
             } else {
-              if (tipo == 'number') {
+              if (tipo == 'number' || tipo == 'currency' || tipo == 'pesos') {
                 newClass = mywidth + ' text-right'
               } else {
                 newClass = mywidth;
@@ -4246,12 +4265,16 @@ export class Tamnora {
         }
 
         Object.keys(items).forEach((item) => {
-          let xattribute = thisTable[midata][index][item].attribute ? thisTable[midata][index][item].attribute : '';
-          let value = items[item].value;
-          let tipo = thisTable.detectDataType(value);
-          let valor = thisTable.formatValueByDataType(value);
+          let xattribute = miData[item].attribute ? miData[item].attribute : '';
+          let xhidden = miData[item].hidden ? 'hidden' : '';
+          let value = items[item];
+          let tipo = miData[item].type;
+          let valor = this.formatValueByDataType(value);
           let dataClick = '';
           let newClass = '';
+          let mywidth = ''
+
+          console.log(tipo, valor)
 
           if (field[item].change) {
             let resu = field[item].change({ items, valor, index, value });
@@ -4275,9 +4298,16 @@ export class Tamnora {
             }
           }
 
+          if (tipo == 'currency') {
+            newClass = 'text-right'
+            console.log(tipo, valor)
+          }
+
           if (tipo == 'number') {
             table += `<td ${xattribute} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
           } else if (tipo == 'date' || tipo == 'datetime-local') {
+            table += `<td ${xattribute} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
+          } else if (tipo == 'currency') {
             table += `<td ${xattribute} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
           } else {
             table += `<td ${xattribute} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
@@ -4377,7 +4407,7 @@ export class Tamnora {
     this.bindElementsWithDataValues(element, name);
     this.bindChangeEvents(element, name);
     this.buscarYResaltar(element, name);
-  
+
     return table;
   }
 
@@ -4386,27 +4416,6 @@ export class Tamnora {
     const tableElement = thisTable.tableElement;
     const classNames = this.class.table;
     const options = thisTable.tableOptions;
-
-    let table = ``;
-    let tableHeader = ``;
-    let count = 0;
-    let desde = 0;
-    let hasta = 0;
-    let recordsPerView = 0;
-    let footer = [];
-    let header = [];
-    let field = {};
-    let xRow = {};
-    let hayMas = false;
-    let midata = 'midata'
-
-
-    if (thisTable.columns.length > 0) {
-      thisTable.arrayOrder = thisTable.midata.map((objeto) =>
-        this.reordenarClaves(objeto, thisTable.columns)
-      );
-      midata = 'arrayOrder';
-    }
 
     if (!tableElement) {
       console.error(`No se encontró la tabla con el nombre '${name}'`);
@@ -4419,6 +4428,49 @@ export class Tamnora {
       console.error(`No se encontró el cuerpo de la tabla para el nombre '${name}'`);
       return;
     }
+
+    let table = ``;
+    let tableHeader = ``;
+    let count = 0;
+    let desde = 0;
+    let hasta = 0;
+    let recordsPerView = 0;
+    let footer = [];
+    let header = [];
+    let field = {};
+    let xRow = {};
+    let hayMas = false;
+    let dataArray = [];
+    let miData = {};
+
+    if (options.colorTable) {
+      thisTable.changeColorClass(options.colorTable);
+    }
+
+
+    if (thisTable.columns.length > 0) {
+      dataArray = this.data[name].map(item => {
+        return thisTable.columns.reduce((acc, key) => {
+          if (item.hasOwnProperty(key)) {
+            acc[key] = item[key];
+          }
+          return acc;
+        }, {});
+      });
+
+      thisTable.columns.forEach(key => {
+        if (thisTable.midata.hasOwnProperty(key)) {
+          miData[key] = thisTable.midata[key];
+        }
+      });
+
+    } else {
+      dataArray = this.data[name];
+      miData = thisTable.midata;
+    }
+
+
+
 
     theTableElement.innerHTML = '';
 
@@ -4435,8 +4487,8 @@ export class Tamnora {
     hasta = desde + thisTable.recordsPerView - 1;
 
 
-    Object.keys(thisTable[midata][0]).forEach(item => {
-      let objectItem = thisTable[midata][0][item];
+    Object.keys(miData).forEach(item => {
+      let objectItem = miData[item];
       let tipo = this.detectDataType(objectItem.value);
       let xheader = {};
       let xfooter = {};
@@ -4510,13 +4562,13 @@ export class Tamnora {
 
     if ("firstRow" in options) {
       table += `<tr>`;
-      Object.keys(thisTable[midata][0]).forEach(item => {
-        let tipo = thisTable.detectDataType(thisTable[midata][0][item].value);
+      Object.keys(miData).forEach(item => {
+        let tipo = thisTable.detectDataType(miData[item].value);
         let classTitleColumn = '';
         let xfield, xvalue, xattribute, xhidden;
 
-        xattribute = thisTable[midata][0][item].attribute ? thisTable[midata][0][item].attribute : '';
-        xhidden = thisTable[midata][0][item].hidden ? 'hidden' : '';
+        xattribute = miData[item].attribute ? miData[item].attribute : '';
+        xhidden = miData[item].hidden ? 'hidden' : '';
 
         xvalue = '';
 
@@ -4541,7 +4593,7 @@ export class Tamnora {
       table += `</tr>`;
     }
 
-    thisTable[midata].forEach((items, index) => {
+    dataArray.forEach((items, index) => {
       count++;
       if (thisTable.paginations) {
         if ((index + 1) < desde) {
@@ -4583,25 +4635,27 @@ export class Tamnora {
             table += `<tr ${actionClick} class="${classNames.tr} ${actionClass}">`;
           }
 
+
           Object.keys(items).forEach((item, iri) => {
-            let xattribute = thisTable[midata][index][item].attribute ? thisTable[midata][index][item].attribute : '';
-            let xhidden = thisTable[midata][index][item].hidden ? 'hidden' : '';
-            let value = items[item].value;
-            let tipo = this.detectDataType(value);
+            let xattribute = miData[item].attribute ? miData[item].attribute : '';
+            let xhidden = miData[item].hidden ? 'hidden' : '';
+            let value = items[item];
+            let tipo = miData[item].type;
             let valor = this.formatValueByDataType(value);
             let dataClick = '';
             let newClass = '';
             let mywidth = ''
 
+
             if (thisTable.widthColumns.length > 0) {
               mywidth = thisTable.widthColumns[iri];
             }
 
-            if (xattribute == 'currency') {
+            if (tipo == 'currency') {
               valor = formatNumberArray(value)[2];
             }
 
-            if (xattribute == 'pesos') {
+            if (tipo == 'pesos') {
               valor = pesos(value);
             }
 
@@ -4623,7 +4677,7 @@ export class Tamnora {
             if (field[item].class) {
               newClass = mywidth + ' ' + field[item].class;
             } else {
-              if (tipo == 'number') {
+              if (tipo == 'number' || tipo == 'currency' || tipo == 'pesos') {
                 newClass = mywidth + ' text-right'
               } else {
                 newClass = mywidth;
@@ -4654,24 +4708,28 @@ export class Tamnora {
         if ('class' in xRow) {
           if ('alternative' in xRow.class) {
             if (index % 2 === 0) {
-              table += `<tr ${actionClick}  class="${classNames.tr} ${xRow.class.normal} ${actionClass} flashTableRow">`;
+              table += `<tr ${actionClick}  class="${classNames.tr} ${xRow.class.normal} ${actionClass}">`;
             } else {
-              table += `<tr ${actionClick}  class="${classNames.tr} ${xRow.class.alternative} ${actionClass} flashTableRow">`;
+              table += `<tr ${actionClick}  class="${classNames.tr} ${xRow.class.alternative} ${actionClass}">`;
             }
           } else {
-            table += `<tr ${actionClick}  class="${classNames.tr} ${xRow.class.normal} ${actionClass} flashTableRow">`;
+            table += `<tr ${actionClick}  class="${classNames.tr} ${xRow.class.normal} ${actionClass}">`;
           }
         } else {
-          table += `<tr ${actionClick}  class="${classNames.tr} ${actionClass} flashTableRow">`;
+          table += `<tr ${actionClick}  class="${classNames.tr} ${actionClass}">`;
         }
 
         Object.keys(items).forEach((item) => {
-          let xattribute = thisTable[midata][index][item].attribute ? thisTable[midata][index][item].attribute : '';
-          let value = items[item].value;
-          let tipo = thisTable.detectDataType(value);
-          let valor = thisTable.formatValueByDataType(value);
+          let xattribute = miData[item].attribute ? miData[item].attribute : '';
+          let xhidden = miData[item].hidden ? 'hidden' : '';
+          let value = items[item];
+          let tipo = miData[item].type;
+          let valor = this.formatValueByDataType(value);
           let dataClick = '';
           let newClass = '';
+          let mywidth = ''
+
+          console.log(tipo, valor)
 
           if (field[item].change) {
             let resu = field[item].change({ items, valor, index, value });
@@ -4695,9 +4753,16 @@ export class Tamnora {
             }
           }
 
+          if (tipo == 'currency') {
+            newClass = 'text-right'
+            console.log(tipo, valor)
+          }
+
           if (tipo == 'number') {
             table += `<td ${xattribute} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
           } else if (tipo == 'date' || tipo == 'datetime-local') {
+            table += `<td ${xattribute} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
+          } else if (tipo == 'currency') {
             table += `<td ${xattribute} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
           } else {
             table += `<td ${xattribute} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
@@ -4962,7 +5027,7 @@ export class Tamnora {
       }
 
       if (dato.observ != '') {
-        observ = `<small class="${classNames.observ}">&#11014; ${dato.observ}</small>`;
+        observ = `&#10509;<small class="${classNames.observ}">${dato.observ}</small>`;
       }
 
       if (dato.hidden == true) {
@@ -5117,7 +5182,7 @@ export class Tamnora {
     const thisForm = this.objects[name];
     let element;
 
-    
+
     if (!thisForm.formElement) {
       element = document.querySelector(`#${thisForm.name}`);
       thisForm.formElement = element;
@@ -5201,20 +5266,34 @@ export class Tamnora {
 
   setDataFromModel(objeto, name) {
     const objectModel = convertirFormatoFecha(objeto)
-    const thisData = this.objects[name].midata;
-    Object.keys(objectModel).forEach((fieldName) => {
-      let value = objectModel[fieldName];
+    const thisObject = this.objects[name];
+    let miData = {};
+    let newObject = {};
 
-      if (thisData[fieldName]) {
-        if (thisData[fieldName].type == 'number' || thisData[fieldName].type == 'select') {
+    if (thisObject.columns.length > 0) {
+      thisObject.columns.forEach(key => {
+        if (thisObject.midata.hasOwnProperty(key)) {
+          miData[key] = thisObject.midata[key];
+          newObject[key] = objectModel[key];
+        }
+      });
+    } else {
+      miData = thisObject.midata;
+      newObject = objectModel;
+    }
+
+    Object.keys(newObject).forEach((fieldName) => {
+      let value = newObject[fieldName];
+
+      if (miData[fieldName]) {
+        if (miData[fieldName].type == 'number' || miData[fieldName].type == 'select') {
           if (!isNaN(parseFloat(value)) && isFinite(value)) {
-            thisData[fieldName].value = parseFloat(value)
+            miData[fieldName].value = parseFloat(value)
           } else {
-            thisData[fieldName].value = value;
+            miData[fieldName].value = value;
           }
         } else {
-          thisData[fieldName].value = value;
-
+          miData[fieldName].value = value;
         }
 
       } else {
@@ -5226,16 +5305,32 @@ export class Tamnora {
   }
 
   setDataObject(objeto, name) {
-    const updates = convertirFormatoFecha(objeto)
-    for (const prop in updates) {
-      if (updates.hasOwnProperty(prop) && this.objects[name].midata.hasOwnProperty(prop)) {
-        this.objects[name].midata[prop].value = updates[prop];
-        if (!isNaN(parseFloat(updates[prop])) && isFinite(updates[prop])) {
-          this.data[name][prop] = parseFloat(updates[prop]);
-        } else {
-          this.data[name][prop] = updates[prop];
+    const objectModel = convertirFormatoFecha(objeto)
+    const thisObject = this.objects[name];
+    let miData = {};
+    let newObject = {};
+
+    if (thisObject.columns.length > 0) {
+      thisObject.columns.forEach(key => {
+        if (thisObject.midata.hasOwnProperty(key)) {
+          miData[key] = thisObject.midata[key];
+          newObject[key] = objectModel[key];
         }
-        this.updateElementsWithDataValue(`${name}!${prop}`, updates[prop], name);
+      });
+    } else {
+      miData = thisObject.midata;
+      newObject = objectModel;
+    }
+
+    for (const prop in newObject) {
+      if (newObject.hasOwnProperty(prop) && this.objects[name].midata.hasOwnProperty(prop)) {
+        this.objects[name].midata[prop].value = newObject[prop];
+        if (!isNaN(parseFloat(newObject[prop])) && isFinite(newObject[prop])) {
+          this.data[name][prop] = parseFloat(newObject[prop]);
+        } else {
+          this.data[name][prop] = newObject[prop];
+        }
+        this.updateElementsWithDataValue(`${name}!${prop}`, newObject[prop], name);
 
       } else {
         console.warn(`Key '${prop}' does not exist in this.objects.${name}.midata`);
@@ -5265,7 +5360,7 @@ export class Tamnora {
       form.addEventListener('submit', async (event) => {
         let name = event.target.name
         event.preventDefault(); // Prevenir el comportamiento por defecto del formulario  
-        this.executeFunctionByName(functionName, event, modalName, name)
+        this.executeFunctionByName(functionName, event, name)
 
       });
 
