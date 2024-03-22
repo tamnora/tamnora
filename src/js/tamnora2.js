@@ -1,7 +1,5 @@
 const SERVER = import.meta.env.VITE_SERVER_NODE;
 const TYPE_SERVER = 'node';
-
-
 let informe = { primero: 'nada', segundo: 'nada' };
 
 function createQuerySQL(type, params) {
@@ -274,25 +272,25 @@ export function defaultClass() {
     navactive: `text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500`,
     inactive: `text-neutral-600`,
     btnAtras: `flex items-center ps-2 py-2 pe-4 gap-1 w-fit text-sm focus:outline-none font-medium text-neutral-500 rounded-md hover:text-neutral-600 focus:text-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800/50 border dark:border-neutral-700/50  bg-black/5 hover:bg-black/10 dark:bg-white/5`,
-    btnBack: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-neutral-500 to-neutral-600 dark:from-neutral-700 dark:to-neutral-800 shadow-lg shadow-neutral-500/30 hover:shadow-neutral-500/50 dark:shadow-lg dark:shadow-neutral-700/80 border-b border-neutral-400 dark:border-neutral-600 active:translate-y-0.5  transition-all duration-100 scale-95 hover:scale-100 text-center me-2 mb-2`,
+    btnBack: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-neutral-500 to-neutral-600 dark:from-neutral-700 dark:to-neutral-800 shadow-lg shadow-neutral-500/30 hover:shadow-neutral-500/50 dark:shadow-lg dark:shadow-neutral-700/80 border-b border-neutral-400 dark:border-neutral-600 active:translate-y-0.5  transition-all duration-100 scale-95 hover:scale-100 text-center `,
     btnSystem: `flex items-center px-3 py-1 gap-1 w-fit text-sm focus:outline-none font-medium text-neutral-500 rounded-md hover:text-neutral-600 focus:text-neutral-600 dark:bg-neutral-800 dark:text-neutral-200 dark:hover:bg-neutral-800/50 border dark:border-neutral-700/50  bg-black/5 hover:bg-black/10 dark:bg-white/5`,
-    btnEmerald: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/40 hover:shadow-sky-600/60 dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100  scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center me-2`,
-    btnSky: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50  dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100 active:bg-sky-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center me-2`,
-    btnRed: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-600/30 hover:shadow-red-600/50  dark:from-red-600 dark:to-red-700 active:translate-y-0.5 transition-all duration-100 active:bg-red-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-red-800/80 text-center me-2`,
-    btnNeutral: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-neutral-500 shadow-md hover:shadow-xl shadow-neutral-600/30 dark:shadow-neutral-300/30 dark:bg-neutral-600 active:translate-y-0.5 transition-all duration-100 active:bg-neutral-700 scale-95 hover:scale-100 text-center me-2`,
-    btnBlue: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-blue-500 shadow-md hover:shadow-xl shadow-blue-600/30 dark:shadow-blue-300/30 dark:bg-blue-600 active:translate-y-0.5 transition-all duration-100 active:bg-blue-700 scale-95 hover:scale-100 text-center me-2`,
+    btnEmerald: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-emerald-500 to-emerald-600 shadow-lg shadow-emerald-600/40 hover:shadow-emerald-600/60 dark:from-emerald-600 dark:to-emerald-700 active:translate-y-0.5 transition-all duration-100  scale-95 hover:scale-100 dark:shadow-lg dark:shadow-emerald-800/80 text-center `,
+    btnSky: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-sky-500 to-sky-600 shadow-lg shadow-sky-600/30 hover:shadow-sky-600/50  dark:from-sky-600 dark:to-sky-700 active:translate-y-0.5 transition-all duration-100 active:bg-sky-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-sky-800/80 text-center `,
+    btnRed: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-gradient-to-r from-red-500 to-red-600 shadow-lg shadow-red-600/30 hover:shadow-red-600/50  dark:from-red-600 dark:to-red-700 active:translate-y-0.5 transition-all duration-100 active:bg-red-700 scale-95 hover:scale-100 dark:shadow-lg dark:shadow-red-800/80 text-center `,
+    btnNeutral: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-neutral-500 shadow-md hover:shadow-xl shadow-neutral-600/30 dark:shadow-neutral-300/30 dark:bg-neutral-600 active:translate-y-0.5 transition-all duration-100 active:bg-neutral-700 scale-95 hover:scale-100 text-center`,
+    btnBlue: `flex items-center rounded-lg px-4 py-2 text-sm font-medium focus:outline-none text-white bg-blue-500 shadow-md hover:shadow-xl shadow-blue-600/30 dark:shadow-blue-300/30 dark:bg-blue-600 active:translate-y-0.5 transition-all duration-100 active:bg-blue-700 scale-95 hover:scale-100 text-center `,
     form: {
-      divModal: `fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70  overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center`,
+      divModal: `fixed top-0 flex left-0 right-0 z-50 h-screen w-full bg-neutral-900/50 dark:bg-neutral-900/70  overflow-x-hidden overflow-y-auto md:inset-0 justify-center items-center bg-opacity-75 backdrop-filter backdrop-blur-sm`,
       btnCloseModal: `text-neutral-400 bg-transparent hover:bg-red-200 hover:text-red-900 rounded-lg text-sm w-8 h-8 ml-auto inline-flex justify-center items-center dark:hover:bg-red-600 dark:hover:text-white`,
-      divPadre: `relative bg-transparent  shadow-none animated fadeIn`,
-      modalContainer: `relative w-full max-w-3xl max-h-full bg-neutral-100 dark:bg-neutral-800 p-6 rounded-lg`,
+      divPadre: `relative bg-transparent  shadow-none tmn-fadeIn`,
+      modalContainer: `relative w-full max-w-3xl max-h-full bg-neutral-100 dark:bg-neutral-800 p-6 rounded-lg border border-neutral-600`,
       modalContainerFull: `relative w-full h-screen bg-neutral-100 dark:bg-neutral-800 p-6 `,
       modalContainer2xl: `relative w-full max-w-2xl max-h-full bg-neutral-100 dark:bg-neutral-800 p-6 rounded-lg`,
       header: `flex flex-col items-start sm:flex-row sm:justify-between sm:items-center px-2 pb-6 border-b rounded-t border-neutral-200 dark:border-neutral-600`,
       grid: `grid grid-cols-12 gap-2 py-6 px-2`,
       gridColumns: `col-span-12 sm:col-span-6 md:col-span-4 lg:col-span-3`,
       titleContainer: `flex flex-col w-full`,
-      buttonsContainer: `flex gap-2 w-full justify-end`,
+      buttonsContainer: `flex gap-1 w-full justify-end`,
       title: `text-lg font-medium text-left text-neutral-600 dark:text-white leading-none`,
       subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400 leading-tight`,
       observ: `mt-1 ml-1 text-sm font-normal italic text-neutral-500 dark:text-neutral-500 leading-tight`,
@@ -316,7 +314,7 @@ export function defaultClass() {
       inactive: `text-neutral-600`,
     },
     table: {
-      divPadre: `relative bg-transparent overflow-hidden animated fadeIn`,
+      divPadre: `relative bg-transparent overflow-hidden tmn-fadeIn`,
       tableContainer: `overflow-x-auto rounded-lg border border-neutral-400/30 dark:border-neutral-700/50`,
       table: `w-full text-sm text-left text-neutral-500 dark:text-neutral-400`,
       header: `flex justify-between items-center w-full bg-transparent mb-6 gap-3`,
@@ -325,22 +323,22 @@ export function defaultClass() {
       title: `text-lg font-medium text-left text-neutral-600 dark:text-neutral-200 leading-none`,
       subtitle: `mt-1 text-sm font-normal text-neutral-500 dark:text-neutral-400 leading-tight`,
       btnSmall: `text-neutral-900 bg-white border border-neutral-300 focus:outline-none hover:bg-neutral-100 font-semibold rounded-lg text-sm px-3 py-1 mr-2 mb-2 dark:bg-neutral-800 dark:text-white dark:border-neutral-600 dark:hover:bg-neutral-700 dark:hover:border-neutral-600  `,
-      thead: `bg-neutral-300/50 text-neutral-500 dark:text-neutral-600 border-b border-neutral-300 dark:bg-neutral-900/30 dark:border-neutral-600`,
-      tfoot: `bg-neutral-200/50 dark:bg-neutral-800/30 text-neutral-700  dark:text-neutral-400`,
+      thead: `text-xs border-b text-neutral-700 bg-neutral-100/70 border-neutral-200 uppercase dark:bg-neutral-800 dark:text-neutral-400 dark:border-neutral-800`,
+      tfoot: `bg-neutral-100/70 text-neutral-700 dark:bg-neutral-800/50 dark:text-neutral-400`,
       pagination: `flex flex-col sm:flex-row sm:justify-between items-center text-neutral-700 sm:px-4 pt-4 dark:text-neutral-400 `,
       paginationBtn: `bg-neutral-100 text-neutral-700 hover:bg-neutral-200 dark:bg-neutral-800 dark:border-neutral-700/50 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:hover:text-white text-xs`,
       paginationBtnDisable: `bg-neutral-100 text-neutral-400  dark:bg-neutral-800 dark:border-neutral-700/50 dark:text-neutral-600 text-xs`,
       th: `px-4 py-3 select-none text-xs text-neutral-500 uppercase dark:text-neutral-500 whitespace-nowrap`,
-      tr: `border-t border-neutral-200 dark:border-neutral-700 `,
-      trhover: `hover:bg-neutral-200/40 dark:hover:bg-neutral-800/40 hover:text-neutral-700 dark:hover:text-neutral-200 cursor-pointer`,
+      tr: `border-t border-neutral-200 dark:border-neutral-700/70 `,
+      trhover: `hover:bg-neutral-200/40 dark:hover:bg-neutral-800/40 hover:text-neutral-900 dark:hover:text-neutral-100 cursor-pointer`,
       td: `px-4 py-3 select-none whitespace-nowrap`,
       tdclick: `px-4 py-3 select-none cursor-pointer font-semibold hover:text-green-400`,
       trh: `text-md font-semibold whitespace-nowrap`,
       trtitle: `text-md font-semibold`,
       tdh: `px-4 py-2 select-none whitespace-nowrap`,
       tdnumber: `px-4 py-4 text-right`,
-      rowNormal: `bg-neutral-50 dark:bg-neutral-700`,
-      rowAlternative: `bg-neutral-100 dark:bg-neutral-700/50`,
+      rowNormal: `bg-neutral-50/50 dark:bg-neutral-800/80`,
+      rowAlternative: `bg-neutral-50 dark:bg-neutral-800`,
     }
   }
 }
@@ -1018,7 +1016,7 @@ export class Tamnora {
     this.componentDirectory = config.componentDirectory || '../components';
     this.state = this.loadStateFromLocalStorage();
     this.onMountCallback = null;
-    this.darkMode(config.darkMode ?? true);
+    // this.darkMode(config.darkMode ?? false);
 
     // Agregar código de manejo de navegación en la carga de la página
     this.handleNavigationOnLoad();
@@ -1214,7 +1212,6 @@ export class Tamnora {
                   this.functions[`onDelete_${name}`](respuesta);
                 }
 
-
                 if (this.objects[name].resetOnSubmit) {
                   this.objects[name].resetValues();
                 }
@@ -1233,14 +1230,17 @@ export class Tamnora {
                    `
           }
 
-
-
         } else {
           console.error(`NO se puede ELIMINAR ${key} con valor ${val} NULL`)
         }
 
       },
-      reload: () => { console.log }
+      reload: () => { console.log },
+      textToSearchGo:(name)=>{
+        this.objects[name].from = 1;
+        this.objects[name].searchValue = this.getValue('textToSearch');
+        this.updateTable(name);
+      }
     };
 
     window.addEventListener('popstate', () => {
@@ -1257,7 +1257,7 @@ export class Tamnora {
 
     if (!app) {
       const newDiv = document.createElement("div");
-      const classNames = 'container mx-auto animated fadeIn p-5 transition-bg duration-500 flex flex-col gap-3'
+      const classNames = 'container mx-auto tmn-fadeIn p-5 transition-bg duration-500 flex flex-col gap-3'
       newDiv.id = "tmn";
       classNames.split(" ").forEach(className => {
         newDiv.classList.add(className);
@@ -1350,23 +1350,22 @@ export class Tamnora {
             border-bottom: 5px solid var(--sky-700);
           }
           
-
-          @-webkit-keyframes fadeIn {
+          @-webkit-keyframes tmn-fadeIn {
             0% { opacity: 0; }
             to { opacity: 1; }
           }
-          @keyframes fadeIn {
+          @keyframes tmn-fadeIn {
             0% { opacity: 0; }
             to { opacity: 1; }
           }
-          .fadeIn {
-            -webkit-animation-name: fadeIn;
-            animation-name: fadeIn;
-            -webkit-animation-duration: 0.5s;
-            animation-duration: 0.5s;
+          .tmn-fadeIn {
+            -webkit-animation-name: tmn-fadeIn;
+            animation-name: tmn-fadeIn;
+            -webkit-animation-duration: 0.7s;
+            animation-duration: 0.7s;
           }
 
-          @-webkit-keyframes fadeInDown {
+          @-webkit-keyframes tmn-fadeInDown {
             0% {
               opacity: 0;
               -webkit-transform: translateY(-100%);
@@ -1379,7 +1378,7 @@ export class Tamnora {
             }
           }
           
-          @keyframes fadeInDown {
+          @keyframes tmn-fadeInDown {
             0% {
               opacity: 0;
               -webkit-transform: translateY(-100%);
@@ -1392,26 +1391,11 @@ export class Tamnora {
             }
           }
           
-          .fadeInDown {
-            -webkit-animation-name: fadeInDown;
-            animation-name: fadeInDown;
+          .tmn-fadeInDown {
+            -webkit-animation-name: tmn-fadeInDown;
+            animation-name: tmn-fadeInDown;
             -webkit-animation-duration: 0.5s;
             animation-duration: 0.5s;
-          }
-
-          @keyframes fadeInTableRow {
-            0% {
-              opacity: 0;
-              transform: translateY(-20px);
-            }
-            100% {
-              opacity: 1;
-              transform: translateY(0);
-            }
-          }
-          
-          .fadeInTableRow {
-            animation: fadeInTableRow 0.5s ease;
           }
 
           @keyframes flashTableRow {
@@ -1426,8 +1410,21 @@ export class Tamnora {
           .flashTableRow {
             animation: flashTableRow 1s ease-in-out; /* Duración y función de temporización */
           }
-          
 
+          @-webkit-keyframes tmn-fadeOut {
+            0% { opacity: 1; }
+            to { opacity: 0; }
+          }
+          @keyframes tmn-fadeOut {
+            0% { opacity: 1; }
+            to { opacity: 0; }
+          }
+          .tmn-fadeOut {
+            -webkit-animation-name: tmn-fadeOut;
+            animation-name: tmn-fadeOut;
+            -webkit-animation-duration: 0.7s;
+            animation-duration: 0.7s;
+          }
           
           `;
 
@@ -1441,11 +1438,15 @@ export class Tamnora {
     const newDiv = document.createElement("div");
     newDiv.id = id;
 
-    classNames.split(" ").forEach(className => {
-      newDiv.classList.add(className);
-    });
+    if(!document.getElementById(id)){
+      classNames.split(" ").forEach(className => {
+        newDiv.classList.add(className);
+      });
+  
+      tmnDiv.appendChild(newDiv);
+    }
 
-    tmnDiv.appendChild(newDiv);
+ 
   }
 
   async fetchData(url) {
@@ -1522,7 +1523,7 @@ export class Tamnora {
     this.applyStyleClassesNavActive()
     this.bindSubmitEvents();
     this.bindChangeEvents();
-    this.darkMode(true);
+    this.darkMode(false);
     this.listenerMessage();
   }
 
@@ -1824,10 +1825,11 @@ export class Tamnora {
     const records = await runCode(sqlt);
     this.setValue(data, records)
     this.setValue(nameIdElement, { id: 0, name: '' })
+    this.setValue('itab', 0)
 
 
     let salidaHTML = `
-        <div class="relative flex flex-col md:flex-row w-full text-sm text-neutral-900 bg-white rounded-lg border border-neutral-200  dark:bg-neutral-800 dark:border-neutral-700/50 dark:text-white    animated fadeIn">
+        <div class="relative flex flex-col md:flex-row w-full text-sm text-neutral-900 bg-white rounded-lg border border-neutral-200  dark:bg-neutral-800 dark:border-neutral-700/50 dark:text-white    tmn-fadeIn">
           <div id="${containerSearchName}" class="flex grow p-2.5  z-20 justify-start border-b dark:border-neutral-500 md:border-none cursor-pointer">
             <span class="text-neutral-600 dark:text-neutral-400 border-none outline-none mr-2">${titleName}</span>
             <span id="${searchName}" spellcheck="false"  class="font-semibold text-sky-700  dark:text-sky-500 border-none outline-none uppercase" contenteditable="true"></span>
@@ -1896,6 +1898,15 @@ export class Tamnora {
       eleSearchName.focus();
     })
 
+    eleSearchName.addEventListener("focus", function() {
+      const range = document.createRange();
+      const selection = window.getSelection();
+      range.selectNodeContents(this);
+      range.collapse(false);
+      selection.removeAllRanges();
+      selection.addRange(range);
+    });
+
     eleSearchName.addEventListener('input', (e) => {
       e.preventDefault();
       let value = e.target.innerText.toLowerCase();
@@ -1961,7 +1972,7 @@ export class Tamnora {
 
             } else {
               if (matchingClient.length > 0) {
-                //console.log(matchingClient, index)
+                console.log(matchingClient, index)
                 resId = matchingClient[index].id;
                 resName = matchingClient[index].name;
 
@@ -2301,9 +2312,8 @@ export class Tamnora {
         }
         this.changeThemeColor();
       })
-    } else {
-
-    }
+    } 
+    
   }
 
   bindData(attribute) {
@@ -3089,6 +3099,18 @@ export class Tamnora {
           }
         },
 
+        hidden:()=>{
+          element.classList.remove('tmn-fadeIn');
+          element.classList.add('tmn-fadeOut');
+          element.hidden = true;
+        },
+
+        show:()=>{
+          element.classList.remove('tmn-fadeOut');
+          element.classList.add('tmn-fadeIn');
+          element.hidden = false;
+        }
+
         // Agregar más eventos aquí según sea necesario
       };
     } else {
@@ -3346,6 +3368,7 @@ export class Tamnora {
     let textDefault = 'textToSearch';
     if (!options.value) options.value = textDefault;
     if (!options.change) options.change = `${textDefault}Go`;
+    if (!options.thisName) options.thisName = '';
     if (!options.inputClass) options.inputClass = 'bg-neutral-50 text-neutral-600 focus:border-sky-400 dark:bg-neutral-700/50 dark:text-neutral-300 dark:border-neutral-800';
     if (!options.iconClass) options.iconClass = 'text-neutral-500 dark:text-neutral-400';
 
@@ -3361,12 +3384,26 @@ export class Tamnora {
       name="search"
       autoComplete="off"
       data-value="${options.value}"
-      data-change = "${options.change}"
+      data-change = "${options.change},${options.thisName}"
       class="block w-full py-2 px-3 ps-10 text-sm font-normal border rounded-lg outline-none shadow-sm ${options.inputClass}" 
       placeholder='Buscar...' />
   </div>
     `
     return comp
+  }
+
+  createFileInput(options = {}) {
+    if (!options.inputClass) options.inputClass = `block w-full mb-5 text-sm text-neutral-900 border border-neutral-300 rounded-lg cursor-pointer bg-neutral-50 dark:text-neutral-400 focus:outline-none dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400`;
+    if (!options.accept) options.accept = '*'; // Acepta todos los tipos de archivos por defecto
+
+    let comp = `
+    <input
+      type="file"
+      name="file"
+      accept="${options.accept}"
+      class="${options.inputClass}" />
+    `;
+    return comp;
   }
 
   createNewObject(fieldName, type, value, key) {
@@ -3419,14 +3456,16 @@ export class Tamnora {
     return { groupType, primaryKey };
   }
 
-  handleDataObject(dataObject, groupType, primaryKey, clean = false) {
+  handleDataObject(dataObject, groupType, primaryKey, clean = false, name) {
     const newObject = {};
+    const newObjectClean = {};
 
     for (const fieldName in dataObject) {
       if (dataObject.hasOwnProperty(fieldName)) {
         let value = dataObject[fieldName];
         let type = this.detectDataType(value);
         let key = '';
+        let cleanValue = '';
 
         if (type == 'datetime') {
           value = formatDate(new Date(value)).fechaHora;
@@ -3444,6 +3483,12 @@ export class Tamnora {
           }
         }
 
+        if (type == 'number') {
+          cleanValue = 0;
+        } else {
+          cleanValue = '';
+        }
+
         if (fieldName in groupType) {
           type = groupType[fieldName];
         }
@@ -3452,9 +3497,12 @@ export class Tamnora {
           key = primaryKey[fieldName];
         }
 
+        newObjectClean[fieldName] = cleanValue;
         newObject[fieldName] = this.createNewObject(fieldName, type, value, key);
       }
     }
+
+    this.setValue(`${name}_clean`, newObjectClean)
 
     return newObject;
   }
@@ -3488,13 +3536,13 @@ export class Tamnora {
         formElement: '',
         modalName: '',
         name: nameForm,
-        defaultDataObjeto: {},
-        addData: (obj, clean = false) => { this.addObject(nameForm, obj, clean) },
+        addDataFromRunCode: async(sqCode)=>{await this.addDataFromRunCode(nameForm, sqCode)},
+        addDataFromDBSelect: async(sql)=> {await this.addDataFromDBSelect(nameForm, sql)},
+        addData: async(obj, clean = false) => { await this.addObject(nameForm, obj, clean) },
         createForm: (options) => { this.createForm(options, nameForm) },
         setData: (fieldName, key, value) => { this.setData(fieldName, key, value, nameForm) },
         newData: () => {
-          let obj = this.cleanDataObject(this.data[nameForm]);
-          this.data[nameForm] = obj;
+          this.data[nameForm] = this.data[`${nameForm}_clean`];
           this.updateForm(nameForm);
         },
         setDataKeys: (key, objectNameValue) => { this.setDataKeys(key, objectNameValue, nameForm) },
@@ -3504,7 +3552,8 @@ export class Tamnora {
         closeModal: () => { this.functions.closeModal(nameForm) },
         onSubmit: (fn) => { this.setFunction(`onSubmit_${nameForm}`, fn) },
         onDelete: (fn) => { this.setFunction(`onDelete_${nameForm}`, fn) },
-        onMount: () => { }
+        onMount: () => { },
+        labelCapitalize:()=>{ this.labelCapitalize(nameForm)}
       }
 
     }
@@ -3549,18 +3598,27 @@ export class Tamnora {
         arrayOrder: [],
         defaultDataRow: {},
         addData: (arr) => { this.addArray(nameTable, arr) },
+        addDataFromRunCode: async(sqCode)=>{await this.addDataFromRunCode(nameTable, sqCode)},
+        addDataFromDBSelect: async(sql)=> {await this.addDataFromDBSelect(nameTable, sql)},
         createTable: (options) => { this.createTable(options, nameTable) },
         updateData: (arr) => {
           this.updateArray(nameTable, arr);
           this.updateTable(nameTable);
         },
-        loadingTable: (obj) => {
+        filterData:(textSearch)=>{
+          this.objects[nameTable].from = 1;
+          this.objects[nameTable].searchValue = textSearch;
+          this.updateTable(nameTable)
+        },
+        refresh:()=>{this.updateTable(nameTable)},
+        loadingTable: (obj = {}) => {
           let { rows = 5, cols = 4, withHeader = false } = obj
           this.objects[nameTable].loader = true;
           this.loadingTable(nameTable, rows, cols, withHeader);
         },
         setData: (fieldName, key, value) => { this.setData(fieldName, key, value, nameTable) },
         setDataKeys: (key, objectNameValue) => { this.setDataKeys(key, objectNameValue, nameTable) },
+        labelCapitalize:()=>{ this.labelCapitalize(nameTable)}
       }
     }
 
@@ -3573,10 +3631,7 @@ export class Tamnora {
     this.objects[name].from = 1;
     this.setDefaultRow(name, arr[0]);
     this.setValue(name, arr);
-    // arr.forEach(reg => {
-    //   const obj = convertirFormatoFecha(reg)
-    //   this.addObject(name, obj)
-    // });
+
     const obj = convertirFormatoFecha(arr[0])
     this.addObject(name, obj)
   }
@@ -3590,18 +3645,40 @@ export class Tamnora {
     const dataObject = convertirFormatoFecha(obj)
     const structure = this.objects[name]?.structure || [];
     const { groupType, primaryKey } = this.handleStructure(name, structure);
-    const newObject = this.handleDataObject(dataObject, groupType, primaryKey, clean);
-    const newObjectDefault = this.handleDataObject(dataObject, groupType, primaryKey, true);
-
-
+    const newObject = this.handleDataObject(dataObject, groupType, primaryKey, clean, name);
+        
     if (this.objects[name].type == 'form') {
       this.objects[name].midata = newObject;
-      this.objects[name].defaultDataObjeto = newObjectDefault;
       this.setValue(name, dataObject);
     } else {
       // this.objects[name].midata.push(newObject);
       this.objects[name].midata = newObject;
     }
+  }
+
+  async runSQL(sql) {
+    let rstData = await dbSelect('s', sql)
+    return rstData
+  }
+
+  async runCode(sqCode) {
+    let rstData = await runCode(sqCode);
+    return rstData
+  }
+
+  async addDataFromDBSelect(name, sql) {
+    let rstData = await dbSelect('s', sql)
+    console.log(rstData)
+  }
+
+  async addDataFromRunCode(name, sqCode) {
+    let rstData = await runCode(sqCode);
+    if(this.objects[name].type == 'form'){
+      this.addObject(name, rstData[0]);
+    } else {
+      this.addArray(name, rstData)
+    }
+
   }
 
   cleanDataObject(originalObject) {
@@ -3641,7 +3718,6 @@ export class Tamnora {
         })
 
         this.objects[name].structure = newStruc;
-        console.log(this.objects[name].structure)
 
       } else {
         console.error(struc[0].msgError)
@@ -3755,6 +3831,17 @@ export class Tamnora {
     this.objects[name].midata = [];
   }
 
+  capitalize(str) {
+    if (!str) {
+      return str;
+    }
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+
+  labelCapitalize(name) {
+    this.forEachField(name, (field, key) => this.setData(field, 'name', this.capitalize(key.name), name))
+  }
+
   setDefaultRow(name, dataObject) {
     const newObject = {};
     let groupType = {};
@@ -3822,7 +3909,7 @@ export class Tamnora {
 
       for (let j = 0; j < cols; j++) {
         bodyLoading += `<td class="px-4 py-3 select-none whitespace-nowrap w-10 text-semibold">
-          <div class="select-none w-32 h-3 bg-gray-200 rounded-full dark:bg-gray-700 animate-pulse"></div>
+          <div class="select-none w-32 h-3 bg-neutral-200 rounded-full dark:bg-neutral-700 animate-pulse"></div>
         </td>`
       }
       bodyLoading += `</tr>`;
@@ -3865,7 +3952,7 @@ export class Tamnora {
 
       for (let j = 0; j < cols; j++) {
         tabla += `<th scope="col" class="px-4 py-3 select-none text-xs text-neutral-500 uppercase dark:text-neutral-500 whitespace-nowrap text-left">
-          <div class="select-none w-32 h-3 bg-gray-100 rounded-full dark:bg-gray-700 "></div>
+          <div class="select-none w-32 h-3 bg-neutral-100 rounded-full dark:bg-neutral-700 "></div>
         </th>`
       }
 
@@ -3881,7 +3968,7 @@ export class Tamnora {
 
         for (let j = 0; j < cols; j++) {
           tabla += `<td class="px-4 py-3 select-none whitespace-nowrap w-10 text-semibold">
-            <div class="select-none w-32 h-3 bg-gray-200 rounded-full dark:bg-gray-700 animate-pulse"></div>
+            <div class="select-none w-32 h-3 bg-neutral-200 rounded-full dark:bg-neutral-700 animate-pulse"></div>
           </td>`
         }
         tabla += `</tr>`;
@@ -3939,6 +4026,7 @@ export class Tamnora {
     const classNames = this.class.table;
     let options;
     let element;
+    
     if (!thisTable.tableElement) {
       element = document.querySelector(`#${name}`);
       thisTable.tableElement = element;
@@ -3971,7 +4059,6 @@ export class Tamnora {
       thisTable.changeColorClass(options.colorTable);
     }
 
-
     if (thisTable.columns.length > 0) {
       dataArray = this.data[name].map(item => {
         return thisTable.columns.reduce((acc, key) => {
@@ -3993,7 +4080,11 @@ export class Tamnora {
       miData = thisTable.midata;
     }
 
-
+    if(thisTable.searchColumns.length > 0 && thisTable.searchValue){
+      dataArray = dataArray.filter(objeto => {
+        return thisTable.searchColumns.some(key => objeto[key].toLowerCase().includes(thisTable.searchValue.toLowerCase()));
+      });
+    }
 
     table += `<div class="${classNames.divPadre} ${thisTable.widthPadre}">`;
 
@@ -4031,7 +4122,6 @@ export class Tamnora {
     desde = thisTable.from > 0 ? thisTable.from : 1;
     recordsPerView = thisTable.recordsPerView;
     hasta = desde + thisTable.recordsPerView - 1;
-
 
     Object.keys(miData).forEach(item => {
       let objectItem = miData[item];
@@ -4128,10 +4218,7 @@ export class Tamnora {
           }
         }
 
-
         table += `<td scope="col" ${xattribute} ${xhidden} class="${classNames.td} ${classTitleColumn}">${xvalue}</td>`;
-
-
 
       })
 
@@ -4151,7 +4238,7 @@ export class Tamnora {
           if ('click' in xRow) {
             if (xRow.click.function && xRow.click.field) {
               if (items[xRow.click.field]) {
-                actionClick = `data-action="${xRow.click.function},${index},${items[xRow.click.field].value}" `;
+                actionClick = `data-action="${xRow.click.function},${index},${items[xRow.click.field]}" `;
                 actionClass = classNames.trhover;
               } else {
                 console.error('row.click.field: ', `No existe columna ${xRow.click.field} en ${name}`);
@@ -4179,7 +4266,6 @@ export class Tamnora {
           } else {
             table += `<tr ${actionClick} class="${classNames.tr} ${actionClass}">`;
           }
-
 
           Object.keys(items).forEach((item, iri) => {
             let xattribute = miData[item].attribute ? miData[item].attribute : '';
@@ -4230,7 +4316,6 @@ export class Tamnora {
             }
 
             table += `<td ${xattribute} ${xhidden} name="${item}" class="${classNames.td} ${newClass}" ${dataClick}>${valor}</td>`;
-
 
           })
           table += `</tr>`;
@@ -4362,7 +4447,6 @@ export class Tamnora {
         }
       }
 
-
       if (hayMas == true && hayMenos == false) {
         buttons.prev.click = '';
         buttons.prev.class = classNames.paginationBtnDisable;
@@ -4372,9 +4456,7 @@ export class Tamnora {
 
       }
 
-
-
-      table += `<div class="${this.tableClass.pagination}">
+      table += `<div id="${name}_pagination" class="${classNames.pagination}">
 			<!-- Help text -->
 			<span class="text-xs text-neutral-600 dark:text-neutral-400">
 					Registro <span class="font-semibold ">${desde}</span> al <span class="font-semibold ">${hasta}</span> (total: <span class="font-semibold">${count}</span> registros)
@@ -4397,9 +4479,6 @@ export class Tamnora {
 		</div>`
     }
 
-
-
-
     element.innerHTML = table;
     this.bindClickPaginations(element, name);
     this.bindActionEvents(element, name)
@@ -4416,6 +4495,8 @@ export class Tamnora {
     const tableElement = thisTable.tableElement;
     const classNames = this.class.table;
     const options = thisTable.tableOptions;
+
+    
 
     if (!tableElement) {
       console.error(`No se encontró la tabla con el nombre '${name}'`);
@@ -4440,13 +4521,13 @@ export class Tamnora {
     let field = {};
     let xRow = {};
     let hayMas = false;
+    let hayMenos = false;
     let dataArray = [];
     let miData = {};
 
     if (options.colorTable) {
       thisTable.changeColorClass(options.colorTable);
     }
-
 
     if (thisTable.columns.length > 0) {
       dataArray = this.data[name].map(item => {
@@ -4467,6 +4548,12 @@ export class Tamnora {
     } else {
       dataArray = this.data[name];
       miData = thisTable.midata;
+    }
+
+    if(thisTable.searchColumns.length > 0 && thisTable.searchValue){
+      dataArray = dataArray.filter(objeto => {
+        return thisTable.searchColumns.some(key => objeto[key].toLowerCase().includes(thisTable.searchValue.toLowerCase()));
+      });
     }
 
 
@@ -4501,6 +4588,7 @@ export class Tamnora {
 
 
       xname = objectItem.name;
+      
 
       if (thisTable.searchColumns.includes(item)) {
         ColSearch = '&#9679; '
@@ -4606,7 +4694,7 @@ export class Tamnora {
           if ('click' in xRow) {
             if (xRow.click.function && xRow.click.field) {
               if (items[xRow.click.field]) {
-                actionClick = `data-action="${xRow.click.function},${index},${items[xRow.click.field].value}" `;
+                actionClick = `data-action="${xRow.click.function},${index},${items[xRow.click.field]}" `;
                 actionClass = classNames.trhover;
               } else {
                 console.error('row.click.field: ', `No existe columna ${xRow.click.field} en ${name}`);
@@ -4697,7 +4785,7 @@ export class Tamnora {
         let actionClass = '';
         if ('click' in xRow) {
           if (xRow.click.function && xRow.click.field) {
-            actionClick = `data-action="${xRow.click.function},${index},${items[xRow.click.field].value}" `;
+            actionClick = `data-action="${xRow.click.function},${index},${items[xRow.click.field]}" `;
             actionClass = 'cursor-pointer';
           } else {
             console.error('row.click.function', xRow.click.function);
@@ -4800,6 +4888,55 @@ export class Tamnora {
     }
 
     theTableElement.innerHTML = table;
+    let divPaginations = document.querySelector(`#${name}_pagination`);
+    if(divPaginations){
+      divPaginations.innerHTML = '';
+    }
+    
+    if (hayMas || hayMenos) {
+      if (count < hasta) {
+        hasta = count;
+      }
+      let buttons = {
+        prev: {
+          class: classNames.paginationBtn,
+          click: `data-pagination="prev"`
+        },
+        next: {
+          class: classNames.paginationBtn,
+          click: `data-pagination="next"`
+        }
+      }
+
+      if (hayMas == true && hayMenos == false) {
+        buttons.prev.click = '';
+        buttons.prev.class = classNames.paginationBtnDisable;
+      } else if (hayMas == false && hayMenos == true) {
+        buttons.next.click = '';
+        buttons.next.class = classNames.paginationBtnDisable;
+
+      }
+
+      divPaginations.innerHTML = `
+			<span class="text-xs text-neutral-600 dark:text-neutral-400">
+					Registro <span class="font-semibold ">${desde}</span> al <span class="font-semibold ">${hasta}</span> (total: <span class="font-semibold">${count}</span> registros)
+			</span>
+			<div class="inline-flex">
+				<!-- Buttons -->
+				<button ${buttons.prev.click} class="flex items-center justify-center px-3 h-8 text-sm font-medium ${buttons.prev.class} rounded-l ">
+						<svg class="w-3.5 h-3.5 mr-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+							<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5H1m0 0 4 4M1 5l4-4"/>
+						</svg>
+						Anterior
+				</button>
+				<button ${buttons.next.click} class="flex items-center justify-center px-3 h-8 text-sm font-medium ${buttons.next.class} border-0 border-l  rounded-r ">
+						Siguiente
+						<svg class="w-3.5 h-3.5 ml-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 10">
+						<path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 5h12m0 0L9 1m4 4L9 9"/>
+					</svg>
+				</button>
+			</div>`
+    }
 
     // Volver a vincular eventos si es necesario
     this.bindClickPaginations(tableElement, name);
@@ -4812,7 +4949,7 @@ export class Tamnora {
   }
 
 
-  bindClickPaginations(componentDiv) {
+  bindClickPaginations(componentDiv, name) {
     let elementsWithClick;
     if (componentDiv) {
       elementsWithClick = componentDiv.querySelectorAll('[data-pagination]');
@@ -4824,17 +4961,19 @@ export class Tamnora {
       const action = element.getAttribute('data-pagination');
 
       element.addEventListener('click', () => {
-        let pos = this.from;
-        let cant = this.recordsPerView;
+        let pos = this.objects[name].from;
+        let cant = this.objects[name].recordsPerView;
 
         if (action == 'next') {
           pos = pos + cant;
-          this.from = pos;
-          this.createTable(this.tableOptions);
+          this.objects[name].from = pos;
+          this.createTable(this.tableOptions, name);
+         
         } else {
           pos = pos - cant;
-          this.from = pos;
-          this.createTable(this.tableOptions);
+          this.objects[name].from = pos;
+          this.createTable(this.tableOptions, name);
+          
         }
       });
 
@@ -4919,11 +5058,11 @@ export class Tamnora {
       form += `<div name="header" class="${classNames.header}">`
       form += `<div name="titleContainer" class="${classNames.titleContainer}">`;
       if (data.title) {
-        form += `<h3 name="title" class="${classNames.title}">${data.title}</h3>`;
+        form += `<h3 id="${name}_title" name="title" class="${classNames.title}">${data.title}</h3>`;
       }
 
       if ("subtitle" in data) {
-        form += `<p name="subtitle" class="${classNames.subtitle}">${data.subtitle}</p>`;
+        form += `<p id="${name}_subtitle" name="subtitle" class="${classNames.subtitle}">${data.subtitle}</p>`;
       }
       form += '</div>'
       if ("buttons" in data) {
@@ -4948,10 +5087,10 @@ export class Tamnora {
         if ("title" in data || "subtitle" in data) {
           form += `<div name="titleContainer" class="${classNames.titleContainer}">`;
           if ("title" in data) {
-            form += `<h3 name="title" class="${classNames.title}">${data.title}</h3>`;
+            form += `<h3 id="${name}_title" name="title" class="${classNames.title}">${data.title}</h3>`;
           }
           if ("subtitle" in data) {
-            form += `<p name="subtitle" class="${classNames.subtitle}">${data.subtitle}</p>`;
+            form += `<p id="${name}_subtitle" name="subtitle" class="${classNames.subtitle}">${data.subtitle}</p>`;
           }
           form += '</div>';
         }
@@ -4975,7 +5114,7 @@ export class Tamnora {
     }
 
 
-    form += `<div name="grid" class="${classNames.grid}">`;
+    form += `<div id="grid_${name}" name="grid" class="${classNames.grid}">`;
     this.forEachField(name, (campo, dato) => {
       let fieldElement = '';
       let dataValue = '';
@@ -5180,8 +5319,11 @@ export class Tamnora {
 
   updateForm(name) {
     const thisForm = this.objects[name];
+    const classNames = this.class.form;
+    const data = thisForm.formOptions;
+    const nameForm = name;
     let element;
-
+    let form = '';
 
     if (!thisForm.formElement) {
       element = document.querySelector(`#${thisForm.name}`);
@@ -5190,11 +5332,188 @@ export class Tamnora {
       element = thisForm.formElement;
     }
 
+    let gridForm = element.querySelector(`#grid_${name}`)
+    
+
+    this.forEachField(name, (campo, dato) => {
+      let fieldElement = '';
+      let dataValue = '';
+      let colspan = '';
+      let esrequired = '';
+      let textRequired = '';
+      let pattern = '';
+      let onChange = '';
+      let xClass = '';
+      let dataUppercase = '';
+      let attributes = '';
+      let attributeClass = '';
+      let observ = '';
+
+      if (data.bind) {
+        dataValue = `data-form="${data.bind}!${campo}"`;
+      } else {
+        dataValue = `data-form="${thisForm.name}!${campo}"`;
+      }
+
+      if (dato.required == true) {
+        esrequired = 'required';
+        textRequired = `<span class='text-red-500 text-xs'>(req)</span>`
+      }
+
+      if (dato.pattern != '') {
+        pattern = `pattern="${dato.pattern}"`;
+      }
+
+      if (dato.change != '') {
+        onChange = `data-onchange="${dato.change}"`;
+      }
+
+      if (dato.class != '') {
+        xClass = dato.class;
+        if (xClass.includes('uppercase')) {
+          dataUppercase = 'data-UpperCase="true"';
+        }
+      }
+
+      if ('column' in dato) {
+        if (dato.column != '') {
+          colspan = `${dato.column}`
+        } else {
+          colspan = columns
+        }
+      } else {
+        colspan = columns
+      }
+
+      if (dato.observ != '') {
+        observ = `&#10509;<small class="${classNames.observ}">${dato.observ}</small>`;
+      }
+
+      if (dato.hidden == true) {
+        colspan += ' hidden';
+      }
+
+      if (dato.attribute == 'readonly') {
+        attributes = 'readonly tabindex="-1"';
+        attributeClass = classNames.inputDisable;
+      } else if (dato.attribute == 'locked') {
+        attributeClass = classNames.input;
+        attributes = 'readonly tabindex="-1"';
+      } else {
+        attributeClass = classNames.input;
+        attributes = '';
+      }
+
+      if (dato.type === 'select') {
+        let haySelected = false;
+        let options = dato.options.map(option => {
+          if (option.value == dato.value || option.value == dato.defaultValue) {
+            if (dato.elegirOpcion == true) {
+              return `<option value="${option.value}">${option.label}</option>`
+            } else {
+              haySelected = true;
+              return `<option value="${option.value}" selected>${option.label}</option>`
+            }
+          } else {
+            return `<option value="${option.value}">${option.label}</option>`
+          }
+        }).join('');
+
+        if (!haySelected) {
+          options = `<option value="" disabled selected>Elegir...</option>${options}`
+          if (!dato.required) {
+            esrequired = 'required';
+            textRequired = `<span class='text-red-500 text-xs'>(req)</span>`
+          }
+        }
+
+        fieldElement = `
+        <div class="${colspan}">
+          <label for="${nameForm}_${campo}" class="${classNames.label}">${dato.name} ${textRequired}</label>
+          <select id="${nameForm}_${campo}" ${dataValue} ${onChange} class="${classNames.select} ${xClass}" ${esrequired}>
+            ${options}
+          </select>
+          ${observ}
+        </div>`;
+      } else if (dato.type === 'datalist') {
+        const options = dato.options.map(option => {
+          if ((option.value == dato.value && dato.elegirOpcion == false) || option.value == dato.defaultValue) {
+            return `<option value="${option.value}" selected>${option.label}</option>`
+          } else {
+            return `<option value="${option.value}">${option.label}</option>`
+          }
+        }).join('');
+
+        fieldElement = `
+        <div class="${colspan}">
+        <label for="${nameForm}_${campo}" class="${classNames.label}">${dato.name} ${textRequired}</label>
+        <input type="text" autocomplete="off" list="lista-${campo}" ${onChange} id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${pattern} value="${dato.value}" ${attributes} class="${attributeClass} ${xClass}">
+          <datalist id="lista-${campo}">
+            ${options}
+          </datalist>
+          ${observ}
+        </div>`;
+      } else if (dato.type === 'checkbox') {
+        fieldElement = `
+          <div class="${colspan}">
+            <input type="checkbox" id="${nameForm}_${campo}" ${dataValue} ${onChange} ${esrequired} class="${classNames.checkbox}" ${dato.value ? 'checked' : ''}>
+            <label class="${classNames.labelCheckbox}" for="${nameForm}_${campo}">${dato.name} ${textRequired}</label>
+          </div>
+        `;
+      } else if (dato.type === 'textarea') {
+        fieldElement = `
+          <div class="${colspan}">
+            <label for="${nameForm}_${campo}" class="${classNames.label}">${dato.name} ${textRequired}</label>
+            <textarea id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${onChange} ${pattern} ${attributes} rows="${dato.rows}" class="${classNames.textarea} ${xClass}">${dato.value}</textarea>
+            ${observ}
+          </div>
+        `;
+      } else if (dato.type === 'currency') {
+        fieldElement = `
+          <div class="${colspan}">
+            <label for="${nameForm}_${campo}" class="${classNames.label}">${dato.name} ${textRequired}</label>
+            <input type="text" autocomplete="off" data-change="currency" id="${nameForm}_${campo}" ${dataValue} ${esrequired} ${pattern} value="${formatNumberArray(dato.value)[2]}" ${attributes} class="${attributeClass} ${xClass}">
+            ${observ}
+          </div>
+        `;
+      } else if (dato.type === 'datetime-local') {
+        fieldElement = `
+          <div class="${colspan}">
+            <label for="${nameForm}_${campo}" class="${classNames.label}">${dato.name} ${textRequired}</label>
+            <input type="${dato.type}" autocomplete="off" id="${nameForm}_${campo}" ${dataValue} ${dataUppercase} ${onChange} ${esrequired} ${pattern} value="${formatDate(new Date(dato.value)).fechaHoraLocal}" ${attributes} class="${attributeClass} ${xClass}">
+            ${observ}
+          </div>
+        `;
+      } else {
+
+        fieldElement = `
+          <div class="${colspan}">
+            <label for="${nameForm}_${campo}" class="${classNames.label}">${dato.name} ${textRequired}</label>
+            <input type="${dato.type}" autocomplete="off" id="${nameForm}_${campo}" ${dataValue} ${dataUppercase} ${onChange} ${esrequired} ${pattern} value="${dato.value}" ${attributes} class="${attributeClass} ${xClass}">
+            ${observ}
+          </div>
+        `;
+      }
+
+      form += fieldElement;
+    });
+
+    gridForm.innerHTML = form;
+
+
+
     if (typeof this.data[name] == 'object') {
       Object.keys(this.data[name]).forEach((key) => {
         let value = this.data[name][key];
         this.updateElementsWithDataValue(`${name}!${key}`, value, name);
       });
+    }
+
+    this.bindChangeEvents(element);
+    this.bindElementsWithDataValues(element);
+    if (thisForm.focus) {
+      let elemnetFocus = element.querySelector(`#${nameForm}_${thisForm.focus}`);
+      elemnetFocus.focus();
     }
 
   }
@@ -5207,16 +5526,14 @@ export class Tamnora {
 
   setData(fieldName, key, value, name) {
     const thisData = this.objects[name].midata;
+
     if (thisData[fieldName]) {
       if (!isNaN(parseFloat(value)) && isFinite(value)) {
         thisData[fieldName][key] = parseFloat(value)
-        // this.defaultDataObjeto[fieldName][key] = parseFloat(value);
       } else {
         thisData[fieldName][key] = value;
-        // this.defaultDataObjeto[fieldName][key] = value;
         if (value == 'currency') {
           thisData[fieldName].pattern = "[0-9.,]*";
-          // this.defaultDataObjeto[fieldName].pattern = "[0-9.,]*";
         }
       }
       if (key == 'introDate') {
@@ -5231,15 +5548,12 @@ export class Tamnora {
 
         if (typeInput == 'datetime-local') {
           thisData[fieldName].value = formatDate(myDate).fechaHora;
-          // this.defaultDataObjeto[fieldName].value = formatDate(myDate).fechaHora;
           this.data[name][fieldName] = formatDate(myDate).fechaHora;
         } else if (typeInput == 'date') {
           thisData[fieldName].value = formatDate(myDate).fecha;
-          // this.defaultDataObjeto[fieldName].value = formatDate(myDate).fecha;
           this.data[name][fieldName] = formatDate(myDate).fecha;
         } else if (typeInput == 'time') {
           thisData[fieldName].value = formatDate(myDate).horaLarga;
-          // this.defaultDataObjeto[fieldName].value = formatDate(myDate).horaLarga;
           this.data[name][fieldName] = formatDate(myDate).horaLarga;
         }
       }
@@ -5459,5 +5773,7 @@ export class Tamnora {
       }
     });
   }
+
+
 
 }

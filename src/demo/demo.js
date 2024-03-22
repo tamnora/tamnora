@@ -1,4 +1,4 @@
-import { Tamnora, structure, runCode, dbSelect } from '../js/tamnora'
+import { Tamnora, structure, runCode, dbSelect } from '../js/tamnora2'
 import { navbar } from '../components/navbar.tmn';
 
 const tmn = new Tamnora;
@@ -6,7 +6,7 @@ const laTabla = tmn.newTable('tabla');
 const elForm = tmn.newForm('formulario');
 let dataFetch = [];
 
-laTabla.setValue('buscado', 'casa');
+tmn.setValue('buscado', 'casa');
 
 
 tmn.setValue('idSelected', 0);
@@ -14,8 +14,8 @@ tmn.setValue('idSelected', 0);
 tmn.select('#navbar').html(navbar('Tamnora js'))
 tmn.setComponentHTML
 
-laTabla.setFunction('accionBuscar',()=>{
-  let valorBuscado = laTabla.getValue('buscando');
+tmn.setFunction('accionBuscar',()=>{
+  let valorBuscado = tmn.getValue('buscando');
   let cursos = dataFetch;
 
   laTabla.searchValue = ''
